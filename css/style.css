@@ -203,19 +203,26 @@ a {
 .hero-content {
     position: relative;
     z-index: 1;
-    max-width: 800px;
+    max-width: 960px; /* increased to better accommodate rotated phones */
     padding: 20px;
 }
 
+/* Site name (moved into hero) */
 .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
+    font-size: 2.4rem; /* slightly smaller than before, but prominent */
+    margin-bottom: 8px;
     animation: fadeInUp 1s ease;
 }
 
+.hero .hero-title {
+    font-size: 1.6rem; /* tagline size */
+    margin-bottom: 18px;
+    animation: fadeInUp 1s ease 0.05s backwards;
+}
+
 .hero p {
-    font-size: 1.3rem;
-    margin-bottom: 30px;
+    font-size: 1.15rem;
+    margin-bottom: 24px;
     animation: fadeInUp 1s ease 0.2s backwards;
 }
 
@@ -414,7 +421,7 @@ section {
     vector-effect: non-scaling-stroke;
 } 
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .features-grid {
         grid-template-columns: 1fr;
     }
@@ -859,7 +866,7 @@ section {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     /* Hide the full nav/menu: we replace it with a single visible login button */
     .nav-menu {
         display: none !important;
@@ -874,7 +881,7 @@ section {
         display: inline-block;
         margin-left: 10px;
         padding: 8px 12px;
-        font-size: 0.9rem; /* slightly smaller for better balance */
+        font-size: 0.95rem; /* slightly increased to remain legible on larger rotated screens */
         border-radius: 6px;
     }
 
@@ -890,6 +897,20 @@ section {
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: 0.95rem; /* keep site name readable without overflowing */
+    }
+
+    /* New site title styles (site name lives in hero now) */
+    .hero .site-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: block;
+        color: var(--dark-color);
+    }
+
+    .hero .hero-title {
+        font-size: 1.25rem;
+        margin-bottom: 8px;
     }
 
     .nav-menu {
@@ -962,18 +983,13 @@ section {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .nav-brand {
-        font-size: 0.95rem; /* smaller to fit narrow viewports */
+        font-size: 1rem;
     }
 
     .brand-name {
-        display: inline-block;
-        max-width: calc(100vw - 100px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 0.95rem;
+        display: none; /* brand moved into hero, hide if still present */
     }
 
     .logo {
@@ -1421,7 +1437,7 @@ section {
 }
 
 /* Mobile Responsiveness for New Features */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .guest-modal-content {
         padding: 30px 20px;
     }
