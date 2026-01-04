@@ -541,13 +541,8 @@ function initGuestArea() {
 
     guestBtn.addEventListener('click', (e) => {
         e.preventDefault();
-
-        // Check if already logged in
-        if (localStorage.getItem('guestLoggedIn')) {
-            showGuestInfo();
-        } else {
-            showGuestLogin();
-        }
+        // Redirect to guest information page
+        window.location.href = 'guest-info.html';
     });
 }
 
