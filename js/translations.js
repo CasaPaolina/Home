@@ -142,8 +142,10 @@ const translations = {
         // Guest Area
         guest_login_title: "Area Riservata Ospiti",
         guest_login_subtitle: "Inserisci la password fornita al check-in",
+        guest_password_placeholder: "Password",
         guest_login_btn: "Accedi",
         guest_login_help: "Non hai ricevuto la password? Contattaci su WhatsApp",
+        guest_login_wrong: "Password errata, riprova",
         guest_info_title: "Informazioni per gli Ospiti",
         guest_logout: "Esci",
 
@@ -168,6 +170,7 @@ const translations = {
         nav_beaches: "Beaches",
         nav_contact: "Contact",
         nav_guest_area: "Guest Area",
+        nav_login: "Login",
 
         // Hero Section
         hero_title: "An oasis of peace and tranquility in the heart of Salento",
@@ -241,6 +244,8 @@ const translations = {
         beach_recommended: "🏖️ Recommended Beach",
 
         // Review
+        leave_review: "✍️ Leave a Review",
+        leave_review_cta: "⭐ Leave a Review on Google",
         review_subtext: "Your review helps us improve!",
 
         // Contact Section
@@ -282,8 +287,10 @@ const translations = {
         // Guest Area
         guest_login_title: "Guest Reserved Area",
         guest_login_subtitle: "Enter the password provided at check-in",
+        guest_password_placeholder: "Password",
         guest_login_btn: "Login",
         guest_login_help: "Didn't receive the password? Contact us on WhatsApp",
+        guest_login_wrong: "Wrong password, try again",
         guest_info_title: "Guest Information",
         guest_logout: "Logout",
 
@@ -308,6 +315,7 @@ const translations = {
         nav_beaches: "Playas",
         nav_contact: "Contacto",
         nav_guest_area: "Área de Huéspedes",
+        nav_login: "Acceder",
 
         // Hero Section
         hero_title: "Un oasis de paz y tranquilidad en el corazón de Salento",
@@ -355,6 +363,11 @@ const translations = {
         service_linen_desc: "Sábanas y toallas limpias incluidas",
         service_wifi_title: "Wi‑Fi",
 
+        // Review
+        leave_review: "✍️ Deja una Reseña",
+        leave_review_cta: "⭐ Deja una reseña en Google",
+        review_subtext: "¡Tu reseña nos ayuda a mejorar!",
+
         // Contact Section
         contact_title: "Contáctanos",
         contact_address_title: "Dirección",
@@ -384,8 +397,10 @@ const translations = {
         // Guest Area
         guest_login_title: "Área Reservada para Huéspedes",
         guest_login_subtitle: "Introduce la contraseña proporcionada en el check-in",
+        guest_password_placeholder: "Contraseña",
         guest_login_btn: "Acceder",
         guest_login_help: "¿No recibiste la contraseña? Contáctanos en WhatsApp",
+        guest_login_wrong: "Contraseña incorrecta, inténtalo de nuevo",
 
         // Availability Request
         availability_title: "Solicitar Disponibilidad",
@@ -408,6 +423,7 @@ const translations = {
         nav_beaches: "Strände",
         nav_contact: "Kontakt",
         nav_guest_area: "Gästebereich",
+        nav_login: "Anmelden",
 
         // Hero Section
         hero_title: "Eine Oase der Ruhe und Gelassenheit im Herzen des Salento",
@@ -454,6 +470,11 @@ const translations = {
         service_linen_title: "Bettwäsche",
         service_linen_desc: "Saubere Bettwäsche und Handtücher inklusive",
         service_wifi_title: "Wi‑Fi",
+
+        // Review
+        leave_review: "✍️ Bewertung Hinterlassen",
+        leave_review_cta: "⭐ Hinterlasse eine Bewertung auf Google",
+        review_subtext: "Ihre Bewertung hilft uns, uns zu verbessern!",
 
         // Contact Section
         contact_title: "Kontaktieren Sie Uns",

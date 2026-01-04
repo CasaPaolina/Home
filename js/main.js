@@ -604,10 +604,16 @@ function showGuestLogin() {
     `;
 
     document.body.appendChild(modal);
+    // translate newly injected elements
+    translatePage(currentLang);
     document.body.style.overflow = 'hidden';
 
     const form = modal.querySelector('#guest-login-form');
     const passwordInput = modal.querySelector('#guest-password');
+    // ensure placeholder matches current language
+    if (translations[currentLang] && translations[currentLang].guest_password_placeholder) {
+        passwordInput.placeholder = translations[currentLang].guest_password_placeholder;
+    }
     const errorEl = document.createElement('div');
     errorEl.id = 'guest-login-error';
     errorEl.style.color = 'red';
@@ -623,7 +629,7 @@ function showGuestLogin() {
         const password = passwordInput.value;
 
         // Simple password check (in production, this should be server-side)
-        if (password === 'casapaolina2024' || password === 'ospite') {
+        if (password === 'chiara' || password === 'ale') {
             localStorage.setItem('guestLoggedIn', 'true');
             document.body.removeChild(modal);
             document.body.style.overflow = '';
@@ -631,8 +637,9 @@ function showGuestLogin() {
         } else {
             passwordInput.style.borderColor = 'red';
             passwordInput.value = '';
-            passwordInput.placeholder = currentLang === 'it' ? 'Password errata, riprova' : 'Wrong password, try again';
-            errorEl.textContent = currentLang === 'it' ? 'Password errata, riprova' : 'Wrong password, try again';
+            const wrongMsg = (translations[currentLang] && translations[currentLang].guest_login_wrong) || (currentLang === 'it' ? 'Password errata, riprova' : 'Wrong password, try again');
+            passwordInput.placeholder = wrongMsg;
+            errorEl.textContent = wrongMsg;
         }
     });
 
