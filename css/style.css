@@ -864,6 +864,18 @@ section {
         display: flex;
     }
 
+    .nav-brand {
+        flex: 1 1 auto;
+        min-width: 0; /* allow text to truncate instead of pushing other items */
+    }
+
+    .brand-name {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     .nav-menu {
         position: fixed;
         left: -100%;
@@ -881,8 +893,22 @@ section {
         left: 0;
     }
 
+    /* make flags smaller and keep them to the right of the brand */
     .language-switcher {
-        margin-top: 20px;
+        margin-left: 8px;
+        gap: 6px;
+        z-index: 1100;
+    }
+
+    .lang-btn {
+        padding: 6px 10px;
+        font-size: 1.15rem;
+        border-width: 1px;
+    }
+
+    /* ensure hamburger is above other elements */
+    .hamburger {
+        z-index: 1200;
     }
 
     .hero h1 {
@@ -921,12 +947,29 @@ section {
 
 @media (max-width: 480px) {
     .nav-brand {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+    }
+
+    .brand-name {
+        display: inline-block;
+        max-width: calc(100vw - 120px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .logo {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .language-switcher {
+        gap: 4px;
+    }
+
+    .lang-btn {
+        padding: 4px 8px;
+        font-size: 1rem;
     }
 
     .hero h1 {
