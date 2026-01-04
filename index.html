@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Paolina - Uggiano la Chiesa, Salento</title>
+    <meta name="description" content="Casa Paolina - An oasis of peace and tranquility in the heart of Salento, Puglia">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.3.8/dist/photoswipe.css" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="images/img_8835.jpeg" alt="Casa Paolina Logo" class="logo">
+                <span class="brand-name">Casa Paolina</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" data-translate="nav_home">Home</a></li>
+                <li><a href="#rooms" data-translate="nav_rooms">Camere</a></li>
+                <li><a href="#services" data-translate="nav_services">Servizi</a></li>
+                <li><a href="#area-map" data-translate="nav_area">Zona</a></li>
+                <li><a href="#beach-map" data-translate="nav_beaches">Spiagge</a></li>
+                <li><a href="#contact" data-translate="nav_contact">Contatti</a></li>
+                <li><a href="#" id="guest-area-btn" data-translate="nav_guest_area">Area Ospiti</a></li>
+            </ul>
+            <div class="language-switcher">
+                <button class="lang-btn active" data-lang="it">IT</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 data-translate="hero_title">Un'oasi di pace e tranquillità nel cuore del Salento</h1>
+            <p data-translate="hero_subtitle">Immergiti nella tradizione e nel comfort per un'esperienza indimenticabile</p>
+            <div class="hero-buttons">
+                <a href="#rooms" class="btn btn-primary" data-translate="hero_btn_rooms">Scopri le Camere</a>
+                <a href="https://wa.me/393208086738" class="btn btn-secondary" target="_blank">
+                    <span data-translate="hero_btn_contact">Contattaci</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-translate="about_title">Benvenuti a Casa Paolina</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p data-translate="about_text">Un'oasi di pace e tranquillità immersa nel cuore di Uggiano la Chiesa, dove tradizione e comfort si fondono per offrire un'esperienza indimenticabile. A pochi chilometri dal mare, è il rifugio ideale per godersi la tua vacanza nel meraviglioso Salento.</p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                            <span data-translate="about_feature1">A pochi km dal mare</span>
+                        </div>
+                        <div class="feature-item">
+                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            <span data-translate="about_feature2">Atmosfera familiare</span>
+                        </div>
+                        <div class="feature-item">
+                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M2 12h20"/>
+                                <circle cx="12" cy="12" r="7"/>
+                                <path d="M8 12h8M12 8v8"/>
+                            </svg>
+                            <span data-translate="about_feature3">Giardino privato</span>
+                        </div>
+                        <div class="feature-item">
+                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                                <line x1="12" y1="20" x2="12.01" y2="20"/>
+                            </svg>
+                            <span data-translate="about_feature4">Wi-Fi gratuito</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Section -->
+    <section id="rooms" class="rooms">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-translate="rooms_title">Le Nostre Camere</h2>
+                <div class="divider"></div>
+                <p data-translate="rooms_subtitle">Scegli l'appartamento perfetto per la tua vacanza</p>
+            </div>
+
+            <div class="rooms-grid">
+                <!-- Appartamento Celeste -->
+                <div class="room-card">
+                    <div class="room-gallery">
+                        <img src="images/celeste1.jpg" alt="Appartamento Celeste" class="room-img active">
+                        <img src="images/celeste2.jpg" alt="Appartamento Celeste" class="room-img">
+                        <img src="images/celeste3.jpg" alt="Appartamento Celeste" class="room-img">
+                        <img src="images/celeste4.jpg" alt="Appartamento Celeste" class="room-img">
+                        <div class="gallery-dots">
+                            <span class="dot active" data-index="0"></span>
+                            <span class="dot" data-index="1"></span>
+                            <span class="dot" data-index="2"></span>
+                            <span class="dot" data-index="3"></span>
+                        </div>
+                        <button class="gallery-btn prev">&lt;</button>
+                        <button class="gallery-btn next">&gt;</button>
+                    </div>
+                    <div class="room-details">
+                        <h3>Appartamento Celeste</h3>
+                        <div class="room-meta">
+                            <span>40 m²</span>
+                            <span>•</span>
+                            <span data-translate="room_guests">1-4 Persone</span>
+                        </div>
+                        <ul class="room-amenities">
+                            <li data-translate="room_celeste_bed">1 Letto matrimoniale + 2 letti singoli</li>
+                            <li data-translate="room_induction">Piano cottura a induzione</li>
+                            <li>Wi-Fi</li>
+                            <li data-translate="room_bathroom">Bagno privato</li>
+                            <li data-translate="room_linens">Biancheria pulita</li>
+                            <li data-translate="room_garden">Accesso al giardino</li>
+                            <li data-translate="room_ac">Aria condizionata</li>
+                        </ul>
+                        <button class="btn btn-primary availability-btn" data-room="Appartamento Celeste" data-translate="room_availability">Richiedi Disponibilità</button>
+                    </div>
+                </div>
+
+                <!-- Appartamento Verde -->
+                <div class="room-card">
+                    <div class="room-gallery">
+                        <img src="images/verde1.jpg" alt="Appartamento Verde" class="room-img active">
+                        <img src="images/verde2.jpg" alt="Appartamento Verde" class="room-img">
+                        <img src="images/verde3.jpg" alt="Appartamento Verde" class="room-img">
+                        <img src="images/verde4.jpg" alt="Appartamento Verde" class="room-img">
+                        <div class="gallery-dots">
+                            <span class="dot active" data-index="0"></span>
+                            <span class="dot" data-index="1"></span>
+                            <span class="dot" data-index="2"></span>
+                            <span class="dot" data-index="3"></span>
+                        </div>
+                        <button class="gallery-btn prev">&lt;</button>
+                        <button class="gallery-btn next">&gt;</button>
+                    </div>
+                    <div class="room-details">
+                        <h3>Appartamento Verde</h3>
+                        <div class="room-meta">
+                            <span>38 m²</span>
+                            <span>•</span>
+                            <span data-translate="room_guests">1-4 Persone</span>
+                        </div>
+                        <ul class="room-amenities">
+                            <li data-translate="room_verde_bed">1 Letto matrimoniale + 2 letti singoli</li>
+                            <li data-translate="room_induction">Piano cottura a induzione</li>
+                            <li>Wi-Fi</li>
+                            <li data-translate="room_bathroom">Bagno privato</li>
+                            <li data-translate="room_linens">Biancheria pulita</li>
+                            <li data-translate="room_garden">Accesso al giardino</li>
+                            <li data-translate="room_ac">Aria condizionata</li>
+                        </ul>
+                        <button class="btn btn-primary availability-btn" data-room="Appartamento Verde" data-translate="room_availability">Richiedi Disponibilità</button>
+                    </div>
+                </div>
+
+                <!-- Suite 17 -->
+                <div class="room-card">
+                    <div class="room-gallery">
+                        <img src="images/suite1.jpg" alt="Suite 17" class="room-img active">
+                        <img src="images/suite2.jpg" alt="Suite 17" class="room-img">
+                        <img src="images/suite3.jpg" alt="Suite 17" class="room-img">
+                        <img src="images/suite4.jpg" alt="Suite 17" class="room-img">
+                        <div class="gallery-dots">
+                            <span class="dot active" data-index="0"></span>
+                            <span class="dot" data-index="1"></span>
+                            <span class="dot" data-index="2"></span>
+                            <span class="dot" data-index="3"></span>
+                        </div>
+                        <button class="gallery-btn prev">&lt;</button>
+                        <button class="gallery-btn next">&gt;</button>
+                    </div>
+                    <div class="room-details">
+                        <h3>Suite 17</h3>
+                        <div class="room-meta">
+                            <span>36 m²</span>
+                            <span>•</span>
+                            <span data-translate="room_guests_2">1-2 Persone</span>
+                        </div>
+                        <ul class="room-amenities">
+                            <li data-translate="room_suite_bed">1 Letto matrimoniale</li>
+                            <li data-translate="room_gas">Piano cottura a gas</li>
+                            <li>Wi-Fi</li>
+                            <li data-translate="room_bathroom">Bagno privato</li>
+                            <li data-translate="room_linens">Biancheria pulita</li>
+                            <li data-translate="room_garden">Accesso al giardino</li>
+                            <li data-translate="room_ac">Aria condizionata</li>
+                        </ul>
+                        <button class="btn btn-primary availability-btn" data-room="Suite 17" data-translate="room_availability">Richiedi Disponibilità</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-translate="services_title">Servizi e Comfort</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <span class="service-icon">❄️</span>
+                    <h3 data-translate="service_ac_title">Aria Condizionata</h3>
+                    <p data-translate="service_ac_desc">Ogni appartamento è dotato di aria condizionata</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">📶</span>
+                    <h3>Wi-Fi</h3>
+                    <p data-translate="service_wifi_desc">Connessione internet gratuita e veloce</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🍳</span>
+                    <h3 data-translate="service_kitchen_title">Angolo Cottura</h3>
+                    <p data-translate="service_kitchen_desc">Cucina attrezzata in ogni appartamento</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🌳</span>
+                    <h3 data-translate="service_garden_title">Giardino</h3>
+                    <p data-translate="service_garden_desc">Spazio esterno per rilassarsi</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🅿️</span>
+                    <h3 data-translate="service_parking_title">Parcheggio</h3>
+                    <p data-translate="service_parking_desc">Posto auto disponibile</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🧺</span>
+                    <h3 data-translate="service_linen_title">Biancheria</h3>
+                    <p data-translate="service_linen_desc">Lenzuola e asciugamani puliti inclusi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Area Map Section -->
+    <section id="area-map" class="map-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-translate="area_title">Scopri la Zona</h2>
+                <div class="divider"></div>
+                <p data-translate="area_subtitle">Servizi e punti di interesse nelle vicinanze</p>
+            </div>
+            <div class="map-filters">
+                <button class="filter-btn active" data-category="all" data-translate="filter_all">Tutti</button>
+                <button class="filter-btn" data-category="restaurants" data-translate="filter_restaurants">Ristoranti</button>
+                <button class="filter-btn" data-category="supermarkets" data-translate="filter_supermarkets">Supermercati</button>
+                <button class="filter-btn" data-category="pharmacy" data-translate="filter_pharmacy">Farmacie</button>
+                <button class="filter-btn" data-category="attractions" data-translate="filter_attractions">Attrazioni</button>
+            </div>
+            <div id="area-map-container" class="map-container"></div>
+        </div>
+    </section>
+
+    <!-- Beach Map Section -->
+    <section id="beach-map" class="map-section beach-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-translate="beach_title">Spiagge Consigliate</h2>
+                <div class="divider"></div>
+                <p data-translate="beach_subtitle">Trova la spiaggia perfetta in base al vento</p>
+            </div>
+            <div class="weather-info">
+                <div class="weather-card">
+                    <div class="weather-icon" id="wind-arrow">🧭</div>
+                    <div class="weather-details">
+                        <p data-translate="wind_direction">Direzione vento:</p>
+                        <p id="wind-direction-text" class="wind-value">Caricamento...</p>
+                        <p data-translate="wind_speed">Velocità:</p>
+                        <p id="wind-speed-text" class="wind-value">--</p>
+                    </div>
+                </div>
+                <div class="recommendation-card">
+                    <h3 data-translate="beach_recommended">🏖️ Spiaggia Consigliata</h3>
+                    <p id="recommended-beach" class="beach-name">Caricamento...</p>
+                    <p id="recommendation-reason" class="beach-reason"></p>
+                </div>
+            </div>
+            <div id="beach-map-container" class="map-container"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-translate="contact_title">Contattaci</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">📍</span>
+                        <div>
+                            <h3 data-translate="contact_address_title">Indirizzo</h3>
+                            <p>Via Dante De Blasi, 15<br>73020 Uggiano la Chiesa (LE)<br>Puglia, Italia</p>
+                            <a href="https://maps.app.goo.gl/yr5b7tZAcYgAzTeT9" target="_blank" class="btn btn-secondary" data-translate="contact_directions">Ottieni Indicazioni</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📱</span>
+                        <div>
+                            <h3 data-translate="contact_phone_title">Telefono</h3>
+                            <p><a href="tel:+393208086738">+39 320 808 6738</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <div>
+                            <h3>CIN</h3>
+                            <p>IT075091C200081350</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://wa.me/393208086738" target="_blank" class="social-btn whatsapp">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            WhatsApp
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61558595285924" target="_blank" class="social-btn facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                        <a href="https://www.instagram.com/paolinashome/" target="_blank" class="social-btn instagram">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+                            Instagram
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3048.8937858662944!2d18.348901976547693!3d40.14738717147916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1347cc7f8e9f6e37%3A0x8f0b0b0b0b0b0b0b!2sVia%20Dante%20De%20Blasi%2C%2015%2C%2073020%20Uggiano%20la%20Chiesa%20LE!5e0!3m2!1sit!2sit!4v1704369600000!5m2!1sit!2sit" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Casa Paolina</h3>
+                    <p data-translate="footer_text">Il tuo rifugio nel cuore del Salento</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-translate="footer_quick_links">Link Rapidi</h4>
+                    <ul>
+                        <li><a href="#rooms" data-translate="nav_rooms">Camere</a></li>
+                        <li><a href="#services" data-translate="nav_services">Servizi</a></li>
+                        <li><a href="#area-map" data-translate="nav_area">Zona</a></li>
+                        <li><a href="#contact" data-translate="nav_contact">Contatti</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-translate="contact_title">Contatti</h4>
+                    <p>Via Dante De Blasi, 15<br>Uggiano la Chiesa (LE)</p>
+                    <p>Tel: <a href="tel:+393208086738">+39 320 808 6738</a></p>
+                    <p>CIN: IT075091C200081350</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Casa Paolina. <span data-translate="footer_rights">Tutti i diritti riservati.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

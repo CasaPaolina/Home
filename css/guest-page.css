@@ -1,0 +1,466 @@
+/* Guest Page Specific Styles */
+
+.guest-page {
+    background: var(--light-color);
+}
+
+/* Header */
+.guest-header {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 20px 0;
+    box-shadow: var(--shadow);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.back-link {
+    color: var(--white);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    opacity: 0.8;
+}
+
+.guest-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Language Flags */
+.language-flags {
+    display: flex;
+    gap: 10px;
+}
+
+.flag-btn {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+}
+
+.flag-btn:hover,
+.flag-btn.active {
+    border-color: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+/* Weather & Beaches Section */
+.weather-beaches {
+    padding: 60px 0;
+    background: var(--white);
+}
+
+.weather-beaches h2 {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+.weather-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.weather-time-slot {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px;
+    border-radius: 15px;
+    color: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.weather-time-slot h3 {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.wind-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.wind-arrow {
+    font-size: 3rem;
+    transition: transform 0.5s ease;
+}
+
+.wind-details p {
+    margin: 8px 0;
+    font-size: 1rem;
+}
+
+/* Beach Recommendations */
+.beach-recommendations {
+    background: var(--light-color);
+    padding: 40px;
+    border-radius: 20px;
+}
+
+.beach-recommendations h3 {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+}
+
+.beaches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.beach-card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.beach-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.beach-card h4 {
+    color: var(--primary-color);
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.beach-card .beach-type {
+    display: inline-block;
+    background: var(--secondary-color);
+    color: var(--white);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+}
+
+.beach-card p {
+    margin: 8px 0;
+    color: var(--text-light);
+}
+
+.beach-card .beach-booking {
+    margin-top: 15px;
+}
+
+.beach-card .beach-booking a {
+    display: inline-block;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.beach-card .beach-booking a:hover {
+    background: var(--accent-color);
+}
+
+/* Essential Info */
+.essential-info {
+    padding: 60px 0;
+    background: var(--white);
+}
+
+.essential-info h2 {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.info-card {
+    background: var(--light-color);
+    padding: 30px;
+    border-radius: 15px;
+    border-left: 4px solid var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-card.emergency {
+    border-left-color: var(--accent-color);
+    background: #fff5f5;
+}
+
+.info-card .info-icon {
+    width: 40px;
+    height: 40px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.info-card h3 {
+    color: var(--dark-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.info-card p {
+    margin: 8px 0;
+    color: var(--text-dark);
+}
+
+.info-card a {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* House Rules */
+.house-rules {
+    padding: 60px 0;
+    background: var(--light-color);
+}
+
+.house-rules h2 {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.rule-item {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.rule-item:hover {
+    transform: scale(1.05);
+}
+
+.rule-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.rule-item p {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* POI Map Section */
+.poi-map-section {
+    padding: 60px 0;
+    background: var(--white);
+}
+
+.poi-map-section h2 {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.poi-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.poi-filter-btn {
+    padding: 12px 25px;
+    border: 2px solid var(--primary-color);
+    background: var(--white);
+    color: var(--primary-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.poi-filter-btn:hover,
+.poi-filter-btn.active {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.poi-categories {
+    margin-top: 40px;
+}
+
+.poi-category {
+    background: var(--light-color);
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.poi-category h3 {
+    color: var(--dark-color);
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+}
+
+.poi-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.poi-item {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.poi-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.poi-item h4 {
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+.poi-item p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+/* Review Section */
+.review-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%);
+    padding: 40px;
+    border-radius: 15px;
+    margin-top: 30px;
+    text-align: center;
+    color: var(--white);
+}
+
+.review-section h3 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
+
+.review-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.review-btn {
+    background: var(--white);
+    color: var(--primary-color);
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.review-btn:hover {
+    background: var(--secondary-color);
+    color: var(--white);
+    transform: scale(1.05);
+}
+
+/* Footer */
+.guest-footer {
+    background: var(--dark-color);
+    color: var(--white);
+    padding: 30px 0;
+    text-align: center;
+}
+
+.guest-footer p {
+    margin: 8px 0;
+}
+
+.guest-footer a {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.guest-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .guest-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .weather-timeline {
+        grid-template-columns: 1fr;
+    }
+
+    .beaches-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .poi-filters {
+        flex-direction: column;
+    }
+
+    .poi-list {
+        grid-template-columns: 1fr;
+    }
+}
