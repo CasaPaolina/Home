@@ -562,8 +562,9 @@ function openLightbox(images, startIndex) {
 function initGuestArea() {
     const guestBtn = document.getElementById('guest-area-btn');
     const guestLoginBtn = document.getElementById('guest-login-btn');
-    // If neither button exists, nothing to do
-    if (!guestBtn && !guestLoginBtn) return;
+    const guestLoginMobile = document.getElementById('guest-login-mobile');
+    // If no relevant buttons exist, nothing to do
+    if (!guestBtn && !guestLoginBtn && !guestLoginMobile) return;
 
     if (guestBtn) {
         guestBtn.addEventListener('click', (e) => {
@@ -580,6 +581,14 @@ function initGuestArea() {
     // Extra visible login trigger (explicit Accedi button)
     if (guestLoginBtn) {
         guestLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showGuestLogin();
+        });
+    }
+
+    // Mobile-only visible login button
+    if (guestLoginMobile) {
+        guestLoginMobile.addEventListener('click', (e) => {
             e.preventDefault();
             showGuestLogin();
         });

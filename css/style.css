@@ -860,8 +860,22 @@ section {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Hide the full nav/menu: we replace it with a single visible login button */
+    .nav-menu {
+        display: none !important;
+    }
+
     .hamburger {
-        display: flex;
+        display: none !important; /* remove hamburger on mobile per request */
+    }
+
+    /* show prominent mobile login button */
+    .mobile-login {
+        display: inline-block;
+        margin-left: 10px;
+        padding: 8px 12px;
+        font-size: 0.95rem;
+        border-radius: 6px;
     }
 
     .nav-brand {
@@ -912,7 +926,6 @@ section {
         z-index: 1300;
         position: relative; /* keep it on top */
     }
-
     .hero h1 {
         font-size: 2rem;
     }
