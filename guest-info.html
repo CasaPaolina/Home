@@ -38,6 +38,13 @@
         <div class="container">
             <h2 data-translate="weather_beaches_title">Previsioni Vento & Spiagge Consigliate</h2>
 
+            <!-- Current Date Display -->
+            <div style="text-align: center; margin-bottom: 30px; padding: 15px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 15px;">
+                <h3 id="current-date-display" style="font-size: 1.5rem; color: var(--dark-color); margin: 0;">
+                    <!-- Will be filled by JavaScript -->
+                </h3>
+            </div>
+
             <!-- Weather Timeline -->
             <div class="weather-timeline">
                 <div class="weather-time-slot">
@@ -141,10 +148,27 @@
                         <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
                     </svg>
                     <h3 data-translate="waste">Raccolta Differenziata</h3>
-                    <p><strong data-translate="plastic">Plastica:</strong> <span data-translate="tue_fri">Mar, Ven</span></p>
-                    <p><strong data-translate="paper">Carta:</strong> <span data-translate="thu">Gio</span></p>
-                    <p><strong data-translate="general">Indifferenziato:</strong> <span data-translate="mon_wed_sat">Lun, Mer, Sab</span></p>
-                    <p><strong data-translate="glass">Vetro:</strong> <span data-translate="wed">Mer</span></p>
+                    <div style="background: #f0f9ff; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <p style="margin: 5px 0;"><strong>♻️ Plastica e Metalli:</strong> Martedì e Venerdì</p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Bottiglie, flaconi, vaschette, lattine, barattoli metallici</p>
+                    </div>
+                    <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <p style="margin: 5px 0;"><strong>📄 Carta e Cartone:</strong> Giovedì</p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Giornali, riviste, scatole (appiattire)</p>
+                    </div>
+                    <div style="background: #fefce8; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <p style="margin: 5px 0;"><strong>🗑️ Indifferenziato:</strong> Lunedì, Mercoledì, Sabato</p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Tutto ciò che non è riciclabile</p>
+                    </div>
+                    <div style="background: #fef2f2; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <p style="margin: 5px 0;"><strong>🍾 Vetro:</strong> Mercoledì</p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Bottiglie e vasetti di vetro (senza tappi)</p>
+                    </div>
+                    <div style="background: #f5f3ff; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                        <p style="margin: 5px 0;"><strong>🥬 Organico:</strong> Tutti i giorni</p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Scarti alimentari, utilizzare sacchetti compostabili</p>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 0.9rem; font-style: italic;">⏰ Esporre i rifiuti la sera prima del giorno di raccolta</p>
                 </div>
 
                 <!-- Security -->
@@ -199,6 +223,24 @@
     <section class="poi-map-section">
         <div class="container">
             <h2 data-translate="poi_title">Punti di Interesse</h2>
+
+            <!-- Boat Excursion Highlight -->
+            <div class="excursion-highlight">
+                <div class="excursion-content">
+                    <div class="excursion-text">
+                        <h3>🚤 Escursione in Gommone</h3>
+                        <p><strong>Partenza:</strong> Porto Badisco</p>
+                        <p><strong>Servizio:</strong> Foto ricordo incluse</p>
+                        <p>Scopri le meravigliose grotte marine e le calette nascoste della costa adriatica del Salento con un'emozionante escursione in gommone.</p>
+                        <a href="https://wa.me/393208086738?text=Vorrei%20informazioni%20sull'escursione%20in%20gommone" target="_blank" class="btn btn-primary">
+                            Prenota Escursione
+                        </a>
+                    </div>
+                    <div class="excursion-image">
+                        <img src="images/porto-badisco.jpg" alt="Porto Badisco" style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
 
             <div class="poi-filters">
                 <button class="poi-filter-btn active" data-category="all" data-translate="filter_all">Tutti</button>
@@ -285,16 +327,11 @@
 
                 <!-- Reviews -->
                 <div class="review-section">
-                    <h3 data-translate="leave_review">✍️ Lascia una Recensione</h3>
+                    <h3 data-translate="leave_review">✍️ Lascia una Recensione su Google</h3>
+                    <p style="margin-bottom: 20px; font-size: 1.1rem;">La tua recensione ci aiuta a migliorare!</p>
                     <div class="review-links">
-                        <a href="https://www.google.com/search?q=casa+paolina+uggiano+la+chiesa" target="_blank" class="review-btn">
-                            Google
-                        </a>
-                        <a href="https://www.facebook.com/profile.php?id=61558595285924" target="_blank" class="review-btn">
-                            Facebook
-                        </a>
-                        <a href="https://www.instagram.com/paolinashome/" target="_blank" class="review-btn">
-                            Instagram
+                        <a href="https://g.page/r/YOUR_GOOGLE_PLACE_ID/review" target="_blank" class="review-btn" style="font-size: 1.2rem; padding: 15px 40px;">
+                            ⭐ Lascia una Recensione su Google
                         </a>
                     </div>
                 </div>

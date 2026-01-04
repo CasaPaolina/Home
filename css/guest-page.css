@@ -291,6 +291,66 @@
     background: var(--white);
 }
 
+/* Excursion Highlight */
+.excursion-highlight {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-lg);
+}
+
+.excursion-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+    align-items: center;
+}
+
+.excursion-text {
+    color: var(--white);
+}
+
+.excursion-text h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.excursion-text p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.excursion-text .btn {
+    margin-top: 20px;
+    background: var(--white);
+    color: var(--primary-color);
+}
+
+.excursion-text .btn:hover {
+    background: var(--light-color);
+    transform: translateY(-2px);
+}
+
+.excursion-image img {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .excursion-content {
+        grid-template-columns: 1fr;
+    }
+
+    .excursion-highlight {
+        padding: 30px 20px;
+    }
+
+    .excursion-text h3 {
+        font-size: 1.5rem;
+    }
+}
+
 .map-container {
     height: 500px;
     border-radius: 15px;

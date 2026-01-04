@@ -19,7 +19,7 @@ const beaches = [
         exposed: ['E', 'NE', 'SE'],
         description: "Spiaggia sabbiosa con acque cristalline",
         distance: "15 km",
-        booking: "https://www.lido-torredell'orso.it"
+        booking: "https://www.spiagge.it/puglia/lecce/torre-dell-orso"
     },
     {
         name: "Torre Sant'Andrea",
@@ -52,7 +52,7 @@ const beaches = [
         exposed: ['E', 'NE', 'SE'],
         description: "Lunga spiaggia tra mare e laghi",
         distance: "13 km",
-        booking: "https://www.lidobaiaalimini.it"
+        booking: "https://www.spiagge.it/puglia/lecce/alimini"
     },
     {
         name: "Porto Badisco",
@@ -74,7 +74,7 @@ const beaches = [
         exposed: ['E', 'SE', 'S'],
         description: "Grotte marine e scogliere",
         distance: "10 km",
-        booking: "https://www.lidocastro.it"
+        booking: "https://www.spiagge.it/puglia/lecce/castro"
     },
     {
         name: "Santa Cesarea Terme",
@@ -108,7 +108,7 @@ const beaches = [
         exposed: ['W', 'SW', 'NW'],
         description: "Lunga spiaggia sabbiosa movida estiva",
         distance: "55 km",
-        booking: "https://www.lidobaiaverde.it"
+        booking: "https://www.spiagge.it/puglia/lecce/gallipoli"
     },
     {
         name: "Gallipoli - Punta della Suina",
@@ -130,7 +130,7 @@ const beaches = [
         exposed: ['W', 'SW', 'NW'],
         description: "Riserva marina con acque trasparenti",
         distance: "62 km",
-        booking: "https://www.lidoportocesareo.it"
+        booking: "https://www.spiagge.it/puglia/lecce/porto-cesareo"
     },
     {
         name: "Santa Maria al Bagno",
@@ -468,8 +468,42 @@ function initPOIMap() {
     });
 }
 
+// Display current date
+function displayCurrentDate() {
+    const dateDisplay = document.getElementById('current-date-display');
+    if (!dateDisplay) return;
+
+    const now = new Date();
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+
+    // Get language from localStorage or default to Italian
+    const lang = localStorage.getItem('guestLanguage') || 'it';
+    const locale = {
+        'it': 'it-IT',
+        'en': 'en-US',
+        'es': 'es-ES',
+        'de': 'de-DE'
+    }[lang] || 'it-IT';
+
+    const dateString = now.toLocaleDateString(locale, options);
+
+    // Add emoji based on day of week
+    const dayEmojis = ['📅', '📆', '🗓️', '📋', '📊', '📈', '📉'];
+    const emoji = dayEmojis[now.getDay()];
+
+    dateDisplay.textContent = `${emoji} ${dateString}`;
+}
+
 // Initialize everything on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Display current date
+    displayCurrentDate();
+
     // Fetch weather and beach recommendations
     fetchWeatherForecast();
 

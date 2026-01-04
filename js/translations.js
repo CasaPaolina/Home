@@ -252,6 +252,174 @@ const translations = {
         availability_phone: "Phone",
         availability_message: "Notes (optional)",
         availability_submit: "Send Request",
+    },
+    es: {
+        // Navigation
+        nav_home: "Inicio",
+        nav_rooms: "Habitaciones",
+        nav_services: "Servicios",
+        nav_area: "Zona",
+        nav_beaches: "Playas",
+        nav_contact: "Contacto",
+        nav_guest_area: "Área de Huéspedes",
+
+        // Hero Section
+        hero_title: "Un oasis de paz y tranquilidad en el corazón de Salento",
+        hero_subtitle: "Sumérgete en la tradición y el confort para una experiencia inolvidable",
+        hero_btn_rooms: "Descubre las Habitaciones",
+        hero_btn_contact: "Contáctanos",
+
+        // About Section
+        about_title: "Bienvenidos a Casa Paolina",
+        about_text: "Un oasis de paz y tranquilidad inmerso en el corazón de Uggiano la Chiesa, donde tradición y confort se fusionan para ofrecer una experiencia inolvidable. A pocos kilómetros del mar, es el refugio ideal para disfrutar de tus vacaciones en el maravilloso Salento.",
+        about_feature1: "A pocos km del mar",
+        about_feature2: "Ambiente familiar",
+        about_feature3: "Jardín privado",
+        about_feature4: "Wi-Fi gratuito",
+
+        // Rooms Section
+        rooms_title: "Nuestras Habitaciones",
+        rooms_subtitle: "Elige el apartamento perfecto para tus vacaciones",
+        room_guests: "1-4 Personas",
+        room_guests_2: "1-2 Personas",
+        room_celeste_bed: "1 Cama doble + 2 camas individuales",
+        room_verde_bed: "1 Cama doble + 2 camas individuales",
+        room_suite_bed: "1 Cama doble",
+        room_induction: "Placa de inducción",
+        room_gas: "Placa de gas",
+        room_bathroom: "Baño privado",
+        room_linens: "Ropa de cama limpia",
+        room_garden: "Acceso al jardín",
+        room_ac: "Aire acondicionado",
+        room_book: "Reservar Ahora",
+        room_availability: "Solicitar Disponibilidad",
+
+        // Services Section
+        services_title: "Servicios y Comodidades",
+        service_ac_title: "Aire Acondicionado",
+        service_ac_desc: "Cada apartamento está equipado con aire acondicionado",
+        service_wifi_desc: "Conexión a internet gratuita y rápida",
+        service_kitchen_title: "Cocina",
+        service_kitchen_desc: "Cocina equipada en cada apartamento",
+        service_garden_title: "Jardín",
+        service_garden_desc: "Espacio al aire libre para relajarse",
+        service_parking_title: "Aparcamiento",
+        service_parking_desc: "Plaza de aparcamiento disponible",
+        service_linen_title: "Ropa de cama",
+        service_linen_desc: "Sábanas y toallas limpias incluidas",
+
+        // Contact Section
+        contact_title: "Contáctanos",
+        contact_address_title: "Dirección",
+        contact_directions: "Obtener Direcciones",
+        contact_phone_title: "Teléfono",
+
+        // Footer
+        footer_text: "Tu refugio en el corazón de Salento",
+        footer_quick_links: "Enlaces Rápidos",
+        footer_rights: "Todos los derechos reservados.",
+
+        // Guest Area
+        guest_login_title: "Área Reservada para Huéspedes",
+        guest_login_subtitle: "Introduce la contraseña proporcionada en el check-in",
+        guest_login_btn: "Acceder",
+        guest_login_help: "¿No recibiste la contraseña? Contáctanos en WhatsApp",
+
+        // Availability Request
+        availability_title: "Solicitar Disponibilidad",
+        availability_checkin: "Check-in",
+        availability_checkout: "Check-out",
+        availability_adults: "Adultos",
+        availability_children: "Niños",
+        availability_name: "Nombre Completo",
+        availability_email: "Email",
+        availability_phone: "Teléfono",
+        availability_message: "Notas (opcional)",
+        availability_submit: "Enviar Solicitud",
+    },
+    de: {
+        // Navigation
+        nav_home: "Startseite",
+        nav_rooms: "Zimmer",
+        nav_services: "Dienstleistungen",
+        nav_area: "Umgebung",
+        nav_beaches: "Strände",
+        nav_contact: "Kontakt",
+        nav_guest_area: "Gästebereich",
+
+        // Hero Section
+        hero_title: "Eine Oase der Ruhe und Gelassenheit im Herzen des Salento",
+        hero_subtitle: "Tauchen Sie ein in Tradition und Komfort für ein unvergessliches Erlebnis",
+        hero_btn_rooms: "Zimmer Entdecken",
+        hero_btn_contact: "Kontaktieren Sie Uns",
+
+        // About Section
+        about_title: "Willkommen in Casa Paolina",
+        about_text: "Eine Oase der Ruhe und Gelassenheit im Herzen von Uggiano la Chiesa, wo Tradition und Komfort verschmelzen, um ein unvergessliches Erlebnis zu bieten. Nur wenige Kilometer vom Meer entfernt, ist es der ideale Rückzugsort für Ihren Urlaub im wunderschönen Salento.",
+        about_feature1: "Nur wenige km vom Meer",
+        about_feature2: "Familiäre Atmosphäre",
+        about_feature3: "Privater Garten",
+        about_feature4: "Kostenloses WLAN",
+
+        // Rooms Section
+        rooms_title: "Unsere Zimmer",
+        rooms_subtitle: "Wählen Sie das perfekte Apartment für Ihren Urlaub",
+        room_guests: "1-4 Personen",
+        room_guests_2: "1-2 Personen",
+        room_celeste_bed: "1 Doppelbett + 2 Einzelbetten",
+        room_verde_bed: "1 Doppelbett + 2 Einzelbetten",
+        room_suite_bed: "1 Doppelbett",
+        room_induction: "Induktionskochfeld",
+        room_gas: "Gaskochfeld",
+        room_bathroom: "Eigenes Bad",
+        room_linens: "Saubere Bettwäsche",
+        room_garden: "Gartenzugang",
+        room_ac: "Klimaanlage",
+        room_book: "Jetzt Buchen",
+        room_availability: "Verfügbarkeit Anfragen",
+
+        // Services Section
+        services_title: "Dienstleistungen & Komfort",
+        service_ac_title: "Klimaanlage",
+        service_ac_desc: "Jedes Apartment ist mit Klimaanlage ausgestattet",
+        service_wifi_desc: "Kostenlose und schnelle Internetverbindung",
+        service_kitchen_title: "Küchenzeile",
+        service_kitchen_desc: "Ausgestattete Küche in jedem Apartment",
+        service_garden_title: "Garten",
+        service_garden_desc: "Außenbereich zum Entspannen",
+        service_parking_title: "Parkplatz",
+        service_parking_desc: "Parkplatz verfügbar",
+        service_linen_title: "Bettwäsche",
+        service_linen_desc: "Saubere Bettwäsche und Handtücher inklusive",
+
+        // Contact Section
+        contact_title: "Kontaktieren Sie Uns",
+        contact_address_title: "Adresse",
+        contact_directions: "Wegbeschreibung",
+        contact_phone_title: "Telefon",
+
+        // Footer
+        footer_text: "Ihr Rückzugsort im Herzen des Salento",
+        footer_quick_links: "Schnellzugriff",
+        footer_rights: "Alle Rechte vorbehalten.",
+
+        // Guest Area
+        guest_login_title: "Reservierter Gästebereich",
+        guest_login_subtitle: "Geben Sie das beim Check-in erhaltene Passwort ein",
+        guest_login_btn: "Anmelden",
+        guest_login_help: "Passwort nicht erhalten? Kontaktieren Sie uns über WhatsApp",
+
+        // Availability Request
+        availability_title: "Verfügbarkeit Anfragen",
+        availability_checkin: "Check-in",
+        availability_checkout: "Check-out",
+        availability_adults: "Erwachsene",
+        availability_children: "Kinder",
+        availability_name: "Vollständiger Name",
+        availability_email: "E-Mail",
+        availability_phone: "Telefon",
+        availability_message: "Notizen (optional)",
+        availability_submit: "Anfrage Senden",
     }
 };
 

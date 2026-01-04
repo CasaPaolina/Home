@@ -21,14 +21,14 @@
                 <li><a href="#home" data-translate="nav_home">Home</a></li>
                 <li><a href="#rooms" data-translate="nav_rooms">Camere</a></li>
                 <li><a href="#services" data-translate="nav_services">Servizi</a></li>
-                <li><a href="#area-map" data-translate="nav_area">Zona</a></li>
-                <li><a href="#beach-map" data-translate="nav_beaches">Spiagge</a></li>
                 <li><a href="#contact" data-translate="nav_contact">Contatti</a></li>
                 <li><a href="#" id="guest-area-btn" data-translate="nav_guest_area">Area Ospiti</a></li>
             </ul>
             <div class="language-switcher">
-                <button class="lang-btn active" data-lang="it">IT</button>
-                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn active" data-lang="it" title="Italiano">🇮🇹</button>
+                <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
+                <button class="lang-btn" data-lang="es" title="Español">🇪🇸</button>
+                <button class="lang-btn" data-lang="de" title="Deutsch">🇩🇪</button>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -65,12 +65,11 @@
                     <div class="about-features">
                         <div class="feature-item">
                             <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M2 12h20"/>
-                                <path d="M12 2C6.5 2 2 6.5 2 12"/>
-                                <circle cx="7" cy="17" r="1"/>
-                                <circle cx="12" cy="19" r="1"/>
-                                <circle cx="17" cy="17" r="1"/>
-                                <path d="M22 12c0 2.5-1 4.5-2 6"/>
+                                <path d="M2 16.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
+                                <path d="M2 12.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
+                                <path d="M2 20.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
+                                <circle cx="19" cy="5" r="2"/>
+                                <path d="M19 7v3"/>
                             </svg>
                             <span data-translate="about_feature1">A pochi km dal mare</span>
                         </div>
@@ -267,53 +266,6 @@
                     <p data-translate="service_linen_desc">Lenzuola e asciugamani puliti inclusi</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Area Map Section -->
-    <section id="area-map" class="map-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 data-translate="area_title">Scopri la Zona</h2>
-                <div class="divider"></div>
-                <p data-translate="area_subtitle">Servizi e punti di interesse nelle vicinanze</p>
-            </div>
-            <div class="map-filters">
-                <button class="filter-btn active" data-category="all" data-translate="filter_all">Tutti</button>
-                <button class="filter-btn" data-category="restaurants" data-translate="filter_restaurants">Ristoranti</button>
-                <button class="filter-btn" data-category="supermarkets" data-translate="filter_supermarkets">Supermercati</button>
-                <button class="filter-btn" data-category="pharmacy" data-translate="filter_pharmacy">Farmacie</button>
-                <button class="filter-btn" data-category="attractions" data-translate="filter_attractions">Attrazioni</button>
-            </div>
-            <div id="area-map-container" class="map-container"></div>
-        </div>
-    </section>
-
-    <!-- Beach Map Section -->
-    <section id="beach-map" class="map-section beach-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 data-translate="beach_title">Spiagge Consigliate</h2>
-                <div class="divider"></div>
-                <p data-translate="beach_subtitle">Trova la spiaggia perfetta in base al vento</p>
-            </div>
-            <div class="weather-info">
-                <div class="weather-card">
-                    <div class="weather-icon" id="wind-arrow">🧭</div>
-                    <div class="weather-details">
-                        <p data-translate="wind_direction">Direzione vento:</p>
-                        <p id="wind-direction-text" class="wind-value">Caricamento...</p>
-                        <p data-translate="wind_speed">Velocità:</p>
-                        <p id="wind-speed-text" class="wind-value">--</p>
-                    </div>
-                </div>
-                <div class="recommendation-card">
-                    <h3 data-translate="beach_recommended">🏖️ Spiaggia Consigliata</h3>
-                    <p id="recommended-beach" class="beach-name">Caricamento...</p>
-                    <p id="recommendation-reason" class="beach-reason"></p>
-                </div>
-            </div>
-            <div id="beach-map-container" class="map-container"></div>
         </div>
     </section>
 

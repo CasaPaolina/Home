@@ -541,8 +541,13 @@ function initGuestArea() {
 
     guestBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        // Redirect to guest information page
-        window.location.href = 'guest-info.html';
+
+        // Check if already logged in
+        if (localStorage.getItem('guestLoggedIn')) {
+            window.location.href = 'guest-info.html';
+        } else {
+            showGuestLogin();
+        }
     });
 }
 
@@ -577,7 +582,7 @@ function showGuestLogin() {
             localStorage.setItem('guestLoggedIn', 'true');
             document.body.removeChild(modal);
             document.body.style.overflow = '';
-            showGuestInfo();
+            window.location.href = 'guest-info.html';
         } else {
             passwordInput.style.borderColor = 'red';
             passwordInput.value = '';
