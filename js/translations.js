@@ -8,10 +8,11 @@ const translations = {
         nav_beaches: "Spiagge",
         nav_contact: "Contatti",
         nav_guest_area: "Area Ospiti",
+        nav_login: "Accedi",
 
         // Hero Section
         hero_title: "Un'oasi di pace e tranquillità nel cuore del Salento",
-        hero_subtitle: "Immergiti nella tradizione e nel comfort per un'esperienza indimenticabile",
+        hero_subtitle: "Immergiti nella tradizione e nel comfort per un'esperienza indimenticabile. Il cuore di Uggiano la Chiesa, a pochi chilometri dal mare, è il rifugio ideale per godersi la tua vacanza nel meraviglioso Salento.",
         hero_btn_rooms: "Scopri le Camere",
         hero_btn_contact: "Contattaci",
 
@@ -42,6 +43,7 @@ const translations = {
 
         // Services Section
         services_title: "Servizi e Comfort",
+        services_subtitle: "Servizi principali e punti di forza della struttura",
         service_ac_title: "Aria Condizionata",
         service_ac_desc: "Ogni appartamento è dotato di aria condizionata",
         service_wifi_desc: "Connessione internet gratuita e veloce",
@@ -53,15 +55,23 @@ const translations = {
         service_parking_desc: "Posto auto disponibile",
         service_linen_title: "Biancheria",
         service_linen_desc: "Lenzuola e asciugamani puliti inclusi",
+        service_wifi_title: "Wi‑Fi",
 
         // Area Map Section
         area_title: "Scopri la Zona",
         area_subtitle: "Servizi e punti di interesse nelle vicinanze",
+        poi_title: "Punti di Interesse",
         filter_all: "Tutti",
+        filter_nightlife: "Movida",
+        filter_beaches: "Spiagge",
+        filter_excursions: "Escursioni",
+        filter_services: "Servizi",
         filter_restaurants: "Ristoranti",
         filter_supermarkets: "Supermercati",
         filter_pharmacy: "Farmacie",
         filter_attractions: "Attrazioni",
+        nightlife_title: "🍹 Movida Locale",
+        attractions_title: "🏛️ Luoghi da Visitare",
 
         // Beach Map Section
         beach_title: "Spiagge Consigliate",
@@ -80,6 +90,29 @@ const translations = {
         footer_text: "Il tuo rifugio nel cuore del Salento",
         footer_quick_links: "Link Rapidi",
         footer_rights: "Tutti i diritti riservati.",
+
+        // Waste & Security
+        waste: "Raccolta Differenziata",
+        plastic: "Plastica",
+        paper: "Carta",
+        general: "Indifferenziato",
+        glass: "Vetro",
+        tue_fri: "Mar, Ven",
+        thu: "Gio",
+        mon_wed_sat: "Lun, Mer, Sab",
+
+        security: "Sicurezza",
+        area_monitored: "Area Videosorvegliata",
+        lock_door: "Chiudi sempre la porta a chiave",
+        valuables: "Custodisci oggetti di valore",
+        emergency_number: "Emergenze",
+        owner: "Proprietario",
+
+        // Review
+        leave_review_cta: "⭐ Lascia una Recensione su Google",
+        leave_review: "✍️ Lascia una Recensione",
+        review_subtext: "La tua recensione ci aiuta a migliorare!",
+        excursions_guest_note: "Prenotazioni escursioni disponibili per gli ospiti. Accedi all'area riservata per maggiori dettagli.",
 
         // Beach names and descriptions
         beach_torre_dellorso: "Torre dell'Orso",
@@ -138,7 +171,7 @@ const translations = {
 
         // Hero Section
         hero_title: "An oasis of peace and tranquility in the heart of Salento",
-        hero_subtitle: "Immerse yourself in tradition and comfort for an unforgettable experience",
+        hero_subtitle: "Immerse yourself in tradition and comfort for an unforgettable experience. Located in the heart of Uggiano la Chiesa, just a few kilometers from the sea, it's the perfect refuge to enjoy your vacation in beautiful Salento.",
         hero_btn_rooms: "Discover Rooms",
         hero_btn_contact: "Contact Us",
 
@@ -169,6 +202,7 @@ const translations = {
 
         // Services Section
         services_title: "Services & Comfort",
+        services_subtitle: "Main services and highlights of the property",
         service_ac_title: "Air Conditioning",
         service_ac_desc: "Every apartment is equipped with air conditioning",
         service_wifi_desc: "Free and fast internet connection",
@@ -180,22 +214,34 @@ const translations = {
         service_parking_desc: "Parking space available",
         service_linen_title: "Linens",
         service_linen_desc: "Clean sheets and towels included",
+        service_wifi_title: "Wi‑Fi",
 
         // Area Map Section
         area_title: "Discover the Area",
         area_subtitle: "Services and points of interest nearby",
+        poi_title: "Points of Interest",
         filter_all: "All",
+        filter_nightlife: "Nightlife",
+        filter_beaches: "Beaches",
+        filter_excursions: "Excursions",
+        filter_services: "Services",
         filter_restaurants: "Restaurants",
         filter_supermarkets: "Supermarkets",
         filter_pharmacy: "Pharmacies",
         filter_attractions: "Attractions",
+        nightlife_title: "🍹 Local Nightlife",
+        attractions_title: "🏛️ Places to Visit",
 
         // Beach Map Section
         beach_title: "Recommended Beaches",
+        beaches_map_title: "Salento Beaches Map",
         beach_subtitle: "Find the perfect beach based on wind conditions",
         wind_direction: "Wind direction:",
         wind_speed: "Speed:",
         beach_recommended: "🏖️ Recommended Beach",
+
+        // Review
+        review_subtext: "Your review helps us improve!",
 
         // Contact Section
         contact_title: "Contact Us",
@@ -265,7 +311,7 @@ const translations = {
 
         // Hero Section
         hero_title: "Un oasis de paz y tranquilidad en el corazón de Salento",
-        hero_subtitle: "Sumérgete en la tradición y el confort para una experiencia inolvidable",
+        hero_subtitle: "Sumérgete en la tradición y el confort para una experiencia inolvidable. En el corazón de Uggiano la Chiesa, a pocos kilómetros del mar, es el refugio ideal para disfrutar de tus vacaciones en el maravilloso Salento.",
         hero_btn_rooms: "Descubre las Habitaciones",
         hero_btn_contact: "Contáctanos",
 
@@ -307,6 +353,7 @@ const translations = {
         service_parking_desc: "Plaza de aparcamiento disponible",
         service_linen_title: "Ropa de cama",
         service_linen_desc: "Sábanas y toallas limpias incluidas",
+        service_wifi_title: "Wi‑Fi",
 
         // Contact Section
         contact_title: "Contáctanos",
@@ -318,6 +365,21 @@ const translations = {
         footer_text: "Tu refugio en el corazón de Salento",
         footer_quick_links: "Enlaces Rápidos",
         footer_rights: "Todos los derechos reservados.",
+
+        // Area Map Section
+        area_title: "Información del Área",
+        area_subtitle: "Servicios y puntos de interés cercanos",
+        filter_all: "Todos",
+        filter_nightlife: "Vida Nocturna",
+        filter_beaches: "Playas",
+        filter_excursions: "Excursiones",
+        filter_services: "Servicios",
+        filter_restaurants: "Restaurantes",
+        filter_supermarkets: "Supermercados",
+        filter_pharmacy: "Farmacias",
+        filter_attractions: "Atracciones",
+        nightlife_title: "🍹 Vida Nocturna Local",
+        attractions_title: "🏛️ Lugares para Visitar",
 
         // Guest Area
         guest_login_title: "Área Reservada para Huéspedes",
@@ -349,7 +411,7 @@ const translations = {
 
         // Hero Section
         hero_title: "Eine Oase der Ruhe und Gelassenheit im Herzen des Salento",
-        hero_subtitle: "Tauchen Sie ein in Tradition und Komfort für ein unvergessliches Erlebnis",
+        hero_subtitle: "Tauchen Sie ein in Tradition und Komfort für ein unvergessliches Erlebnis. Im Herzen von Uggiano la Chiesa, nur wenige Kilometer vom Meer entfernt, ist es der ideale Rückzugsort, um Ihren Urlaub im wunderschönen Salento zu genießen.",
         hero_btn_rooms: "Zimmer Entdecken",
         hero_btn_contact: "Kontaktieren Sie Uns",
 
@@ -391,6 +453,7 @@ const translations = {
         service_parking_desc: "Parkplatz verfügbar",
         service_linen_title: "Bettwäsche",
         service_linen_desc: "Saubere Bettwäsche und Handtücher inklusive",
+        service_wifi_title: "Wi‑Fi",
 
         // Contact Section
         contact_title: "Kontaktieren Sie Uns",
@@ -402,6 +465,21 @@ const translations = {
         footer_text: "Ihr Rückzugsort im Herzen des Salento",
         footer_quick_links: "Schnellzugriff",
         footer_rights: "Alle Rechte vorbehalten.",
+
+        // Area Map Section
+        area_title: "Entdecken Sie die Umgebung",
+        area_subtitle: "Dienstleistungen und Sehenswürdigkeiten in der Nähe",
+        filter_all: "Alle",
+        filter_nightlife: "Nachtleben",
+        filter_beaches: "Strände",
+        filter_excursions: "Ausflüge",
+        filter_services: "Dienstleistungen",
+        filter_restaurants: "Restaurants",
+        filter_supermarkets: "Supermärkte",
+        filter_pharmacy: "Apotheken",
+        filter_attractions: "Sehenswürdigkeiten",
+        nightlife_title: "🍹 Lokales Nachtleben",
+        attractions_title: "🏛️ Orte zu Besuchen",
 
         // Guest Area
         guest_login_title: "Reservierter Gästebereich",

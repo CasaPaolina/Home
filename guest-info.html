@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="css/guest-page.css">
 </head>
 <body class="guest-page">
+    <script>
+        // Protect guest area: redirect to homepage if not authenticated
+        if (localStorage.getItem('guestLoggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
     <!-- Header -->
     <header class="guest-header">
         <div class="container">
@@ -33,61 +39,8 @@
         </div>
     </header>
 
-    <!-- Weather & Beach Recommendations -->
-    <section class="weather-beaches">
-        <div class="container">
-            <h2 data-translate="weather_beaches_title">Previsioni Vento & Spiagge Consigliate</h2>
-
-            <!-- Current Date Display -->
-            <div style="text-align: center; margin-bottom: 30px; padding: 15px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 15px;">
-                <h3 id="current-date-display" style="font-size: 1.5rem; color: var(--dark-color); margin: 0;">
-                    <!-- Will be filled by JavaScript -->
-                </h3>
-            </div>
-
-            <!-- Weather Timeline -->
-            <div class="weather-timeline">
-                <div class="weather-time-slot">
-                    <h3 data-translate="morning">Mattina (9:00-12:00)</h3>
-                    <div class="wind-info">
-                        <div class="wind-arrow" id="wind-morning">🧭</div>
-                        <div class="wind-details">
-                            <p><span data-translate="direction">Direzione:</span> <span id="wind-dir-morning">--</span></p>
-                            <p><span data-translate="speed">Velocità:</span> <span id="wind-speed-morning">--</span> km/h</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="weather-time-slot">
-                    <h3 data-translate="noon">Mezzogiorno (12:00-15:00)</h3>
-                    <div class="wind-info">
-                        <div class="wind-arrow" id="wind-noon">🧭</div>
-                        <div class="wind-details">
-                            <p><span data-translate="direction">Direzione:</span> <span id="wind-dir-noon">--</span></p>
-                            <p><span data-translate="speed">Velocità:</span> <span id="wind-speed-noon">--</span> km/h</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="weather-time-slot">
-                    <h3 data-translate="afternoon">Pomeriggio (15:00-18:00)</h3>
-                    <div class="wind-info">
-                        <div class="wind-arrow" id="wind-afternoon">🧭</div>
-                        <div class="wind-details">
-                            <p><span data-translate="direction">Direzione:</span> <span id="wind-dir-afternoon">--</span></p>
-                            <p><span data-translate="speed">Velocità:</span> <span id="wind-speed-afternoon">--</span> km/h</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Beach Recommendations -->
-            <div class="beach-recommendations">
-                <h3 data-translate="top_beaches">🏖️ Top 3 Spiagge Consigliate Oggi</h3>
-                <div class="beaches-grid" id="recommended-beaches">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Weather & Beach Recommendations moved below Essential Info & House Rules -->
+    <!-- See later in the document -->
 
     <!-- Essential Info -->
     <section class="essential-info">
@@ -149,26 +102,26 @@
                     </svg>
                     <h3 data-translate="waste">Raccolta Differenziata</h3>
                     <div style="background: #f0f9ff; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <p style="margin: 5px 0;"><strong>♻️ Plastica e Metalli:</strong> Martedì e Venerdì</p>
-                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Bottiglie, flaconi, vaschette, lattine, barattoli metallici</p>
+                        <p style="margin: 5px 0;"><strong data-translate="waste_plastic_title">♻️ Plastica e Metalli:</strong> <span data-translate="waste_plastic_days">Martedì e Venerdì</span></p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;" data-translate="waste_plastic_desc">Bottiglie, flaconi, vaschette, lattine, barattoli metallici</p>
                     </div>
                     <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <p style="margin: 5px 0;"><strong>📄 Carta e Cartone:</strong> Giovedì</p>
-                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Giornali, riviste, scatole (appiattire)</p>
+                        <p style="margin: 5px 0;"><strong data-translate="waste_paper_title">📄 Carta e Cartone:</strong> <span data-translate="waste_paper_days">Giovedì</span></p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;" data-translate="waste_paper_desc">Giornali, riviste, scatole (appiattire)</p>
                     </div>
                     <div style="background: #fefce8; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <p style="margin: 5px 0;"><strong>🗑️ Indifferenziato:</strong> Lunedì, Mercoledì, Sabato</p>
-                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Tutto ciò che non è riciclabile</p>
+                        <p style="margin: 5px 0;"><strong data-translate="waste_indiff_title">🗑️ Indifferenziato:</strong> <span data-translate="waste_indiff_days">Lunedì, Mercoledì, Sabato</span></p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;" data-translate="waste_indiff_desc">Tutto ciò che non è riciclabile</p>
                     </div>
                     <div style="background: #fef2f2; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <p style="margin: 5px 0;"><strong>🍾 Vetro:</strong> Mercoledì</p>
-                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Bottiglie e vasetti di vetro (senza tappi)</p>
+                        <p style="margin: 5px 0;"><strong data-translate="waste_glass_title">🍾 Vetro:</strong> <span data-translate="waste_glass_days">Mercoledì</span></p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;" data-translate="waste_glass_desc">Bottiglie e vasetti di vetro (senza tappi)</p>
                     </div>
                     <div style="background: #f5f3ff; padding: 15px; border-radius: 10px; margin: 10px 0;">
-                        <p style="margin: 5px 0;"><strong>🥬 Organico:</strong> Tutti i giorni</p>
-                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;">Scarti alimentari, utilizzare sacchetti compostabili</p>
+                        <p style="margin: 5px 0;"><strong data-translate="waste_organic_title">🥬 Organico:</strong> <span data-translate="waste_organic_days">Tutti i giorni</span></p>
+                        <p style="font-size: 0.85rem; color: #666; margin: 5px 0 5px 25px;" data-translate="waste_organic_desc">Scarti alimentari, utilizzare sacchetti compostabili</p>
                     </div>
-                    <p style="margin-top: 15px; font-size: 0.9rem; font-style: italic;">⏰ Esporre i rifiuti la sera prima del giorno di raccolta</p>
+                    <p style="margin-top: 15px; font-size: 0.9rem; font-style: italic;" data-translate="waste_note_expose">⏰ Esporre i rifiuti la sera prima del giorno di raccolta</p>
                 </div>
 
                 <!-- Security -->
@@ -177,6 +130,7 @@
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                     <h3 data-translate="security">Sicurezza</h3>
+                    <p><strong data-translate="area_monitored">📹 Area Videosorvegliata</strong></p>
                     <p data-translate="lock_door">Chiudi sempre la porta a chiave</p>
                     <p data-translate="valuables">Custodisci oggetti di valore</p>
                     <p data-translate="emergency_number"><strong>Emergenze:</strong> 112</p>
@@ -219,121 +173,91 @@
         </div>
     </section>
 
-    <!-- Points of Interest Map -->
-    <section class="poi-map-section">
+    <!-- Weather & Beach Recommendations (moved here after info & rules) -->
+    <section class="weather-beaches">
         <div class="container">
-            <h2 data-translate="poi_title">Punti di Interesse</h2>
+            <h2 data-translate="weather_beaches_title">Previsioni Vento & Spiagge Consigliate</h2>
 
-            <!-- Boat Excursion Highlight -->
-            <div class="excursion-highlight">
-                <div class="excursion-content">
-                    <div class="excursion-text">
-                        <h3>🚤 Escursione in Gommone</h3>
-                        <p><strong>Partenza:</strong> Porto Badisco</p>
-                        <p><strong>Servizio:</strong> Foto ricordo incluse</p>
-                        <p>Scopri le meravigliose grotte marine e le calette nascoste della costa adriatica del Salento con un'emozionante escursione in gommone.</p>
-                        <a href="https://wa.me/393208086738?text=Vorrei%20informazioni%20sull'escursione%20in%20gommone" target="_blank" class="btn btn-primary">
-                            Prenota Escursione
-                        </a>
+            <!-- Current Date Display -->
+            <div style="text-align: center; margin-bottom: 30px; padding: 15px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-radius: 15px;">
+                <h3 id="current-date-display" style="font-size: 1.5rem; color: var(--dark-color); margin: 0;">
+                    <!-- Will be filled by JavaScript -->
+                </h3>
+            </div>
+
+            <!-- Weather Timeline -->
+            <div class="weather-timeline">
+                <div class="weather-time-slot">
+                    <h3 data-translate="morning">Mattina (9:00-12:00)</h3>
+                    <div class="wind-info">
+                        <div class="wind-arrow" id="wind-morning">🧭</div>
+                        <div class="wind-details">
+                            <p><span data-translate="direction">Direzione:</span> <span id="wind-dir-morning">--</span></p>
+                            <p><span data-translate="speed">Velocità:</span> <span id="wind-speed-morning">--</span> km/h</p>
+                        </div>
                     </div>
-                    <div class="excursion-image">
-                        <img src="images/porto-badisco.jpg" alt="Porto Badisco" style="width: 100%; height: 250px; object-fit: cover; border-radius: 15px;" onerror="this.style.display='none'">
+                </div>
+                <div class="weather-time-slot">
+                    <h3 data-translate="noon">Mezzogiorno (12:00-15:00)</h3>
+                    <div class="wind-info">
+                        <div class="wind-arrow" id="wind-noon">🧭</div>
+                        <div class="wind-details">
+                            <p><span data-translate="direction">Direzione:</span> <span id="wind-dir-noon">--</span></p>
+                            <p><span data-translate="speed">Velocità:</span> <span id="wind-speed-noon">--</span> km/h</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="weather-time-slot">
+                    <h3 data-translate="afternoon">Pomeriggio (15:00-18:00)</h3>
+                    <div class="wind-info">
+                        <div class="wind-arrow" id="wind-afternoon">🧭</div>
+                        <div class="wind-details">
+                            <p><span data-translate="direction">Direzione:</span> <span id="wind-dir-afternoon">--</span></p>
+                            <p><span data-translate="speed">Velocità:</span> <span id="wind-speed-afternoon">--</span> km/h</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="poi-filters">
-                <button class="poi-filter-btn active" data-category="all" data-translate="filter_all">Tutti</button>
-                <button class="poi-filter-btn" data-category="nightlife" data-translate="filter_nightlife">Movida</button>
-                <button class="poi-filter-btn" data-category="attractions" data-translate="filter_attractions">Luoghi da Visitare</button>
-                <button class="poi-filter-btn" data-category="beaches" data-translate="filter_beaches">Spiagge</button>
-                <button class="poi-filter-btn" data-category="excursions" data-translate="filter_excursions">Escursioni</button>
-                <button class="poi-filter-btn" data-category="services" data-translate="filter_services">Servizi</button>
+            <!-- Beach Recommendations -->
+            <div class="beach-recommendations">
+                <h3 data-translate="top_beaches">🏖️ Top 3 Spiagge Consigliate Oggi</h3>
+                <div class="beaches-grid" id="recommended-beaches">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Beach Map -->
+                <div style="margin-top: 40px;">
+                    <h4 data-translate="beaches_map_title" style="text-align: center; color: var(--dark-color); margin-bottom: 20px; font-size: 1.3rem;">Mappa Spiagge del Salento</h4>
+                    <div id="beaches-map" class="map-container"></div>
+                </div>
             </div>
+        </div>
+    </section>
 
-            <div id="poi-map" class="map-container"></div>
-
-            <!-- POI Categories -->
-            <div class="poi-categories">
-                <!-- Movida -->
-                <div class="poi-category" id="cat-nightlife">
-                    <h3 data-translate="nightlife_title">🍹 Movida Locale</h3>
-                    <div class="poi-list">
-                        <div class="poi-item">
-                            <h4>Avamposto</h4>
-                            <p>Via Dante De Blasi, Uggiano La Chiesa</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Skafe al Casotto</h4>
-                            <p>Via Bastione Pelasgi, 12, Otranto</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Spinnaker</h4>
-                            <p>Via Filippo Turati, 3, Torre dell'Orso</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>La Casaccia</h4>
-                            <p>Otranto</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Blu Bay</h4>
-                            <p>Via Sant'Antonio, Castro</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Guendalina</h4>
-                            <p>SP259, Santa Cesarea Terme</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Malé</h4>
-                            <p>Via Pola, 40, Santa Cesarea Terme</p>
-                        </div>
-                    </div>
+    <!-- Excursions (guest-only) -->
+    <section class="excursions">
+        <div class="container">
+            <div class="excursion-card">
+                <h3 data-translate="excursions_title">🚤 Escursione in Gommone</h3>
+                <p><strong data-translate="excursions_departure">Partenza:</strong> <span data-translate="excursions_port">Porto Badisco</span></p>
+                <p><strong data-translate="excursions_service">Servizio:</strong> <span data-translate="excursions_service_desc">Foto ricordo incluse</span></p>
+                <p data-translate="excursions_desc">Scopri le meravigliose grotte marine e le calette nascoste della costa adriatica del Salento con un'emozionante escursione in gommone.</p>
+                <div class="excursion-actions">
+                    <a class="btn btn-primary btn-cta" href="https://wa.me/393208086738" target="_blank" data-translate="book_excursion_btn">Prenota Escursione</a>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Attractions -->
-                <div class="poi-category" id="cat-attractions">
-                    <h3 data-translate="attractions_title">🏛️ Luoghi da Visitare</h3>
-                    <div class="poi-list">
-                        <div class="poi-item">
-                            <h4>Lecce</h4>
-                            <p data-translate="lecce_desc">Città barocca con architettura storica</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Gallipoli</h4>
-                            <p data-translate="gallipoli_desc">Città costiera sul Mar Ionio</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Santa Maria di Leuca</h4>
-                            <p data-translate="leuca_desc">Punta estrema del Salento</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Otranto</h4>
-                            <p data-translate="otranto_desc">Città storica sul mare Adriatico</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Cava di Bauxite</h4>
-                            <p data-translate="bauxite_desc">Lago verde smeraldo - 15km</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Grotta Zinzulusa</h4>
-                            <p data-translate="zinzulusa_desc">Grotta marina spettacolare</p>
-                        </div>
-                        <div class="poi-item">
-                            <h4>Punta Palascia</h4>
-                            <p data-translate="palascia_desc">Punto più a est d'Italia</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reviews -->
-                <div class="review-section">
-                    <h3 data-translate="leave_review">✍️ Lascia una Recensione su Google</h3>
-                    <p style="margin-bottom: 20px; font-size: 1.1rem;">La tua recensione ci aiuta a migliorare!</p>
-                    <div class="review-links">
-                        <a href="https://g.page/r/YOUR_GOOGLE_PLACE_ID/review" target="_blank" class="review-btn" style="font-size: 1.2rem; padding: 15px 40px;">
-                            ⭐ Lascia una Recensione su Google
-                        </a>
-                    </div>
+    <!-- Reviews -->
+    <section class="reviews">
+        <div class="container">
+            <div class="review-section">
+                <h3 data-translate="leave_review">✍️ Lascia una Recensione su Google</h3>
+                <p class="review-subtext" data-translate="review_subtext">La tua recensione ci aiuta a migliorare!</p>
+                <div class="review-links">
+                    <a href="https://g.page/r/YOUR_GOOGLE_PLACE_ID/review" target="_blank" class="review-btn" data-translate="leave_review_cta">⭐ Lascia una Recensione su Google</a>
                 </div>
             </div>
         </div>

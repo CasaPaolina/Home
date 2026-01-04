@@ -105,6 +105,30 @@ const beaches = [
     }
 ];
 
+// Points of Interest used on the main POI map (kept in sync with guest page)
+const pointsOfInterest = [
+    { name: "Avamposto", address: "Via Dante De Blasi, Uggiano La Chiesa", lat: 40.0975, lng: 18.3920, category: "nightlife" },
+    { name: "Skafe al Casotto", address: "Via Bastione Pelasgi, 12, Otranto", lat: 40.1436, lng: 18.4916, category: "nightlife" },
+    { name: "Spinnaker", address: "Via Filippo Turati, 3, Torre dell'Orso", lat: 40.2667, lng: 18.4167, category: "nightlife" },
+    { name: "La Casaccia", address: "Otranto", lat: 40.1430, lng: 18.4900, category: "nightlife" },
+    { name: "Blu Bay", address: "Via Sant'Antonio, Castro", lat: 40.0167, lng: 18.4300, category: "nightlife" },
+
+    { name: "Lecce", address: "Città barocca", lat: 40.3515, lng: 18.1750, category: "attractions", description: "Città barocca con architettura storica" },
+    { name: "Gallipoli", address: "Città costiera", lat: 40.0556, lng: 17.9922, category: "attractions", description: "Città costiera sul Mar Ionio" },
+    { name: "Santa Maria di Leuca", address: "Punta estrema", lat: 39.7972, lng: 18.3611, category: "attractions", description: "Punta estrema del Salento" },
+    { name: "Otranto", address: "Città storica", lat: 40.1436, lng: 18.4908, category: "attractions", description: "Città storica sul mare Adriatico" },
+    { name: "Cava di Bauxite", address: "Otranto", lat: 40.1100, lng: 18.4700, category: "attractions", description: "Lago verde smeraldo - 15km" },
+    { name: "Grotta Zinzulusa", address: "Castro", lat: 40.0083, lng: 18.4250, category: "attractions", description: "Grotta marina spettacolare" },
+    { name: "Punta Palascia", address: "Otranto", lat: 40.1083, lng: 18.5194, category: "attractions", description: "Punto più a est d'Italia" },
+
+
+
+    // Services
+    { name: "Supermercato Conad", address: "Uggiano la Chiesa", lat: 40.0970, lng: 18.3915, category: "services" },
+    { name: "Farmacia", address: "Uggiano la Chiesa", lat: 40.0968, lng: 18.3910, category: "services" },
+    { name: "Lavanderia Self-Service", address: "Via Roma, Uggiano la Chiesa", lat: 40.0965, lng: 18.3905, category: "services" }
+];
+
 // Custom icons for map markers
 const createCustomIcon = (color) => {
     return L.divIcon({
@@ -537,19 +561,31 @@ function openLightbox(images, startIndex) {
 // Guest area functionality
 function initGuestArea() {
     const guestBtn = document.getElementById('guest-area-btn');
-    if (!guestBtn) return;
+    const guestLoginBtn = document.getElementById('guest-login-btn');
+    // If neither button exists, nothing to do
+    if (!guestBtn && !guestLoginBtn) return;
 
-    guestBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+    if (guestBtn) {
+        guestBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Require password: show login modal if not authenticated
+            if (localStorage.getItem('guestLoggedIn') === 'true') {
+                window.location.href = 'guest-info.html';
+            } else {
+                showGuestLogin();
+            }
+        });
+    }
 
-        // Check if already logged in
-        if (localStorage.getItem('guestLoggedIn')) {
-            window.location.href = 'guest-info.html';
-        } else {
+    // Extra visible login trigger (explicit Accedi button)
+    if (guestLoginBtn) {
+        guestLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             showGuestLogin();
-        }
-    });
-}
+        });
+    }
+
+}  
 
 function showGuestLogin() {
     const modal = document.createElement('div');
@@ -572,6 +608,15 @@ function showGuestLogin() {
 
     const form = modal.querySelector('#guest-login-form');
     const passwordInput = modal.querySelector('#guest-password');
+    const errorEl = document.createElement('div');
+    errorEl.id = 'guest-login-error';
+    errorEl.style.color = 'red';
+    errorEl.style.minHeight = '1.2em';
+    errorEl.style.marginTop = '6px';
+    modal.querySelector('.guest-modal-content').appendChild(errorEl);
+
+    // Focus on password input for accessibility
+    passwordInput.focus();
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -587,6 +632,7 @@ function showGuestLogin() {
             passwordInput.style.borderColor = 'red';
             passwordInput.value = '';
             passwordInput.placeholder = currentLang === 'it' ? 'Password errata, riprova' : 'Wrong password, try again';
+            errorEl.textContent = currentLang === 'it' ? 'Password errata, riprova' : 'Wrong password, try again';
         }
     });
 
@@ -830,6 +876,105 @@ function showAvailabilityForm(roomName) {
     });
 }
 
+// Initialize POI Map for main page
+function initMainPOIMap() {
+    const mapElement = document.getElementById('main-poi-map');
+    if (!mapElement) return;
+
+    // Create map centered on Casa Paolina
+    const map = L.map('main-poi-map').setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add Casa Paolina marker
+    const homeIcon = L.divIcon({
+        html: '🏠',
+        className: 'custom-marker',
+        iconSize: [30, 30]
+    });
+
+    L.marker([CASA_PAOLINA.lat, CASA_PAOLINA.lng], { icon: homeIcon })
+        .bindPopup('<b>Casa Paolina</b><br>Via Dante De Blasi, 15')
+        .addTo(map);
+
+    // Category icons (include those used on guest page)
+    const categoryIcons = {
+        nightlife: '🍹',
+        attractions: '🏛️',
+        beaches: '🏖️',
+        excursions: '🥾',
+        services: '🛒',
+        restaurants: '🍴',
+        supermarkets: '🛒',
+        pharmacy: '💊'
+    };
+
+    // Add all POI markers to category layer groups
+    const markers = {};
+    pointsOfInterest.forEach(poi => {
+        const icon = L.divIcon({
+            html: categoryIcons[poi.category] || '📍',
+            className: 'custom-marker',
+            iconSize: [25, 25]
+        });
+
+        const popupContent = `
+            <div style="min-width: 180px;">
+                <h4 style="margin: 0 0 8px 0;">${poi.name}</h4>
+                <p style="margin: 4px 0; font-size: 0.9rem;">${poi.address || poi.description || ''}</p>
+            </div>
+        `;
+
+        const marker = L.marker([poi.lat, poi.lng], { icon })
+            .bindPopup(popupContent);
+
+        if (!markers[poi.category]) {
+            markers[poi.category] = L.layerGroup().addTo(map);
+        }
+        marker.addTo(markers[poi.category]);
+    });
+
+    // Wire up the filter buttons to show/hide layer groups and toggle category lists
+    const filterButtons = document.querySelectorAll('.poi-filter-btn');
+    const categoryElements = document.querySelectorAll('.poi-category');
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const category = btn.getAttribute('data-category');
+
+            // Update active button
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Show/hide marker layers
+            if (category === 'all') {
+                Object.values(markers).forEach(layer => map.addLayer(layer));
+            } else {
+                Object.keys(markers).forEach(cat => {
+                    if (cat === category) {
+                        map.addLayer(markers[cat]);
+                    } else {
+                        map.removeLayer(markers[cat]);
+                    }
+                });
+            }
+
+            // Toggle POI category list visibility
+            categoryElements.forEach(catEl => {
+                const catId = catEl.id.replace('cat-', '');
+                if (category === 'all' || category === catId) {
+                    catEl.style.display = 'block';
+                } else {
+                    catEl.style.display = 'none';
+                }
+            });
+        });
+    });
+}
+
 // Update initialization
 const originalInit = document.addEventListener;
 document.addEventListener('DOMContentLoaded', () => {
@@ -841,9 +986,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initGuestArea();
     initAvailabilityForms();
 
-    // Initialize maps with a slight delay to ensure containers are ready
+    // Initialize POI map with a slight delay to ensure container is ready
     setTimeout(() => {
-        initAreaMap();
-        initBeachMap();
+        initMainPOIMap();
     }, 100);
 });

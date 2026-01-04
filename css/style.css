@@ -127,10 +127,25 @@ a {
     transition: all 0.3s ease;
 }
 
-.lang-btn:hover,
+.lang-btn {
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lang-btn:hover {
+    background: var(--white);
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .lang-btn.active {
     background: var(--primary-color);
-    color: var(--white);
+    border-color: var(--primary-color);
+    transform: scale(1.15);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 .hamburger {
@@ -333,6 +348,76 @@ section {
 
 .feature-icon {
     font-size: 2.5rem;
+}
+
+/* Unified features styles */
+.services-features {
+    padding: 60px 0;
+    background: var(--light-color);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 28px;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.feature-card h3 {
+    margin-top: 12px;
+    font-size: 1.05rem;
+    color: var(--dark-color);
+}
+
+.feature-card p {
+    margin-top: 8px;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    /* removed background to show only the icon design */
+    background: transparent;
+    border-radius: 0;
+    color: var(--primary-color);
+    font-size: 1.4rem;
+}
+
+/* Ensure SVGs use stroke-only style and scale nicely */
+.feature-icon[aria-hidden="true"] {
+    width: 44px;
+    height: 44px;
+}
+
+.feature-icon {
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    vector-effect: non-scaling-stroke;
+} 
+
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Rooms Section */
@@ -915,6 +1000,13 @@ section {
 
 .leaflet-popup-content a:hover {
     text-decoration: underline;
+}
+
+/* Custom map markers */
+.custom-marker {
+    font-size: 1.5rem;
+    text-align: center;
+    line-height: 30px;
 }
 
 /* SVG Icons for features */

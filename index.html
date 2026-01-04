@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.3.8/dist/photoswipe.css" />
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/guest-page.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -22,7 +23,7 @@
                 <li><a href="#rooms" data-translate="nav_rooms">Camere</a></li>
                 <li><a href="#services" data-translate="nav_services">Servizi</a></li>
                 <li><a href="#contact" data-translate="nav_contact">Contatti</a></li>
-                <li><a href="#" id="guest-area-btn" data-translate="nav_guest_area">Area Ospiti</a></li>
+                <li><a href="#" id="guest-login-btn" data-translate="nav_login">Accedi</a></li>
             </ul>
             <div class="language-switcher">
                 <button class="lang-btn active" data-lang="it" title="Italiano">🇮🇹</button>
@@ -42,8 +43,7 @@
     <section id="home" class="hero">
         <div class="hero-content">
             <h1 data-translate="hero_title">Un'oasi di pace e tranquillità nel cuore del Salento</h1>
-            <p data-translate="hero_subtitle">Immergiti nella tradizione e nel comfort per un'esperienza indimenticabile</p>
-            <div class="hero-buttons">
+            <p data-translate="hero_subtitle">Immergiti nella tradizione e nel comfort per un'esperienza indimenticabile. Il cuore di Uggiano la Chiesa, a pochi chilometri dal mare, è il rifugio ideale per godersi la tua vacanza nel meraviglioso Salento.</p>
                 <a href="#rooms" class="btn btn-primary" data-translate="hero_btn_rooms">Scopri le Camere</a>
                 <a href="https://wa.me/393208086738" class="btn btn-secondary" target="_blank">
                     <span data-translate="hero_btn_contact">Contattaci</span>
@@ -52,59 +52,6 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="section-header">
-                <h2 data-translate="about_title">Benvenuti a Casa Paolina</h2>
-                <div class="divider"></div>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <p data-translate="about_text">Un'oasi di pace e tranquillità immersa nel cuore di Uggiano la Chiesa, dove tradizione e comfort si fondono per offrire un'esperienza indimenticabile. A pochi chilometri dal mare, è il rifugio ideale per godersi la tua vacanza nel meraviglioso Salento.</p>
-                    <div class="about-features">
-                        <div class="feature-item">
-                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M2 16.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
-                                <path d="M2 12.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
-                                <path d="M2 20.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
-                                <circle cx="19" cy="5" r="2"/>
-                                <path d="M19 7v3"/>
-                            </svg>
-                            <span data-translate="about_feature1">A pochi km dal mare</span>
-                        </div>
-                        <div class="feature-item">
-                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                <polyline points="9 22 9 12 15 12 15 22"/>
-                            </svg>
-                            <span data-translate="about_feature2">Atmosfera familiare</span>
-                        </div>
-                        <div class="feature-item">
-                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 22v-8"/>
-                                <path d="M12 8c3 0 6-3 6-6-3 0-6 3-6 6z"/>
-                                <path d="M12 8c-3 0-6-3-6-6 3 0 6 3 6 6z"/>
-                                <path d="M6 14c2 0 4-2 4-4-2 0-4 2-4 4z"/>
-                                <path d="M18 14c-2 0-4-2-4-4 2 0 4 2 4 4z"/>
-                                <circle cx="12" cy="20" r="2"/>
-                            </svg>
-                            <span data-translate="about_feature3">Giardino privato</span>
-                        </div>
-                        <div class="feature-item">
-                            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
-                                <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
-                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-                                <line x1="12" y1="20" x2="12.01" y2="20"/>
-                            </svg>
-                            <span data-translate="about_feature4">Wi-Fi gratuito</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Rooms Section -->
     <section id="rooms" class="rooms">
@@ -227,44 +174,215 @@
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="services">
+    <!-- Services & Features (Unified) -->
+    <section id="services-features" class="services-features">
         <div class="container">
             <div class="section-header">
                 <h2 data-translate="services_title">Servizi e Comfort</h2>
                 <div class="divider"></div>
+                <p data-translate="services_subtitle">Servizi principali e punti di forza della struttura</p>
             </div>
-            <div class="services-grid">
-                <div class="service-card">
-                    <span class="service-icon">❄️</span>
+            <div class="features-grid">
+                <!-- From About: distance, family, garden, wifi -->
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M2 16.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
+                        <path d="M2 12.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
+                        <path d="M2 20.5c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/>
+                        <circle cx="19" cy="5" r="2"/>
+                        <path d="M19 7v3"/>
+                    </svg>
+                    <h3 data-translate="about_feature1">A pochi km dal mare</h3>
+                </article>
+
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <h3 data-translate="about_feature2">Atmosfera familiare</h3>
+                </article>
+
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M12 22v-8"/>
+                        <path d="M12 8c3 0 6-3 6-6-3 0-6 3-6 6z"/>
+                        <path d="M6 14c2 0 4-2 4-4-2 0-4 2-4 4z"/>
+                        <circle cx="12" cy="20" r="2"/>
+                    </svg>
+                    <h3 data-translate="about_feature3">Giardino privato</h3>
+                </article>
+
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                        <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                        <line x1="12" y1="20" x2="12.01" y2="20"/>
+                    </svg>
+                    <h3 data-translate="service_wifi_title">Wi‑Fi</h3>
+                    <p data-translate="service_wifi_desc">Connessione internet gratuita e veloce</p>
+                </article>
+
+                <!-- Services: AC, Kitchen, Parking, Linens -->
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" fill="none">
+                            <line x1="12" y1="2" x2="12" y2="22" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path d="M6 6l6 6" />
+                            <path d="M18 6l-6 6" />
+                            <path d="M6 18l6-6" />
+                            <path d="M18 18l-6-6" />
+                        </g>
+                    </svg>
                     <h3 data-translate="service_ac_title">Aria Condizionata</h3>
                     <p data-translate="service_ac_desc">Ogni appartamento è dotato di aria condizionata</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-icon">📶</span>
-                    <h3>Wi-Fi</h3>
-                    <p data-translate="service_wifi_desc">Connessione internet gratuita e veloce</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-icon">🍳</span>
+                </article>
+
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" fill="none">
+                            <rect x="3" y="6" width="18" height="12" rx="2" />
+                            <!-- four burners -->
+                            <circle cx="8" cy="11" r="1.2" />
+                            <circle cx="12" cy="11" r="1.2" />
+                            <circle cx="8" cy="15" r="1.2" />
+                            <circle cx="12" cy="15" r="1.2" />
+                            <!-- knobs -->
+                            <circle cx="18.5" cy="9" r="0.6" />
+                            <circle cx="18.5" cy="12" r="0.6" />
+                            <circle cx="18.5" cy="15" r="0.6" />
+                        </g>
+                    </svg>
                     <h3 data-translate="service_kitchen_title">Angolo Cottura</h3>
                     <p data-translate="service_kitchen_desc">Cucina attrezzata in ogni appartamento</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-icon">🌳</span>
-                    <h3 data-translate="service_garden_title">Giardino</h3>
-                    <p data-translate="service_garden_desc">Spazio esterno per rilassarsi</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-icon">🅿️</span>
+                </article>
+
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" fill="none">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <path d="M9 7h3a2 2 0 0 1 0 4h-3v6" />
+                        </g>
+                    </svg>
                     <h3 data-translate="service_parking_title">Parcheggio</h3>
                     <p data-translate="service_parking_desc">Posto auto disponibile</p>
-                </div>
-                <div class="service-card">
-                    <span class="service-icon">🧺</span>
+                </article>
+
+                <article class="feature-card">
+                    <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" fill="none">
+                            <!-- headboard -->
+                            <rect x="2" y="5" width="20" height="4" rx="1" />
+                            <!-- mattress -->
+                            <rect x="3" y="10" width="14" height="6" rx="1.2" />
+                            <!-- legs -->
+                            <line x1="4" y1="20" x2="4" y2="18" />
+                            <line x1="14" y1="20" x2="14" y2="18" />
+                            <!-- decorative pillow line -->
+                            <path d="M6 12h6" />
+                        </g>
+                    </svg>
                     <h3 data-translate="service_linen_title">Biancheria</h3>
                     <p data-translate="service_linen_desc">Lenzuola e asciugamani puliti inclusi</p>
+                </article>
+            </div>
+        </div>
+    </section>
+    <!-- Points of Interest Map -->
+    <section class="poi-map-section">
+        <div class="container">
+            <h2 data-translate="poi_title">Punti di Interesse</h2>
+
+            <div class="poi-filters">
+                <button class="poi-filter-btn active" data-category="all" data-translate="filter_all">Tutti</button>
+                <button class="poi-filter-btn" data-category="nightlife" data-translate="filter_nightlife">Movida</button>
+                <button class="poi-filter-btn" data-category="attractions" data-translate="filter_attractions">Luoghi da Visitare</button>
+
+                <button class="poi-filter-btn" data-category="services" data-translate="filter_services">Servizi</button>
+            </div>
+
+            <div id="main-poi-map" class="map-container"></div>
+
+            <!-- POI Categories -->
+            <div class="poi-categories">
+                <!-- Movida -->
+                <div class="poi-category" id="cat-nightlife">
+                    <h3 data-translate="nightlife_title">🍹 Movida Locale</h3>
+                    <div class="poi-list">
+                        <div class="poi-item">
+                            <h4>Avamposto</h4>
+                            <p>Via Dante De Blasi, Uggiano La Chiesa</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Skafe al Casotto</h4>
+                            <p>Via Bastione Pelasgi, 12, Otranto</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Spinnaker</h4>
+                            <p>Via Filippo Turati, 3, Torre dell'Orso</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>La Casaccia</h4>
+                            <p>Otranto</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Blu Bay</h4>
+                            <p>Via Sant'Antonio, Castro</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Guendalina</h4>
+                            <p>SP259, Santa Cesarea Terme</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Malé</h4>
+                            <p>Via Pola, 40, Santa Cesarea Terme</p>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Attractions -->
+                <div class="poi-category" id="cat-attractions">
+                    <h3 data-translate="attractions_title">🏛️ Luoghi da Visitare</h3>
+                    <div class="poi-list">
+                        <div class="poi-item">
+                            <h4>Lecce</h4>
+                            <p data-translate="lecce_desc">Città barocca con architettura storica</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Gallipoli</h4>
+                            <p data-translate="gallipoli_desc">Città costiera sul Mar Ionio</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Santa Maria di Leuca</h4>
+                            <p data-translate="leuca_desc">Punta estrema del Salento</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Otranto</h4>
+                            <p data-translate="otranto_desc">Città storica sul mare Adriatico</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Cava di Bauxite</h4>
+                            <p data-translate="bauxite_desc">Lago verde smeraldo - 15km</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Grotta Zinzulusa</h4>
+                            <p data-translate="zinzulusa_desc">Grotta marina spettacolare</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Punta Palascia</h4>
+                            <p data-translate="palascia_desc">Punto più a est d'Italia</p>
+                        </div>
+                    </div>
+                </div>
+            <!-- Review Section -->
+            <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%); padding: 40px; border-radius: 15px; margin-top: 40px; text-align: center; color: var(--white);">
+                <h3 data-translate="leave_review" style="margin-bottom: 25px; font-size: 1.8rem;">✍️ Lascia una Recensione su Google</h3>
+                <p data-translate="review_subtext" style="margin-bottom: 20px; font-size: 1.1rem;">La tua recensione ci aiuta a migliorare!</p>
+                <a href="https://g.page/r/YOUR_GOOGLE_PLACE_ID/review" target="_blank" data-translate="leave_review_cta" style="display: inline-block; background: var(--white); color: var(--primary-color); padding: 15px 40px; border-radius: 25px; font-weight: 600; text-decoration: none; font-size: 1.2rem; transition: all 0.3s ease;">
+                    ⭐ Lascia una Recensione su Google
+                </a>
             </div>
         </div>
     </section>

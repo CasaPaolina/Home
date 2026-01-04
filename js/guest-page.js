@@ -18,9 +18,11 @@ const beaches = [
         sheltered: ['W', 'SW', 'NW'],
         exposed: ['E', 'NE', 'SE'],
         description: "Spiaggia sabbiosa con acque cristalline",
+        translationKey: 'beach_torre_dellorso_desc',
         distance: "15 km",
         booking: "https://www.spiagge.it/puglia/lecce/torre-dell-orso"
     },
+
     {
         name: "Torre Sant'Andrea",
         lat: 40.2833,
@@ -29,6 +31,7 @@ const beaches = [
         sheltered: ['W', 'SW', 'S'],
         exposed: ['E', 'NE', 'N'],
         description: "Faraglioni spettacolari e acque turchesi",
+        translationKey: 'beach_torre_santandrea_desc',
         distance: "18 km",
         booking: null
     },
@@ -40,6 +43,7 @@ const beaches = [
         sheltered: ['W', 'NW', 'SW'],
         exposed: ['E', 'SE', 'NE'],
         description: "Baia incontaminata circondata da pineta",
+        translationKey: 'beach_baia_dei_turchi_desc',
         distance: "12 km",
         booking: null
     },
@@ -51,6 +55,7 @@ const beaches = [
         sheltered: ['W', 'SW'],
         exposed: ['E', 'NE', 'SE'],
         description: "Lunga spiaggia tra mare e laghi",
+        translationKey: 'beach_alimini_desc',
         distance: "13 km",
         booking: "https://www.spiagge.it/puglia/lecce/alimini"
     },
@@ -62,6 +67,7 @@ const beaches = [
         sheltered: ['W', 'NW', 'N'],
         exposed: ['E', 'SE', 'S'],
         description: "Baia storica protetta",
+        translationKey: 'beach_porto_badisco_desc',
         distance: "8 km",
         booking: null
     },
@@ -73,6 +79,7 @@ const beaches = [
         sheltered: ['W', 'NW'],
         exposed: ['E', 'SE', 'S'],
         description: "Grotte marine e scogliere",
+        translationKey: 'beach_castro_desc',
         distance: "10 km",
         booking: "https://www.spiagge.it/puglia/lecce/castro"
     },
@@ -84,6 +91,7 @@ const beaches = [
         sheltered: ['W', 'NW', 'N'],
         exposed: ['E', 'SE'],
         description: "Terme naturali e mare cristallino",
+        translationKey: 'beach_santa_cesarea_desc',
         distance: "12 km",
         booking: null
     },
@@ -499,6 +507,54 @@ function displayCurrentDate() {
     dateDisplay.textContent = `${emoji} ${dateString}`;
 }
 
+// Initialize beaches map
+function initBeachesMap() {
+    const mapElement = document.getElementById('beaches-map');
+    if (!mapElement) return;
+
+    // Create map centered on Salento
+    const map = L.map('beaches-map').setView([40.15, 18.25], 10);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add Casa Paolina marker
+    const homeIcon = L.divIcon({
+        html: '🏠',
+        className: 'custom-marker',
+        iconSize: [30, 30]
+    });
+
+    L.marker([CASA_PAOLINA.lat, CASA_PAOLINA.lng], { icon: homeIcon })
+        .bindPopup('<b>Casa Paolina</b><br>Via Dante De Blasi, 15')
+        .addTo(map);
+
+    // Add beach markers
+    const beachIcon = L.divIcon({
+        html: '🏖️',
+        className: 'custom-marker',
+        iconSize: [25, 25]
+    });
+
+    beaches.forEach(beach => {
+        const popupContent = `
+            <div style="min-width: 200px;">
+                <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">${beach.name}</h4>
+                <p style="margin: 5px 0;"><strong>Tipo:</strong> ${beach.type}</p>
+                <p style="margin: 5px 0;"><strong>Distanza:</strong> ${beach.distance}</p>
+                <p style="margin: 5px 0;">${beach.description}</p>
+                ${beach.booking ? `<a href="${beach.booking}" target="_blank" style="display: inline-block; margin-top: 10px; padding: 5px 15px; background: var(--primary-color); color: white; border-radius: 5px; text-decoration: none;">Prenota</a>` : ''}
+            </div>
+        `;
+
+        L.marker([beach.lat, beach.lng], { icon: beachIcon })
+            .bindPopup(popupContent)
+            .addTo(map);
+    });
+}
+
 // Initialize everything on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Display current date
@@ -509,6 +565,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize POI map
     initPOIMap();
+
+    // Initialize beaches map
+    initBeachesMap();
 
     // Refresh weather every 30 minutes
     setInterval(fetchWeatherForecast, 30 * 60 * 1000);
