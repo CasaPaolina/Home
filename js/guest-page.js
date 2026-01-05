@@ -7,6 +7,9 @@ const CASA_PAOLINA = {
     name: "Casa Paolina"
 };
 
+// Cached guest geolocation for faster directions
+let guestLastPosition = null;
+
 // Beach data with coordinates and wind protection
 const beaches = [
     // Adriatic Coast (East)
@@ -590,6 +593,13 @@ function navigateTo(destLat, destLng, destName) {
         return;
     }
 
+    // If we already have the guest position, use it immediately
+    if (guestLastPosition && guestLastPosition.lat && guestLastPosition.lng) {
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${guestLastPosition.lat},${guestLastPosition.lng}&destination=${destLat},${destLng}&travelmode=driving`;
+        try { win.location.href = url; } catch (e) { window.location.href = url; }
+        return;
+    }
+
     const openWithOrigin = (originLat, originLng) => {
         const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
         try { win.location.href = url; } catch (e) { window.location.href = url; }
@@ -690,4 +700,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Refresh weather every 30 minutes
     setInterval(fetchWeatherForecast, 30 * 60 * 1000);
+
+    // Try to read cached guest position from sessionStorage
+    try {
+        const cached = sessionStorage.getItem('guestPosition');
+        if (cached) {
+            const obj = JSON.parse(cached);
+            if (obj && obj.lat && obj.lng) guestLastPosition = obj;
+        }
+    } catch (e) {}
+
+    // Prompt user for geolocation on entering guest area to avoid later popup blocking
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            guestLastPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            try { sessionStorage.setItem('guestPosition', JSON.stringify(guestLastPosition)); } catch (e) {}
+        }, (err) => {
+            // user denied or error - ignore silently
+        }, { timeout: 10000 });
+    }
 });
