@@ -268,14 +268,16 @@ a {
 }
 
 .btn-secondary {
-    background: transparent;
+    background: var(--primary-color);
     color: var(--white);
-    border: 2px solid var(--white);
+    border: 2px solid var(--primary-color);
 }
 
 .btn-secondary:hover {
-    background: var(--white);
-    color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 80%, black 20%);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 /* Section Styles */

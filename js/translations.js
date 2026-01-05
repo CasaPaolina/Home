@@ -107,6 +107,7 @@ const translations = {
         valuables: "Custodisci oggetti di valore",
         emergency_number: "Emergenze",
         owner: "Proprietario",
+        outdoor_lighting: "Illuminazione Esterna",
 
         // Review
         leave_review_cta: "⭐ Lascia una Recensione su Google",
@@ -116,11 +117,17 @@ const translations = {
 
         // Beach names and descriptions
         beach_torre_dellorso: "Torre dell'Orso",
-        beach_torre_santandrea: "Torre Sant'Andrea",
+        beach_torre_santandrea: "Faraglioni di Sant'Andrea",
         beach_baia_dei_turchi: "Baia dei Turchi",
         beach_alimini: "Laghi Alimini",
         beach_porto_badisco: "Porto Badisco",
         beach_castro: "Castro Marina",
+        beach_porto_miggiano: "Porto Miggiano",
+        beach_marina_serra: "Marina Serra",
+        beach_cala_dell_acquaviva: "Cala dell'Acquaviva",
+        beach_grotta_della_poesia: "Grotta della Poesia",
+        beach_grotta_verde: "Grotta Verde",
+        beach_baia_dell_orte: "Baia dell'Orte",
         beach_santa_cesarea: "Santa Cesarea Terme",
         beach_otranto: "Otranto",
 
@@ -253,6 +260,7 @@ const translations = {
         contact_address_title: "Address",
         contact_directions: "Get Directions",
         contact_phone_title: "Phone",
+        outdoor_lighting: "Outdoor lighting",
 
         // Footer
         footer_text: "Your refuge in the heart of Salento",
@@ -261,11 +269,14 @@ const translations = {
 
         // Beach names (keep Italian names)
         beach_torre_dellorso: "Torre dell'Orso",
-        beach_torre_santandrea: "Torre Sant'Andrea",
+        beach_torre_santandrea: "Faraglioni di Sant'Andrea",
         beach_baia_dei_turchi: "Baia dei Turchi",
         beach_alimini: "Alimini Lakes",
         beach_porto_badisco: "Porto Badisco",
         beach_castro: "Castro Marina",
+        beach_porto_miggiano: "Porto Miggiano",
+        beach_baia_dell_orte: "Baia dell'Orte",
+        beach_marina_serra: "Marina Serra",
         beach_santa_cesarea: "Santa Cesarea Terme",
         beach_otranto: "Otranto",
 
@@ -305,6 +316,150 @@ const translations = {
         availability_phone: "Phone",
         availability_message: "Notes (optional)",
         availability_submit: "Send Request",
+    },
+    fr: {
+        // Navigation
+        nav_home: "Accueil",
+        nav_rooms: "Chambres",
+        nav_services: "Services",
+        nav_area: "Zone",
+        nav_beaches: "Plages",
+        nav_contact: "Contact",
+        nav_guest_area: "Espace Invités",
+        nav_login: "Connexion",
+
+        // Hero Section
+        hero_title: "Une oasis de paix et de tranquillité au cœur du Salento",
+        hero_subtitle: "Plongez dans la tradition et le confort pour une expérience inoubliable. Situé au cœur d'Uggiano la Chiesa, à quelques kilomètres de la mer.",
+        hero_btn_rooms: "Découvrir les Chambres",
+        hero_btn_contact: "Contactez-nous",
+
+        // About Section
+        about_title: "Bienvenue à Casa Paolina",
+        about_text: "Une oasis de paix et de tranquillité immergée au cœur d'Uggiano la Chiesa, où tradition et confort se rencontrent pour offrir une expérience inoubliable.",
+        about_feature1: "À quelques km de la mer",
+        about_feature2: "Ambiance familiale",
+        about_feature3: "Jardin privé",
+        about_feature4: "Wi-Fi gratuit",
+
+        // Rooms Section
+        rooms_title: "Nos Chambres",
+        rooms_subtitle: "Choisissez l'appartement parfait pour vos vacances",
+        room_guests: "1-4 Personnes",
+        room_guests_2: "1-2 Personnes",
+        room_celeste_bed: "1 Lit double + 2 lits simples",
+        room_verde_bed: "1 Lit double + 2 lits simples",
+        room_suite_bed: "1 Lit double",
+        room_induction: "Plaque à induction",
+        room_gas: "Plaque à gaz",
+        room_bathroom: "Salle de bain privée",
+        room_linens: "Linge propre",
+        room_garden: "Accès au jardin",
+        room_ac: "Climatisation",
+        room_book: "Réserver",
+        room_availability: "Demander Disponibilité",
+
+        // Services Section
+        services_title: "Services & Confort",
+        services_subtitle: "Principaux services et atouts de l'établissement",
+        service_ac_title: "Climatisation",
+        service_ac_desc: "Chaque appartement est équipé de climatisation",
+        service_wifi_desc: "Connexion internet gratuite et rapide",
+        service_kitchen_title: "Kitchenette",
+        service_kitchen_desc: "Cuisine équipée dans chaque appartement",
+        service_garden_title: "Jardin",
+        service_garden_desc: "Espace extérieur pour se détendre",
+        service_parking_title: "Parking",
+        service_parking_desc: "Place de parking disponible",
+        service_linen_title: "Linge",
+        service_linen_desc: "Draps et serviettes propres inclus",
+        service_wifi_title: "Wi‑Fi",
+
+        // Area Map Section
+        area_title: "Découvrez la Région",
+        area_subtitle: "Services et points d'intérêt à proximité",
+        poi_title: "Points d'Intérêt",
+        filter_all: "Tous",
+        filter_nightlife: "Vie Nocturne",
+        filter_beaches: "Plages",
+        filter_excursions: "Excursions",
+        filter_services: "Services",
+        filter_restaurants: "Restaurants",
+        filter_supermarkets: "Supermarchés",
+        filter_pharmacy: "Pharmacies",
+        filter_attractions: "Attractions",
+        nightlife_title: "🍹 Vie Nocturne Locale",
+        attractions_title: "🏛️ Lieux à Visiter",
+
+        // Beach Map Section
+        beach_title: "Plages Recommandées",
+        beaches_map_title: "Carte des Plages du Salento",
+        beach_subtitle: "Trouvez la plage parfaite selon le vent",
+        wind_direction: "Direction du vent:",
+        wind_speed: "Vitesse:",
+        beach_recommended: "🏖️ Plage Recommandée",
+
+        // Contact Section
+        contact_title: "Contactez-nous",
+        contact_address_title: "Adresse",
+        contact_directions: "Obtenir l'itinéraire",
+        contact_phone_title: "Téléphone",
+        outdoor_lighting: "Éclairage extérieur",
+
+        // Footer
+        footer_text: "Votre refuge au cœur du Salento",
+        footer_quick_links: "Liens Rapides",
+        footer_rights: "Tous droits réservés.",
+
+        // Beach names (keep Italian names)
+        beach_torre_dellorso: "Torre dell'Orso",
+        beach_torre_santandrea: "Faraglioni di Sant'Andrea",
+        beach_baia_dei_turchi: "Baia dei Turchi",
+        beach_alimini: "Laghi Alimini",
+        beach_porto_badisco: "Porto Badisco",
+        beach_castro: "Castro Marina",
+        beach_porto_miggiano: "Porto Miggiano",
+        beach_baia_dell_orte: "Baia dell'Orte",
+        beach_marina_serra: "Marina Serra",
+        beach_santa_cesarea: "Santa Cesarea Terme",
+        beach_otranto: "Otranto",
+
+        // Wind directions
+        wind_n: "Nord",
+        wind_ne: "Nord-Est",
+        wind_e: "Est",
+        wind_se: "Sud-Est",
+        wind_s: "Sud",
+        wind_sw: "Sud-Ouest",
+        wind_w: "Ouest",
+        wind_nw: "Nord-Ouest",
+
+        // Beach recommendations
+        beach_reason_protected: "Protégée du vent actuel",
+        beach_reason_calm: "Mer calme avec ce vent",
+        beach_reason_conditions: "Conditions idéales aujourd'hui",
+
+        // Guest Area
+        guest_login_title: "Espace Réservé Invités",
+        guest_login_subtitle: "Entrez le mot de passe fourni à l'arrivée",
+        guest_password_placeholder: "Mot de passe",
+        guest_login_btn: "Connexion",
+        guest_login_help: "Vous n'avez pas reçu le mot de passe? Contactez-nous sur WhatsApp",
+        guest_login_wrong: "Mot de passe incorrect, réessayez",
+        guest_info_title: "Informations pour les Invités",
+        guest_logout: "Se Déconnecter",
+
+        // Availability Request
+        availability_title: "Demander Disponibilité",
+        availability_checkin: "Arrivée",
+        availability_checkout: "Départ",
+        availability_adults: "Adultes",
+        availability_children: "Enfants",
+        availability_name: "Nom complet",
+        availability_email: "Email",
+        availability_phone: "Téléphone",
+        availability_message: "Notes (optionnel)",
+        availability_submit: "Envoyer la demande",
     },
     es: {
         // Navigation
@@ -373,6 +528,7 @@ const translations = {
         contact_address_title: "Dirección",
         contact_directions: "Obtener Direcciones",
         contact_phone_title: "Teléfono",
+        outdoor_lighting: "Iluminación exterior",
 
         // Footer
         footer_text: "Tu refugio en el corazón de Salento",
@@ -481,6 +637,7 @@ const translations = {
         contact_address_title: "Adresse",
         contact_directions: "Wegbeschreibung",
         contact_phone_title: "Telefon",
+        outdoor_lighting: "Außenbeleuchtung",
 
         // Footer
         footer_text: "Ihr Rückzugsort im Herzen des Salento",

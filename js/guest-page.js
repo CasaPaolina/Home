@@ -2,8 +2,8 @@
 
 // Casa Paolina location - Uggiano la Chiesa
 const CASA_PAOLINA = {
-    lat: 40.09726,
-    lng: 18.39167,
+    lat: 40.102558,
+    lng: 18.446024,
     name: "Casa Paolina"
 };
 
@@ -12,8 +12,8 @@ const beaches = [
     // Adriatic Coast (East)
     {
         name: "Torre dell'Orso",
-        lat: 40.2667,
-        lng: 18.4167,
+        lat: 40.272169,
+        lng: 18.430545,
         type: "Sabbia fine",
         sheltered: ['W', 'SW', 'NW'],
         exposed: ['E', 'NE', 'SE'],
@@ -24,9 +24,9 @@ const beaches = [
     },
 
     {
-        name: "Torre Sant'Andrea",
-        lat: 40.2833,
-        lng: 18.4333,
+        name: "Faraglioni di Sant'Andrea",
+        lat: 40.256684,
+        lng: 18.444069,
         type: "Scogliera",
         sheltered: ['W', 'SW', 'S'],
         exposed: ['E', 'NE', 'N'],
@@ -37,11 +37,11 @@ const beaches = [
     },
     {
         name: "Baia dei Turchi",
-        lat: 40.1500,
-        lng: 18.4833,
+        lat: 40.193550,
+        lng: 18.463585,
         type: "Sabbia bianca",
-        sheltered: ['W', 'NW', 'SW'],
-        exposed: ['E', 'SE', 'NE'],
+        sheltered: ['E', 'SE', 'NE'],
+        exposed: ['W', 'NW', 'SW'],
         description: "Baia incontaminata circondata da pineta",
         translationKey: 'beach_baia_dei_turchi_desc',
         distance: "12 km",
@@ -49,8 +49,8 @@ const beaches = [
     },
     {
         name: "Laghi Alimini",
-        lat: 40.1833,
-        lng: 18.4667,
+        lat: 40.200025,
+        lng: 18.459818,
         type: "Sabbia dorata",
         sheltered: ['W', 'SW'],
         exposed: ['E', 'NE', 'SE'],
@@ -61,8 +61,8 @@ const beaches = [
     },
     {
         name: "Porto Badisco",
-        lat: 40.0833,
-        lng: 18.4500,
+        lat: 40.079442,
+        lng: 18.482903,
         type: "Ciottoli",
         sheltered: ['W', 'NW', 'N'],
         exposed: ['E', 'SE', 'S'],
@@ -73,8 +73,8 @@ const beaches = [
     },
     {
         name: "Castro Marina",
-        lat: 40.0167,
-        lng: 18.4333,
+        lat: 40.001464,
+        lng: 18.425111,
         type: "Scogliera",
         sheltered: ['W', 'NW'],
         exposed: ['E', 'SE', 'S'],
@@ -83,6 +83,79 @@ const beaches = [
         distance: "10 km",
         booking: "https://www.spiagge.it/puglia/lecce/castro"
     },
+    {
+        name: "Porto Miggiano",
+        lat: 40.032276,
+        lng: 18.446058,
+        type: "Scogliera",
+        sheltered: ['W', 'NW'],
+        exposed: ['E', 'SE', 'S'],
+        description: "Insenatura naturale con acque limpide",
+        translationKey: 'beach_porto_miggiano_desc',
+        distance: "10 km",
+        booking: null
+    },
+    {
+        name: "Baia dell'orte",
+        lat: 40.133054,
+        lng: 18.513057,
+        type: "Scogliera",
+        sheltered: ['W', 'NW'],
+        exposed: ['E', 'SE', 'S'],
+        description: "Insenatura naturale con acqua cristallina",
+        translationKey: 'beach_baia_dell_orte_desc',
+        distance: "5 km",
+        booking: null
+    },
+    {
+        name: "Marina Serra",
+        lat: 39.911808,
+        lng: 18.393354,
+        type: "Scogliera",
+        sheltered: ['W', 'NW'],
+        exposed: ['E', 'SE', 'S'],
+        description: "Piscina naturale con acqua cristallina",
+        translationKey: 'beach_marina_serra_desc',
+        distance: "15 km",
+        booking: null
+    },
+    {
+        name: "Cala dell'Acquaviva",
+        lat: 39.991484,
+        lng: 18.413863,
+        type: "Scogliera",
+        sheltered: ['W', 'NW'],
+        exposed: ['E', 'SE', 'S'],
+        description: "Insenatura naturale con acque limpide",
+        translationKey: 'beach_cala_dell_acquaviva_desc',
+        distance: "10 km",
+        booking: null
+    },
+    {
+        name: "Grotta della Poesia",
+        lat: 40.285822,
+        lng: 18.429564,
+        type: "Scogliera",
+        sheltered: ['W', 'NW'],
+        exposed: ['E', 'SE', 'S'],
+        description: "Cavità naturale con acque limpide",
+        translationKey: 'beach_grotta_della_poesia_desc',
+        distance: "10 km",
+        booking: null
+    },
+    {
+        name: "Grotta Verde",
+        lat: 39.963653,
+        lng: 18.404100,
+        type: "Scogliera",
+        sheltered: ['W', 'NW'],
+        exposed: ['E', 'SE', 'S'],
+        description: "Grotta naturale con luminescenze verdi",
+        translationKey: 'beach_grotta_verde_desc',
+        distance: "10 km",
+        booking: null
+    },
+    
     {
         name: "Santa Cesarea Terme",
         lat: 40.0333,
@@ -495,7 +568,8 @@ function displayCurrentDate() {
         'it': 'it-IT',
         'en': 'en-US',
         'es': 'es-ES',
-        'de': 'de-DE'
+        'de': 'de-DE',
+        'fr': 'fr-FR'
     }[lang] || 'it-IT';
 
     const dateString = now.toLocaleDateString(locale, options);
@@ -506,6 +580,48 @@ function displayCurrentDate() {
 
     dateDisplay.textContent = `${emoji} ${dateString}`;
 }
+
+// Open Google Maps directions from current device location to destination
+function navigateTo(destLat, destLng, destName) {
+    // Open a blank window synchronously to avoid popup blocking in browsers like Safari
+    const win = window.open('', '_blank');
+    if (!win) {
+        alert(guestTranslations[currentGuestLang] && guestTranslations[currentGuestLang].get_directions ? guestTranslations[currentGuestLang].get_directions + ' — consenti popup' : 'Consenti popup per aprire le indicazioni');
+        return;
+    }
+
+    const openWithOrigin = (originLat, originLng) => {
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
+        try { win.location.href = url; } catch (e) { window.location.href = url; }
+    };
+
+    const fallback = () => {
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=driving`;
+        try { win.location.href = url; } catch (e) { window.location.href = url; }
+    };
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            openWithOrigin(pos.coords.latitude, pos.coords.longitude);
+        }, (err) => {
+            fallback();
+        }, { timeout: 10000 });
+    } else {
+        fallback();
+    }
+}
+
+// Delegated handler for 'Portami qui' buttons inside popups
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('.btn-get-directions');
+    if (!btn) return;
+    const lat = btn.getAttribute('data-lat');
+    const lng = btn.getAttribute('data-lng');
+    const name = btn.getAttribute('data-name') || '';
+    if (lat && lng) {
+        navigateTo(lat, lng, name);
+    }
+});
 
 // Initialize beaches map
 function initBeachesMap() {
@@ -545,7 +661,10 @@ function initBeachesMap() {
                 <p style="margin: 5px 0;"><strong>Tipo:</strong> ${beach.type}</p>
                 <p style="margin: 5px 0;"><strong>Distanza:</strong> ${beach.distance}</p>
                 <p style="margin: 5px 0;">${beach.description}</p>
-                ${beach.booking ? `<a href="${beach.booking}" target="_blank" style="display: inline-block; margin-top: 10px; padding: 5px 15px; background: var(--primary-color); color: white; border-radius: 5px; text-decoration: none;">Prenota</a>` : ''}
+                    ${beach.booking ? `<a href="${beach.booking}" target="_blank" style="display: inline-block; margin-top: 10px; padding: 5px 15px; background: var(--primary-color); color: white; border-radius: 5px; text-decoration: none;">Prenota</a>` : ''}
+                    <div style="margin-top:8px;">
+                        <button class="btn btn-secondary btn-get-directions" data-lat="${beach.lat}" data-lng="${beach.lng}" data-name="${beach.name.replace(/"/g, '&quot;')}">${guestTranslations[currentGuestLang] && guestTranslations[currentGuestLang].get_directions ? guestTranslations[currentGuestLang].get_directions : 'Portami qui'}</button>
+                    </div>
             </div>
         `;
 

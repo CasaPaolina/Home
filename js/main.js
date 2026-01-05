@@ -1,7 +1,7 @@
 // Casa Paolina location - Uggiano la Chiesa
 const CASA_PAOLINA = {
-    lat: 40.09726,
-    lng: 18.39167,
+    lat: 40.102558,
+    lng: 18.446024,
     name: "Casa Paolina"
 };
 
@@ -14,11 +14,11 @@ const nearbyPlaces = [
     { name: "La Locanda del Gusto", lat: 40.1434, lng: 18.4909, category: "restaurants", description: "Fine dining in Otranto", link: "https://www.lalocandadelgusto.it/" },
 
     // Supermarkets
-    { name: "Conad Supermarket", lat: 40.0970, lng: 18.3915, category: "supermarkets", description: "Full-service grocery", link: null },
-    { name: "Eurospin", lat: 40.0980, lng: 18.3925, category: "supermarkets", description: "Discount supermarket", link: null },
+    { name: "Conad Supermarket", lat: 40.102983, lng: 18.456386, category: "supermarkets", description: "Full-service grocery", link: null },
+    { name: "Eurospin", lat: 40.151594, lng: 18.481611, category: "supermarkets", description: "Discount supermarket", link: null },
 
     // Pharmacies
-    { name: "Farmacia Comunale", lat: 40.0973, lng: 18.3917, category: "pharmacy", description: "Local pharmacy", link: null },
+    { name: "Farmacia Comunale", lat: 40.100930, lng: 18.446268, category: "pharmacy", description: "Local pharmacy", link: null },
 
     // Attractions
     { name: "Otranto", lat: 40.1434, lng: 18.4909, category: "attractions", description: "Historic coastal town", link: "https://www.comune.otranto.le.it/" },
@@ -33,17 +33,17 @@ const nearbyPlaces = [
 const beaches = [
     {
         name: "Torre dell'Orso",
-        lat: 40.2917,
-        lng: 18.4372,
+        lat: 40.272169,
+        lng: 18.430545,
         protectedFrom: ["W", "NW", "SW"],
         description: "Beautiful sandy beach with two iconic rock stacks",
         bookingLink: "https://www.lido-torredell-orso.com/",
         translationKey: "beach_torre_dellorso"
     },
     {
-        name: "Torre Sant'Andrea",
-        lat: 40.2761,
-        lng: 18.4667,
+        name: "Faraglioni di Sant'Andrea",
+        lat: 40.256684,
+        lng: 18.444069,
         protectedFrom: ["W", "NW", "N"],
         description: "Rocky coastline with natural arches",
         bookingLink: null,
@@ -51,8 +51,8 @@ const beaches = [
     },
     {
         name: "Baia dei Turchi",
-        lat: 40.1900,
-        lng: 18.4850,
+        lat: 40.193550,
+        lng: 18.463585,
         protectedFrom: ["W", "SW", "NW"],
         description: "Wild and pristine sandy beach",
         bookingLink: "https://www.baiadeiturchibeach.it/",
@@ -60,8 +60,8 @@ const beaches = [
     },
     {
         name: "Laghi Alimini",
-        lat: 40.2089,
-        lng: 18.4789,
+        lat: 40.200025,
+        lng: 18.459818,
         protectedFrom: ["E", "NE", "SE"],
         description: "Beach near beautiful lakes",
         bookingLink: "https://www.lagunabeachalimini.it/",
@@ -80,10 +80,55 @@ const beaches = [
         name: "Castro Marina",
         lat: 40.0106,
         lng: 18.4294,
-        protectedFrom: ["E", "NE"],
+        protectedFrom: ["w", "Nw"],
         description: "Charming beach with sea caves",
         bookingLink: "https://www.lidozinzulusa.it/",
         translationKey: "beach_castro"
+    },
+    {
+        name: "Porto Miggiano",
+        lat: 40.032276,
+        lng: 18.446058,
+        protectedFrom: ["W", "NW"],
+        description: "Charming beach with sea caves",
+        bookingLink: null,
+        translationKey: "beach_porto_miggiano"
+    },
+    {
+        name: "Marina Serra",
+        lat: 39.911808,
+        lng: 18.393354,
+        protectedFrom: ["W", "NW"],
+        description: "Natural pool with crystal-clear water",
+        bookingLink: null,
+        translationKey: "beach_marina_serra"
+    },
+    {
+        name: "Cala dell'Acquaviva",
+        lat: 39.991484,
+        lng: 18.413863,
+        protectedFrom: ["W", "NW"],
+        description: "Insenatura naturale con acque limpide",
+        bookingLink: null,
+        translationKey: "beach_cala_dell_acquaviva"
+    },
+    {
+        name: "Grotta della Poesia",
+        lat: 40.285822,
+        lng: 18.429564,
+        protectedFrom: ["W", "NW"],
+        description: "Cavità naturale con acque limpide",
+        bookingLink: null,
+        translationKey: "beach_grotta_della_poesia"
+    },
+    {
+        name: "Grotta Verde",
+        lat: 39.963653,
+        lng: 18.404100,
+        protectedFrom: ["W", "NW"],
+        description: "Grotta naturale con luminescenze verdi",
+        bookingLink: null,
+        translationKey: "beach_grotta_verde"
     },
     {
         name: "Santa Cesarea Terme",
@@ -124,9 +169,9 @@ const pointsOfInterest = [
 
 
     // Services
-    { name: "Supermercato Conad", address: "Uggiano la Chiesa", lat: 40.0970, lng: 18.3915, category: "services" },
-    { name: "Farmacia", address: "Uggiano la Chiesa", lat: 40.0968, lng: 18.3910, category: "services" },
-    { name: "Lavanderia Self-Service", address: "Via Roma, Uggiano la Chiesa", lat: 40.0965, lng: 18.3905, category: "services" }
+    { name: "Supermercato Conad", address: "Uggiano la Chiesa", lat: 40.102983, lng: 18.456386, category: "services" },
+    { name: "Farmacia", address: "Uggiano la Chiesa", lat: 40.100935, lng: 18.446268, category: "services" },
+    { name: "Lavanderia Self-Service", address: "Via Roma, Uggiano la Chiesa", lat: 40.099987, lng: 18.443185, category: "services" }
 ];
 
 // Custom icons for map markers
@@ -232,6 +277,9 @@ function initBeachMap() {
             <b>${beach.name}</b><br>
             ${beach.description}<br>
             ${beach.bookingLink ? `<a href="${beach.bookingLink}" target="_blank" style="color: #1abc9c; font-weight: bold;">📅 Book umbrella/seat</a>` : 'No online booking available'}
+            <div style="margin-top:8px;">
+                <button class="btn btn-secondary btn-get-directions" data-lat="${beach.lat}" data-lng="${beach.lng}" data-name="${beach.name.replace(/"/g, '&quot;')}">${translations[currentLang] && translations[currentLang].contact_directions ? translations[currentLang].contact_directions : 'Portami qui'}</button>
+            </div>
         `;
 
         L.marker([beach.lat, beach.lng], { icon: icon })
@@ -357,6 +405,48 @@ function getDistance(lat1, lon1, lat2, lon2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return R * c;
 }
+
+// Open Google Maps directions from current device location to destination
+function navigateTo(destLat, destLng, destName) {
+    // Open a blank window synchronously to avoid popup blocking in browsers like Safari
+    const win = window.open('', '_blank');
+    if (!win) {
+        alert(translations[currentLang] && translations[currentLang].contact_directions ? translations[currentLang].contact_directions + ' — consenti popup' : 'Consenti popup per aprire le indicazioni');
+        return;
+    }
+
+    const openWithOrigin = (originLat, originLng) => {
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
+        try { win.location.href = url; } catch (e) { window.location.href = url; }
+    };
+
+    const fallback = () => {
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=driving`;
+        try { win.location.href = url; } catch (e) { window.location.href = url; }
+    };
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            openWithOrigin(pos.coords.latitude, pos.coords.longitude);
+        }, (err) => {
+            fallback();
+        }, { timeout: 10000 });
+    } else {
+        fallback();
+    }
+}
+
+// Delegated handler for 'Portami qui' buttons inside popups
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('.btn-get-directions');
+    if (!btn) return;
+    const lat = btn.getAttribute('data-lat');
+    const lng = btn.getAttribute('data-lng');
+    const name = btn.getAttribute('data-name') || '';
+    if (lat && lng) {
+        navigateTo(lat, lng, name);
+    }
+});
 
 // Room gallery functionality
 function initRoomGalleries() {
