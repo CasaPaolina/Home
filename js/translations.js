@@ -316,6 +316,12 @@ const translations = {
         availability_phone: "Phone",
         availability_message: "Notes (optional)",
         availability_submit: "Send Request",
+        // Distance labels
+        from_you: "da te",
+        from_casa_paolina: "da Casa Paolina",
+        // Distance labels
+        from_you: "from you",
+        from_casa_paolina: "from Casa Paolina",
     },
     fr: {
         // Navigation
@@ -460,6 +466,9 @@ const translations = {
         availability_phone: "Téléphone",
         availability_message: "Notes (optionnel)",
         availability_submit: "Envoyer la demande",
+        // Distance labels
+        from_you: "de vous",
+        from_casa_paolina: "de Casa Paolina",
     },
     es: {
         // Navigation
@@ -569,6 +578,9 @@ const translations = {
         availability_phone: "Teléfono",
         availability_message: "Notas (opcional)",
         availability_submit: "Enviar Solicitud",
+        // Distance labels
+        from_you: "desde tu ubicación",
+        from_casa_paolina: "desde Casa Paolina",
     },
     de: {
         // Navigation
@@ -676,6 +688,9 @@ const translations = {
         availability_phone: "Telefon",
         availability_message: "Notizen (optional)",
         availability_submit: "Anfrage Senden",
+        // Distance labels
+        from_you: "von deinem Standort",
+        from_casa_paolina: "von Casa Paolina",
     }
 };
 

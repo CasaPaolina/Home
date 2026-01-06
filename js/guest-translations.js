@@ -115,6 +115,9 @@ const guestTranslations = {
         protected_wind: "Protetta dal vento",
         booking_available: "📅 Prenota ombrellone",
         get_directions: "Portami qui",
+        // Distance labels
+        from_you: "da te",
+        from_casa_paolina: "da Casa Paolina",
 
     },
     
@@ -217,6 +220,9 @@ const guestTranslations = {
         protected_wind: "Protected from wind",
         booking_available: "📅 Book umbrella",
         get_directions: "Get directions",
+        // Distance labels
+        from_you: "from you",
+        from_casa_paolina: "from Casa Paolina",
 
         // Beach descriptions (EN)
         beach_torre_dellorso_desc: "Sandy beach with crystal-clear waters",
@@ -347,6 +353,9 @@ const guestTranslations = {
         direction: "Direction",
         speed: "Vitesse",
         top_beaches: "🏖️ Top 3 Plages recommandées aujourd'hui",
+        // Distance labels
+        from_you: "de vous",
+        from_casa_paolina: "de Casa Paolina",
     },
     
     es: {
@@ -467,6 +476,9 @@ const guestTranslations = {
         protected_wind: "Protegida del viento",
         booking_available: "📅 Reservar sombrilla"
         ,get_directions: "Llévame allí"
+        ,// Distance labels
+        from_you: "desde tu ubicación",
+        from_casa_paolina: "desde Casa Paolina"
     },
     
     de: {
@@ -587,6 +599,9 @@ const guestTranslations = {
         protected_wind: "Windgeschützt",
         booking_available: "📅 Sonnenschirm buchen"
         ,get_directions: "Wegbeschreibung"
+        ,// Distance labels
+        from_you: "von deinem Standort",
+        from_casa_paolina: "von Casa Paolina"
     }
 };
 

@@ -10,6 +10,18 @@ const CASA_PAOLINA = {
 // Cached guest geolocation for faster directions
 let guestLastPosition = null;
 
+// Calculate distance between two points (Haversine formula)
+function getDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
 // Beach data with coordinates and wind protection
 const beaches = [
     // Adriatic Coast (East)
@@ -667,9 +679,26 @@ function initBeachesMap() {
     beaches.forEach(beach => {
         const popupContent = `
             <div style="min-width: 200px;">
+                ${beach.name === 'Porto Badisco' ? `<img src="images/spiaggia-porto-badisco.jpg.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Baia dell'orte" ? `<img src="images/orte.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Porto Miggiano" ? `<img src="images/porto_miggiano.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Marina Serra" ? `<img src="images/marina-serra.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Santa Cesarea Terme" ? `<img src="images/santa-cesarea.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">${beach.name}</h4>
                 <p style="margin: 5px 0;"><strong>Tipo:</strong> ${beach.type}</p>
-                <p style="margin: 5px 0;"><strong>Distanza:</strong> ${beach.distance}</p>
+                <p style="margin: 5px 0;"><strong>Distanza:</strong> ${(() => {
+                    try {
+                        if (guestLastPosition && guestLastPosition.lat && guestLastPosition.lng) {
+                            const d = getDistance(guestLastPosition.lat, guestLastPosition.lng, beach.lat, beach.lng);
+                            const suffix = (guestTranslations[currentGuestLang] && guestTranslations[currentGuestLang].from_you) || 'da te';
+                            return `${Math.round(d)} km ${suffix}`;
+                        } else {
+                            const d = getDistance(CASA_PAOLINA.lat, CASA_PAOLINA.lng, beach.lat, beach.lng);
+                            const suffix = (guestTranslations[currentGuestLang] && guestTranslations[currentGuestLang].from_casa_paolina) || 'da Casa Paolina';
+                            return `${Math.round(d)} km ${suffix}`;
+                        }
+                    } catch (e) { return beach.distance; }
+                })()}</p>
                 <p style="margin: 5px 0;">${beach.description}</p>
                     ${beach.booking ? `<a href="${beach.booking}" target="_blank" style="display: inline-block; margin-top: 10px; padding: 5px 15px; background: var(--primary-color); color: white; border-radius: 5px; text-decoration: none;">Prenota</a>` : ''}
                     <div style="margin-top:8px;">

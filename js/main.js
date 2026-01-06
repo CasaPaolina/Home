@@ -274,9 +274,28 @@ function initBeachMap() {
     beaches.forEach(beach => {
         const icon = createCustomIcon(categoryColors.beach);
         const popup = `
+            ${beach.name === 'Porto Badisco' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/spiaggia-porto-badisco.jpg.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
+            ${beach.name === 'Porto Miggiano' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/porto_miggiano.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
+            ${beach.name === 'Marina Serra' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/marina-serra.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
+            ${beach.name === 'Santa Cesarea Terme' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/santa-cesarea.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
             <b>${beach.name}</b><br>
             ${beach.description}<br>
             ${beach.bookingLink ? `<a href="${beach.bookingLink}" target="_blank" style="color: #1abc9c; font-weight: bold;">📅 Book umbrella/seat</a>` : 'No online booking available'}
+            ${(() => {
+                try {
+                    let userPos = null;
+                    try { const cached = sessionStorage.getItem('guestPosition'); if (cached) userPos = JSON.parse(cached); } catch(e) {}
+                    if (userPos && userPos.lat && userPos.lng) {
+                        const d = getDistance(userPos.lat, userPos.lng, beach.lat, beach.lng);
+                        const suffix = (translations[currentLang] && translations[currentLang].from_you) || 'da te';
+                        return `<p style="margin: 5px 0;"><strong>Distanza:</strong> ${Math.round(d)} km ${suffix}</p>`;
+                    } else {
+                        const d = getDistance(CASA_PAOLINA.lat, CASA_PAOLINA.lng, beach.lat, beach.lng);
+                        const suffix = (translations[currentLang] && translations[currentLang].from_casa_paolina) || 'da Casa Paolina';
+                        return `<p style="margin: 5px 0;"><strong>Distanza:</strong> ${Math.round(d)} km ${suffix}</p>`;
+                    }
+                } catch (e) { return `<p style="margin: 5px 0;"><strong>Distanza:</strong> ${beach.distance}</p>`; }
+            })()}
             <div style="margin-top:8px;">
                 <button class="btn btn-secondary btn-get-directions" data-lat="${beach.lat}" data-lng="${beach.lng}" data-name="${beach.name.replace(/"/g, '&quot;')}">${translations[currentLang] && translations[currentLang].contact_directions ? translations[currentLang].contact_directions : 'Portami qui'}</button>
             </div>
@@ -661,7 +680,7 @@ function initGuestArea() {
             e.preventDefault();
             // Require password: show login modal if not authenticated
             if (localStorage.getItem('guestLoggedIn') === 'true') {
-                window.location.href = 'guest-info.html';
+                requestGeolocationThen('guest-info.html');
             } else {
                 showGuestLogin();
             }
@@ -732,7 +751,7 @@ function showGuestLogin() {
             localStorage.setItem('guestLoggedIn', 'true');
             document.body.removeChild(modal);
             document.body.style.overflow = '';
-            window.location.href = 'guest-info.html';
+            requestGeolocationThen('guest-info.html');
         } else {
             passwordInput.style.borderColor = 'red';
             passwordInput.value = '';
@@ -856,6 +875,23 @@ function showGuestInfo() {
             document.body.style.overflow = '';
         }
     });
+}
+
+// Request geolocation and then navigate to the provided URL.
+// If geolocation is available, store the coords in sessionStorage for use on guest pages.
+function requestGeolocationThen(url) {
+    if (navigator.geolocation) {
+        // Try to get position, but don't block too long - timeout 5s
+        navigator.geolocation.getCurrentPosition((pos) => {
+            try { sessionStorage.setItem('guestPosition', JSON.stringify({ lat: pos.coords.latitude, lng: pos.coords.longitude })); } catch (e) {}
+            window.location.href = url;
+        }, (err) => {
+            // On error or denial, just navigate and guest pages will fallback to Casa Paolina
+            window.location.href = url;
+        }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
+    } else {
+        window.location.href = url;
+    }
 }
 
 // Availability request form
