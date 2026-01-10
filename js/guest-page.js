@@ -10,6 +10,9 @@ const CASA_PAOLINA = {
 // Cached guest geolocation for faster directions
 let guestLastPosition = null;
 
+// Markers for beach map (used for filtering)
+let beachMarkers = [];
+
 // Calculate distance between two points (Haversine formula)
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Radius of Earth in km
@@ -111,6 +114,18 @@ const beaches = [
         booking: null
     },
     {
+        name: "Porto Selvaggio",
+        lat: 40.147889,
+        lng: 17.975022,
+        type: "Scogliera",
+        sheltered: ['W', 'NW'],
+        exposed: ['E', 'SE', 'S'],
+        description: "insenatura naturale con acqua cristallina",
+        translationKey: 'beach_porto_selvaggio_desc',
+        distance: "--",
+        booking: null
+    },
+    {
         name: "Baia dell'orte",
         lat: 40.133054,
         lng: 18.513057,
@@ -184,13 +199,14 @@ const beaches = [
         booking: null
     },
     {
-        name: "Otranto",
-        lat: 40.1436,
-        lng: 18.4908,
+        name: "Spiaggia dei Gradoni",
+        lat: 40.149091,
+        lng: 18.486969,
         type: "Sabbia e scogliera",
         sheltered: ['W', 'SW', 'NW'],
         exposed: ['E', 'NE', 'SE'],
         description: "Spiagge cittadine e calette",
+        translationKey: 'beach_otranto_desc',
         distance: "10 km",
         booking: null
     },
@@ -684,6 +700,8 @@ function initBeachesMap() {
                 ${beach.name === "Porto Miggiano" ? `<img src="images/porto_miggiano.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 ${beach.name === "Marina Serra" ? `<img src="images/marina-serra.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 ${beach.name === "Santa Cesarea Terme" ? `<img src="images/santa-cesarea.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Spiaggia dei Gradoni" ? `<img src="images/spiaggia_gradoni.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Porto Selvaggio" ? `<img src="images/porto_selvaggio.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">${beach.name}</h4>
                 <p style="margin: 5px 0;"><strong>Tipo:</strong> ${beach.type}</p>
                 <p style="margin: 5px 0;"><strong>Distanza:</strong> ${(() => {
@@ -707,9 +725,42 @@ function initBeachesMap() {
             </div>
         `;
 
-        L.marker([beach.lat, beach.lng], { icon: beachIcon })
+        const marker = L.marker([beach.lat, beach.lng], { icon: beachIcon })
             .bindPopup(popupContent)
             .addTo(map);
+
+        // store marker with its type for filtering (normalize lowercase)
+        beachMarkers.push({ marker, type: (beach.type || '').toLowerCase(), beach });
+    });
+
+    // Apply initial filter state (buttons default to 'all')
+    function applyBeachFilter(filter) {
+        beachMarkers.forEach(({ marker, type }) => {
+            if (!filter || filter === 'all') {
+                if (!map.hasLayer(marker)) map.addLayer(marker);
+                return;
+            }
+
+            // map filter keywords: 'spiagge' matches types containing 'sabb' (sabbia), 'scogliere' matches 'scogl'
+            const isBeach = type.includes('sabb');
+            const isCliff = type.includes('scogl');
+
+            if ((filter === 'spiagge' && isBeach) || (filter === 'scogliere' && isCliff)) {
+                if (!map.hasLayer(marker)) map.addLayer(marker);
+            } else {
+                if (map.hasLayer(marker)) map.removeLayer(marker);
+            }
+        });
+    }
+
+    // Wire up filter buttons
+    document.querySelectorAll('.beach-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.beach-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const f = btn.getAttribute('data-filter');
+            applyBeachFilter(f);
+        });
     });
 }
 

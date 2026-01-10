@@ -238,7 +238,14 @@
 
                 <!-- Beach Map -->
                 <div style="margin-top: 40px;">
-                    <h4 data-translate="beaches_map_title" style="text-align: center; color: var(--dark-color); margin-bottom: 20px; font-size: 1.3rem;">Mappa Spiagge del Salento</h4>
+                    <h4 data-translate="beaches_map_title" style="text-align: center; color: var(--dark-color); margin-bottom: 12px; font-size: 1.3rem;">Mappa Spiagge del Salento</h4>
+
+                    <div class="map-filters" style="text-align:center; margin-bottom:12px;">
+                        <button class="btn btn-secondary beach-filter active" data-filter="all" data-translate="filter_all">Tutti</button>
+                        <button class="btn btn-secondary beach-filter" data-filter="spiagge" data-translate="filter_beaches">Spiagge</button>
+                        <button class="btn btn-secondary beach-filter" data-filter="scogliere" data-translate="filter_cliffs">Scogliere</button>
+                    </div>
+
                     <div id="beaches-map" class="map-container"></div>
                 </div>
             </div>

@@ -123,13 +123,14 @@ const translations = {
         beach_porto_badisco: "Porto Badisco",
         beach_castro: "Castro Marina",
         beach_porto_miggiano: "Porto Miggiano",
+        beach_porto_selvaggio: "Porto Selvaggio",
         beach_marina_serra: "Marina Serra",
         beach_cala_dell_acquaviva: "Cala dell'Acquaviva",
         beach_grotta_della_poesia: "Grotta della Poesia",
         beach_grotta_verde: "Grotta Verde",
         beach_baia_dell_orte: "Baia dell'Orte",
         beach_santa_cesarea: "Santa Cesarea Terme",
-        beach_otranto: "Otranto",
+        beach_otranto: "Spiaggia dei Gradoni",
 
         // Wind directions
         wind_n: "Nord",
@@ -275,10 +276,11 @@ const translations = {
         beach_porto_badisco: "Porto Badisco",
         beach_castro: "Castro Marina",
         beach_porto_miggiano: "Porto Miggiano",
+        beach_porto_selvaggio: "Porto Selvaggio",
         beach_baia_dell_orte: "Baia dell'Orte",
         beach_marina_serra: "Marina Serra",
         beach_santa_cesarea: "Santa Cesarea Terme",
-        beach_otranto: "Otranto",
+        beach_otranto: "Spiaggia dei Gradoni",
 
         // Wind directions
         wind_n: "North",
@@ -425,10 +427,11 @@ const translations = {
         beach_porto_badisco: "Porto Badisco",
         beach_castro: "Castro Marina",
         beach_porto_miggiano: "Porto Miggiano",
+        beach_porto_selvaggio: "Porto Selvaggio",
         beach_baia_dell_orte: "Baia dell'Orte",
         beach_marina_serra: "Marina Serra",
         beach_santa_cesarea: "Santa Cesarea Terme",
-        beach_otranto: "Otranto",
+        beach_otranto: "Spiaggia dei Gradoni",
 
         // Wind directions
         wind_n: "Nord",

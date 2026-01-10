@@ -140,13 +140,22 @@ const beaches = [
         translationKey: "beach_santa_cesarea"
     },
     {
-        name: "Otranto - Baia dei Turchi",
-        lat: 40.1434,
-        lng: 18.4909,
+        name: "Spiaggia dei Gradoni",
+        lat: 40.149091,
+        lng: 18.486969,
         protectedFrom: ["W", "SW"],
         description: "City beach near historic center",
         bookingLink: "https://www.lidopizzicobeach.com/",
         translationKey: "beach_otranto"
+    }
+    ,{
+        name: "Porto Selvaggio",
+        lat: 40.147889,
+        lng: 17.975022,
+        protectedFrom: ["W", "NW"],
+        description: "insenatura naturale con acqua cristallina",
+        bookingLink: null,
+        translationKey: "beach_porto_selvaggio"
     }
 ];
 
@@ -278,6 +287,8 @@ function initBeachMap() {
             ${beach.name === 'Porto Miggiano' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/porto_miggiano.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
             ${beach.name === 'Marina Serra' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/marina-serra.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
             ${beach.name === 'Santa Cesarea Terme' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/santa-cesarea.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
+            ${beach.name === 'Spiaggia dei Gradoni' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/spiaggia_gradoni.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
+            ${beach.name === 'Porto Selvaggio' ? `<div style="width:100%; margin-bottom:8px;"><img src="images/porto_selvaggio.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px;"></div>` : ''}
             <b>${beach.name}</b><br>
             ${beach.description}<br>
             ${beach.bookingLink ? `<a href="${beach.bookingLink}" target="_blank" style="color: #1abc9c; font-weight: bold;">📅 Book umbrella/seat</a>` : 'No online booking available'}
