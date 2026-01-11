@@ -315,33 +315,58 @@ const pointsOfInterest = [
     { name: "Lavanderia Self-Service", address: "Via Roma, Uggiano la Chiesa", lat: 40.0965, lng: 18.3905, category: "services" }
 ];
 
-// Fetch weather forecast for 3 time slots
+// Fetch weather forecast for 2 days
 async function fetchWeatherForecast() {
     try {
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&timezone=Europe/Rome&forecast_days=1`
+            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&timezone=Europe/Rome&forecast_days=2`
         );
+        if (!response.ok) {
+            throw new Error(`Weather API error: ${response.status}`);
+        }
         const data = await response.json();
 
-        const now = new Date();
+        // Update dates
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        document.getElementById('today-date').textContent = today.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+        document.getElementById('tomorrow-date').textContent = tomorrow.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+
         const hourlyData = data.hourly;
 
-        // Find indices for morning (9-12), noon (12-15), afternoon (15-18)
-        const timeSlots = {
-            morning: findTimeSlotAverage(hourlyData, 9, 12),
-            noon: findTimeSlotAverage(hourlyData, 12, 15),
-            afternoon: findTimeSlotAverage(hourlyData, 15, 18)
+        // Today's forecast
+        const todaySlots = {
+            morning: findTimeSlotAverageForDay(hourlyData, 0, 9, 12),
+            noon: findTimeSlotAverageForDay(hourlyData, 0, 12, 15),
+            afternoon: findTimeSlotAverageForDay(hourlyData, 0, 15, 18)
         };
 
-        updateWindDisplay('morning', timeSlots.morning);
-        updateWindDisplay('noon', timeSlots.noon);
-        updateWindDisplay('afternoon', timeSlots.afternoon);
+        updateWindDisplay('morning-today', todaySlots.morning);
+        updateWindDisplay('noon-today', todaySlots.noon);
+        updateWindDisplay('afternoon-today', todaySlots.afternoon);
 
-        // Use average wind for beach recommendations
-        const avgWindDirection = getWindDirection((timeSlots.morning.direction + timeSlots.noon.direction + timeSlots.afternoon.direction) / 3);
-        const avgWindSpeed = (timeSlots.morning.speed + timeSlots.noon.speed + timeSlots.afternoon.speed) / 3;
+        // Tomorrow's forecast
+        const tomorrowSlots = {
+            morning: findTimeSlotAverageForDay(hourlyData, 1, 9, 12),
+            noon: findTimeSlotAverageForDay(hourlyData, 1, 12, 15),
+            afternoon: findTimeSlotAverageForDay(hourlyData, 1, 15, 18)
+        };
 
-        recommendTop3Beaches(avgWindDirection, avgWindSpeed);
+        updateWindDisplay('morning-tomorrow', tomorrowSlots.morning);
+        updateWindDisplay('noon-tomorrow', tomorrowSlots.noon);
+        updateWindDisplay('afternoon-tomorrow', tomorrowSlots.afternoon);
+
+        // Beach recommendations for today
+        const avgWindDirectionToday = getWindDirection((todaySlots.morning.direction + todaySlots.noon.direction + todaySlots.afternoon.direction) / 3);
+        const avgWindSpeedToday = (todaySlots.morning.speed + todaySlots.noon.speed + todaySlots.afternoon.speed) / 3;
+        recommendTop3Beaches(avgWindDirectionToday, avgWindSpeedToday, 'today');
+
+        // Beach recommendations for tomorrow
+        const avgWindDirectionTomorrow = getWindDirection((tomorrowSlots.morning.direction + tomorrowSlots.noon.direction + tomorrowSlots.afternoon.direction) / 3);
+        const avgWindSpeedTomorrow = (tomorrowSlots.morning.speed + tomorrowSlots.noon.speed + tomorrowSlots.afternoon.speed) / 3;
+        recommendTop3Beaches(avgWindDirectionTomorrow, avgWindSpeedTomorrow, 'tomorrow');
 
     } catch (error) {
         console.error('Error fetching weather:', error);
@@ -349,16 +374,23 @@ async function fetchWeatherForecast() {
     }
 }
 
-// Find average wind speed and direction for a time slot
-function findTimeSlotAverage(hourlyData, startHour, endHour) {
+// Find average wind speed and direction for a specific day and time slot
+function findTimeSlotAverageForDay(hourlyData, dayOffset, startHour, endHour) {
     const times = hourlyData.time;
     let totalSpeed = 0;
     let totalDirection = 0;
     let count = 0;
 
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + dayOffset);
+    const targetDay = targetDate.getDate();
+
     times.forEach((time, index) => {
-        const hour = new Date(time).getHours();
-        if (hour >= startHour && hour < endHour) {
+        const datetime = new Date(time);
+        const hour = datetime.getHours();
+        const day = datetime.getDate();
+
+        if (day === targetDay && hour >= startHour && hour < endHour) {
             totalSpeed += hourlyData.windspeed_10m[index];
             totalDirection += hourlyData.winddirection_10m[index];
             count++;
@@ -392,7 +424,7 @@ function updateWindDisplay(slot, windData) {
     // Update wind speed
     const speedElement = document.getElementById(`wind-speed-${slot}`);
     if (speedElement) {
-        speedElement.textContent = speed;
+        speedElement.textContent = `${speed} km/h`;
     }
 }
 
@@ -404,7 +436,7 @@ function getWindDirection(degrees) {
 }
 
 // Recommend top 3 beaches based on wind conditions
-function recommendTop3Beaches(windDirection, windSpeed) {
+function recommendTop3Beaches(windDirection, windSpeed, day) {
     // Score each beach based on wind protection
     const scoredBeaches = beaches.map(beach => {
         let score = 50; // Base score
@@ -442,10 +474,249 @@ function recommendTop3Beaches(windDirection, windSpeed) {
     // Sort by score and get top 3
     const top3 = scoredBeaches.sort((a, b) => b.score - a.score).slice(0, 3);
 
-    displayTop3Beaches(top3, windDirection);
+    displayTop3BeachesCompact(top3, day);
 }
 
-// Display top 3 beach recommendations
+// Candidates-based beach image helpers: prefer data images, then predictable files, then placeholder
+window.getBeachImageCandidates = function getBeachImageCandidates(beach) {
+    const candidates = [];
+    // explicit images from data
+    if (beach.images && beach.images.length) candidates.push(`images/${beach.images[0]}`);
+    if (beach.image) candidates.unshift(beach.image);
+
+    // predictable filenames based on id or name
+    const raw = (beach.id || beach.name || '').toString().toLowerCase();
+    const slug = raw.replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '');
+    const underscore = slug.replace(/-/g, '_');
+
+    if (slug) {
+        // prefer jpgs, include png and webp as fallbacks
+        candidates.push(
+            `images/${slug}.jpg`,
+            `images/${slug}.png`,
+            `images/${slug}.webp`,
+            `images/${underscore}.jpg`,
+            `images/${underscore}.png`,
+            `images/${underscore}.webp`,
+            `images/${slug.replace(/-/g, '_')}.jpg`,
+            // common local naming patterns
+            `images/spiaggia-${slug}.jpg`,
+            `images/spiaggia_${slug}.jpg`,
+            `images/spiaggia-${slug}.webp`
+        );
+    }
+
+    // Heuristic: try last token of name (e.g., 'Baia dell'orte' -> 'orte.jpg')
+    try {
+        const tokens = raw.split(/\s+/).filter(Boolean);
+        const last = tokens[tokens.length - 1];
+        if (last) {
+            candidates.push(`images/${last}.jpg`, `images/${last}.png`, `images/${last}.webp`);
+        }
+    } catch (e) {}
+
+    // final fallback (use an existing JPG placeholder)
+    candidates.push('images/celeste1.jpg');
+
+    // unique and return
+    return [...new Set(candidates)];
+};
+
+// Render a compact calendar-week view of waste collection
+function renderWasteCalendar() {
+    const container = document.getElementById('waste-calendar');
+    if (!container) return;
+
+    const items = Array.from(document.querySelectorAll('.waste-item'));
+    if (!items.length) return;
+
+    // Build day cells Monday..Saturday
+    const cells = items.map(item => {
+        const day = item.getAttribute('data-day');
+        const dayLabel = item.querySelector('.waste-day') ? item.querySelector('.waste-day').textContent.trim() : '';
+        const pills = Array.from(item.querySelectorAll('.material-pill')).map(p => p.outerHTML).join('');
+        return { day, dayLabel, pills };
+    });
+
+    // Determine today's index (Mon=1..Sat=6)
+    const today = new Date().getDay();
+
+    // Compute next pickup: if today is Mon..Sat use today, else (Sun) choose Monday
+    const nextPickup = (today >= 1 && today <= 6) ? today : 1;
+
+    const html = cells.map(c => {
+        const dayNum = parseInt(c.day, 10);
+        const isToday = (dayNum === today);
+        const isNext = (dayNum === nextPickup);
+        const className = `waste-day-cell ${isToday ? 'today' : ''} ${isNext ? 'next-pickup' : ''}`.trim();
+        return `<div class="${className}" data-day="${c.day}">
+            <div class="calendar-day">${c.dayLabel}</div>
+            <div class="calendar-pills">${c.pills}</div>
+        </div>`;
+    }).join('');
+
+    container.innerHTML = html;
+
+    // On small screens allow horizontal scrolling
+    container.style.overflowX = 'auto';
+}
+
+// Utility: call both highlight and render calendar together
+function refreshWasteUI() {
+    if (typeof highlightTodayWaste === 'function') highlightTodayWaste();
+    renderWasteCalendar();
+} 
+
+// Error handler for img elements; tries next fallback candidate
+window.handleBeachImgError = function handleBeachImgError(img) {
+    try {
+        const fallbacks = (img.dataset.fallbacks || '').split('|');
+        let idx = parseInt(img.dataset.current || '0', 10);
+        idx++;
+        if (idx < fallbacks.length) {
+            img.dataset.current = idx;
+            img.src = fallbacks[idx];
+        } else {
+            img.src = 'images/celeste1.jpg';
+        }
+    } catch (e) {
+        img.src = 'images/celeste1.jpg';
+    }
+};
+
+// Backwards compatibility: first candidate
+window.getBeachImageSrc = function getBeachImageSrc(beach) {
+    const c = window.getBeachImageCandidates(beach);
+    return c.length ? c[0] : '';
+};
+
+// Display compact beach recommendations for today/tomorrow (no numbering) — uses fallback-enabled <img>
+function displayTop3BeachesCompact(beaches, day) {
+    const container = document.getElementById(`recommended-beaches-${day}`);
+    if (!container) return;
+
+    container.innerHTML = beaches.map((beach) => {
+        const escapedName = beach.name.replace(/'/g, "\\'");
+        const candidates = window.getBeachImageCandidates(beach);
+        const first = candidates[0];
+        const dataFallbacks = candidates.join('|');
+        const imageHTML = `<img src="${first}" data-fallbacks="${dataFallbacks}" data-current="0" onerror="handleBeachImgError(this)" alt="${beach.name}" class="beach-thumbnail">`;
+
+        return `<div class="beach-compact-item">
+            ${imageHTML}
+            <div>
+                <span class="beach-name-link" onclick="showBeachPopup('${escapedName}')">${beach.name}</span>
+                <div class="beach-distance">${beach.distance}</div>
+            </div>
+        </div>`;
+    }).join('');
+} 
+
+// Make function globally available
+window.showBeachPopup = showBeachPopup;
+window.closeBeachPopup = closeBeachPopup;
+
+// Common renderer: returns HTML for a beach popup (used by both overlay and marker popups)
+window.getBeachPopupHTML = function getBeachPopupHTML(beach, options = {}) {
+    const bookingUrl = beach.bookingLink || beach.booking || '';
+    const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${CASA_PAOLINA.lat},${CASA_PAOLINA.lng}&destination=${beach.lat},${beach.lng}`;
+    const sandTypeRaw = (beach.sandType || beach.type || '').toString().toLowerCase();
+    const isSand = sandTypeRaw.includes('sand') || sandTypeRaw.includes('sabbia') || sandTypeRaw === '';
+    // Use same candidate fallback logic as compact list for the popup image
+    const candidates = (typeof window.getBeachImageCandidates === 'function') ? window.getBeachImageCandidates(beach) : ((beach.images && beach.images.length) ? [beach.images[0]] : []);
+    const firstImg = candidates[0] || '';
+    const dataFallbacks = candidates.join('|');
+
+    const bookingBtn = bookingUrl ? `<a href="${bookingUrl}" target="_blank" class="popup-btn popup-btn-primary">Prenota ora</a>` : '';
+
+    // Image block: try first candidate and let onerror walk fallbacks
+    const imageBlock = firstImg ? `
+        <div class="popup-image"><img src="${firstImg}" data-fallbacks="${dataFallbacks}" data-current="0" onerror="handleBeachImgError(this)" alt="${beach.name}" loading="lazy"></div>
+    ` : `
+        <div class="popup-image placeholder">
+            <svg width="80" height="56" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="24" height="16" rx="2" fill="#e6f6f5" />
+                <path d="M3 11l3.5-4.5L9 11l3-4 4 6H3z" fill="#a7d6d3"/>
+            </svg>
+        </div>
+    `;
+
+    return `
+        <div class="beach-popup ${options.inline ? 'inline' : ''}">
+            ${imageBlock}
+            <div class="popup-body">
+                <h3>${beach.name}</h3>
+                <p class="popup-type">${isSand ? '🏖️ Sabbia' : '🪨 Scogliera'}</p>
+                <p class="popup-distance">📍 ${beach.distance} da Casa Paolina</p>
+                <p class="popup-description">${beach.description}</p>
+                ${beach.facilities && beach.facilities.length > 0 ? `<div class="popup-facilities"><strong>Servizi:</strong> ${beach.facilities.map(f => getFacilityLabel(f)).join(', ')}</div>` : ''}
+                <div class="popup-actions">
+                    <a href="${directionsUrl}" target="_blank" class="popup-btn popup-btn-secondary">Portami qui</a>
+                    ${bookingBtn}
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+// Show beach popup with details (overlay)
+function showBeachPopup(beachName) {
+    // Find beach data from locations; fallback to local beaches if necessary
+    let beach = null;
+    if (locationsData && locationsData.loaded) {
+        const remoteBeaches = locationsData.getBeaches();
+        beach = remoteBeaches.find(b => b.name === beachName);
+    }
+
+    if (!beach) {
+        // try local beaches array
+        beach = beaches.find(b => b.name === beachName || (b.name && b.name.includes(beachName)) || (beachName && beachName.includes(b.name)));
+    }
+
+    if (!beach) {
+        console.error('Beach not found:', beachName);
+        return;
+    }
+
+    const popupHTML = `
+        <div class="beach-popup-overlay" onclick="closeBeachPopup()">
+            <div class="beach-popup-content" onclick="event.stopPropagation()">
+                <button class="popup-close" onclick="closeBeachPopup()">×</button>
+                ${window.getBeachPopupHTML(beach)}
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', popupHTML);
+}
+
+function closeBeachPopup() {
+    const popup = document.querySelector('.beach-popup-overlay');
+    if (popup) {
+        popup.remove();
+    }
+}
+
+function getFacilityLabel(facility) {
+    const labels = {
+        'parking': 'Parcheggio',
+        'restaurants': 'Ristoranti',
+        'umbrellas': 'Ombrelloni',
+        'sunbeds': 'Lettini',
+        'beach_bar': 'Bar',
+        'beach_clubs': 'Stabilimenti',
+        'water_sports': 'Sport acquatici',
+        'boat_tours': 'Tour in barca',
+        'diving': 'Immersioni',
+        'showers': 'Docce',
+        'thermal_spa': 'Terme',
+        'hiking': 'Escursioni',
+        'nature_reserve': 'Riserva naturale'
+    };
+    return labels[facility] || facility;
+}
+
+// Display top 3 beach recommendations (for "All Beaches" section)
 function displayTop3Beaches(beaches, windDirection) {
     const container = document.getElementById('recommended-beaches');
     if (!container) return;
@@ -465,7 +736,7 @@ function displayTop3Beaches(beaches, windDirection) {
 
         return `
             <div class="beach-card">
-                <h4>${index + 1}. ${beach.name}</h4>
+                <h4>${beach.name}</h4>
                 <span class="beach-type">${beach.type}</span>
                 <p><strong>📍</strong> ${beach.distance} ${guestTranslations[currentGuestLang].from_casa || "da Casa Paolina"}</p>
                 <p>${beach.description}</p>
@@ -612,6 +883,22 @@ function displayCurrentDate() {
     dateDisplay.textContent = `${emoji} ${dateString}`;
 }
 
+// Highlight today's collection card (adds .today class to .waste-item[data-day=X])
+function highlightTodayWaste() {
+    try {
+        const today = new Date().getDay(); // 0=Sunday, 1=Monday ... 6=Saturday
+        // If Sunday (0), do not highlight — no collection scheduled in our list
+        if (today === 0) return;
+        // In our markup Monday=1 ... Saturday=6
+        const el = document.querySelector(`.waste-item[data-day="${today}"]`);
+        if (!el) return;
+        document.querySelectorAll('.waste-item').forEach(node => node.classList.remove('today'));
+        el.classList.add('today');
+    } catch (e) {
+        console.warn('highlightTodayWaste error', e);
+    }
+}
+
 // Open Google Maps directions from current device location to destination
 function navigateTo(destLat, destLng, destName) {
     // Open a blank window synchronously to avoid popup blocking in browsers like Safari
@@ -695,13 +982,13 @@ function initBeachesMap() {
     beaches.forEach(beach => {
         const popupContent = `
             <div style="min-width: 200px;">
-                ${beach.name === 'Porto Badisco' ? `<img src="images/spiaggia-porto-badisco.jpg.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === 'Porto Badisco' ? `<img src="images/spiaggia-porto-badisco.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 ${beach.name === "Baia dell'orte" ? `<img src="images/orte.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 ${beach.name === "Porto Miggiano" ? `<img src="images/porto_miggiano.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 ${beach.name === "Marina Serra" ? `<img src="images/marina-serra.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 ${beach.name === "Santa Cesarea Terme" ? `<img src="images/santa-cesarea.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
-                ${beach.name === "Spiaggia dei Gradoni" ? `<img src="images/spiaggia_gradoni.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
-                ${beach.name === "Porto Selvaggio" ? `<img src="images/porto_selvaggio.webp" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Spiaggia dei Gradoni" ? `<img src="images/spiaggia_gradoni.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
+                ${beach.name === "Porto Selvaggio" ? `<img src="images/porto_selvaggio.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
                 <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">${beach.name}</h4>
                 <p style="margin: 5px 0;"><strong>Tipo:</strong> ${beach.type}</p>
                 <p style="margin: 5px 0;"><strong>Distanza:</strong> ${(() => {
@@ -735,17 +1022,27 @@ function initBeachesMap() {
 
     // Apply initial filter state (buttons default to 'all')
     function applyBeachFilter(filter) {
-        beachMarkers.forEach(({ marker, type }) => {
+        beachMarkers.forEach(({ marker, beach }) => {
             if (!filter || filter === 'all') {
                 if (!map.hasLayer(marker)) map.addLayer(marker);
                 return;
             }
 
-            // map filter keywords: 'spiagge' matches types containing 'sabb' (sabbia), 'scogliere' matches 'scogl'
-            const isBeach = type.includes('sabb');
-            const isCliff = type.includes('scogl');
+            const typeStr = ((beach.sandType || beach.type) || '').toString().toLowerCase();
+            const isCliff = typeStr.includes('rock') || typeStr.includes('scogl') || typeStr.includes('ciott') || typeStr.includes('pebbl');
+            // Per your note: everything not classified as rock is considered sand
+            const isSand = !isCliff;
 
-            if ((filter === 'spiagge' && isBeach) || (filter === 'scogliere' && isCliff)) {
+            const isAdriatic = typeof beach.lng === 'number' ? beach.lng > 18.2 : false;
+            const isIonian = typeof beach.lng === 'number' ? beach.lng <= 18.2 : false;
+
+            let show = false;
+            if (filter === 'sand' && isSand) show = true;
+            if (filter === 'rocks' && isCliff) show = true;
+            if (filter === 'adriatic' && isAdriatic) show = true;
+            if (filter === 'ionian' && isIonian) show = true;
+
+            if (show) {
                 if (!map.hasLayer(marker)) map.addLayer(marker);
             } else {
                 if (map.hasLayer(marker)) map.removeLayer(marker);
@@ -753,10 +1050,10 @@ function initBeachesMap() {
         });
     }
 
-    // Wire up filter buttons
-    document.querySelectorAll('.beach-filter').forEach(btn => {
+    // Wire up filter buttons (use the .beach-filter-btn class to match markup)
+    document.querySelectorAll('.beach-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.beach-filter').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.beach-filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const f = btn.getAttribute('data-filter');
             applyBeachFilter(f);
@@ -764,10 +1061,48 @@ function initBeachesMap() {
     });
 }
 
-// Initialize everything on page load
+// Ensure translations are loaded correctly
+function loadTranslations(language) {
+    const translations = guestTranslations[language];
+    if (!translations) {
+        console.error(`Translations for language ${language} not found.`);
+        return;
+    }
+
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.getAttribute('data-translate');
+        if (translations[key]) {
+            el.textContent = translations[key];
+        }
+    });
+}
+
+// Ensure beaches and weather data are displayed
+async function displayBeachesAndWeather() {
+    try {
+        const locations = await locationsData.load();
+        const beaches = locations.getBeaches();
+        const weather = await fetchWeatherData();
+
+        // Update UI with beaches and weather data
+        updateBeachesUI(beaches);
+        updateWeatherUI(weather);
+    } catch (error) {
+        console.error('Error displaying beaches and weather:', error);
+    }
+}
+
+// Call functions on page load
 document.addEventListener('DOMContentLoaded', () => {
+    const userLang = localStorage.getItem('language') || 'it';
+    loadTranslations(userLang);
+    displayBeachesAndWeather();
+    
     // Display current date
     displayCurrentDate();
+
+    // Highlight today's waste collection and render calendar
+    if (typeof refreshWasteUI === 'function') refreshWasteUI();
 
     // Fetch weather and beach recommendations
     fetchWeatherForecast();
