@@ -62,7 +62,6 @@
         </div>
     </section>
 
-
     <!-- Rooms Section -->
     <section id="rooms" class="rooms">
         <div class="container">
@@ -309,7 +308,6 @@
                 <button class="poi-filter-btn active" data-category="all" data-translate="filter_all">Tutti</button>
                 <button class="poi-filter-btn" data-category="nightlife" data-translate="filter_nightlife">Movida</button>
                 <button class="poi-filter-btn" data-category="attractions" data-translate="filter_attractions">Luoghi da Visitare</button>
-
                 <button class="poi-filter-btn" data-category="services" data-translate="filter_services">Servizi</button>
             </div>
 
@@ -319,79 +317,113 @@
             <div class="poi-categories">
                 <!-- Movida -->
                 <div class="poi-category" id="cat-nightlife">
-                    <h3 data-translate="nightlife_title">🍹 Movida Locale</h3>
+                    <h3><span class="icon icon-nightlife" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16l-3 10H7L4 6z"/><path d="M8 20h8"/></svg></span> <span data-translate="nightlife_title"></span></h3>
                     <div class="poi-list">
                         <div class="poi-item">
                             <h4>Avamposto</h4>
-                            <p>Via Dante De Blasi, Uggiano La Chiesa</p>
+                            <p class="poi-desc">Bar e lounge locale</p>
+                            <p class="poi-address">Via Dante De Blasi, Uggiano La Chiesa</p>
                         </div>
                         <div class="poi-item">
                             <h4>Skafe al Casotto</h4>
-                            <p>Via Bastione Pelasgi, 12, Otranto</p>
+                            <p class="poi-desc">Locale fronte mare</p>
+                            <p class="poi-address">Via Bastione Pelasgi, 12, Otranto</p>
                         </div>
                         <div class="poi-item">
                             <h4>Spinnaker</h4>
-                            <p>Via Filippo Turati, 3, Torre dell'Orso</p>
+                            <p class="poi-desc">Beach club e ristorante</p>
+                            <p class="poi-address">Via Filippo Turati, 3, Torre dell'Orso</p>
                         </div>
                         <div class="poi-item">
                             <h4>La Casaccia</h4>
-                            <p>Otranto</p>
+                            <p class="poi-desc">Bar e locale notturno</p>
+                            <p class="poi-address">Otranto</p>
                         </div>
                         <div class="poi-item">
                             <h4>Blu Bay</h4>
-                            <p>Via Sant'Antonio, Castro</p>
+                            <p class="poi-desc">Disco club vista mare</p>
+                            <p class="poi-address">Via Sant'Antonio, Castro</p>
                         </div>
                         <div class="poi-item">
                             <h4>Guendalina</h4>
-                            <p>SP259, Santa Cesarea Terme</p>
+                            <p class="poi-desc">Lounge bar panoramico</p>
+                            <p class="poi-address">SP259, Santa Cesarea Terme</p>
                         </div>
                         <div class="poi-item">
                             <h4>Malé</h4>
-                            <p>Via Pola, 40, Santa Cesarea Terme</p>
+                            <p class="poi-desc">Club con terrazza</p>
+                            <p class="poi-address">Via Pola, 40, Santa Cesarea Terme</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Attractions -->
                 <div class="poi-category" id="cat-attractions">
-                    <h3 data-translate="attractions_title">🏛️ Luoghi da Visitare</h3>
+                    <h3><span class="icon icon-attraction" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 6h-2v8h-10V9H5l7-6z"/></svg></span> <span data-translate="attractions_title"></span></h3>
                     <div class="poi-list">
                         <div class="poi-item">
                             <h4>Lecce</h4>
-                            <p data-translate="lecce_desc">Città barocca con architettura storica</p>
+                            <p class="poi-desc" data-translate="lecce_desc">Città barocca con architettura storica</p>
                         </div>
                         <div class="poi-item">
                             <h4>Gallipoli</h4>
-                            <p data-translate="gallipoli_desc">Città costiera sul Mar Ionio</p>
+                            <p class="poi-desc" data-translate="gallipoli_desc">Città costiera sul Mar Ionio</p>
                         </div>
                         <div class="poi-item">
                             <h4>Santa Maria di Leuca</h4>
-                            <p data-translate="leuca_desc">Punta estrema del Salento</p>
+                            <p class="poi-desc" data-translate="leuca_desc">Punta estrema del Salento</p>
                         </div>
                         <div class="poi-item">
                             <h4>Otranto</h4>
-                            <p data-translate="otranto_desc">Città storica sul mare Adriatico</p>
+                            <p class="poi-desc" data-translate="otranto_desc">Città storica sul mare Adriatico</p>
                         </div>
                         <div class="poi-item">
                             <h4>Cava di Bauxite</h4>
-                            <p data-translate="bauxite_desc">Lago verde smeraldo - 15km</p>
+                            <p class="poi-desc" data-translate="bauxite_desc">Lago verde smeraldo - 15km</p>
                         </div>
                         <div class="poi-item">
                             <h4>Grotta Zinzulusa</h4>
-                            <p data-translate="zinzulusa_desc">Grotta marina spettacolare</p>
+                            <p class="poi-desc" data-translate="zinzulusa_desc">Grotta marina spettacolare</p>
                         </div>
                         <div class="poi-item">
                             <h4>Punta Palascia</h4>
-                            <p data-translate="palascia_desc">Punto più a est d'Italia</p>
+                            <p class="poi-desc" data-translate="palascia_desc">Punto più a est d'Italia</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services -->
+                <div class="poi-category" id="cat-services">
+                    <h3><span class="icon icon-services" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span> <span data-translate="services_title"></span></h3>
+                    <div class="poi-list">
+                        <div class="poi-item">
+                            <h4>Farmacia</h4>
+                            <p class="poi-desc">Farmacia locale</p>
+                            <p class="poi-address">Uggiano la Chiesa</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Supermercato</h4>
+                            <p class="poi-desc">Supermercato Famila</p>
+                            <p class="poi-address">Via Roma, Uggiano la Chiesa</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Bancomat</h4>
+                            <p class="poi-desc">ATM e servizi bancari</p>
+                            <p class="poi-address">Centro, Uggiano la Chiesa</p>
+                        </div>
+                        <div class="poi-item">
+                            <h4>Stazione Servizio</h4>
+                            <p class="poi-desc">Distributore carburante</p>
+                            <p class="poi-address">SS16, Uggiano la Chiesa</p>
                         </div>
                     </div>
                 </div>
             <!-- Review Section -->
             <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%); padding: 40px; border-radius: 15px; margin-top: 40px; text-align: center; color: var(--white);">
-                <h3 data-translate="leave_review" style="margin-bottom: 25px; font-size: 1.8rem;">✍️ Lascia una Recensione su Google</h3>
+                <h3 style="margin-bottom: 25px; font-size: 1.8rem;"><span class="icon icon-review" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a1 1 0 0 1-1 1H7l-4 2V5a1 1 0 0 1 1-1h14"/></svg></span> <span data-translate="leave_review"></span></h3>
                 <p data-translate="review_subtext" style="margin-bottom: 20px; font-size: 1.1rem;">La tua recensione ci aiuta a migliorare!</p>
-                <a href="https://g.page/r/YOUR_GOOGLE_PLACE_ID/review" target="_blank" data-translate="leave_review_cta" style="display: inline-block; background: var(--white); color: var(--primary-color); padding: 15px 40px; border-radius: 25px; font-weight: 600; text-decoration: none; font-size: 1.2rem; transition: all 0.3s ease;">
-                    ⭐ Lascia una Recensione su Google
+                <a href="https://g.page/r/YOUR_GOOGLE_PLACE_ID/review" target="_blank" style="display: inline-block; background: var(--white); color: var(--primary-color); padding: 15px 40px; border-radius: 25px; font-weight: 600; text-decoration: none; font-size: 1.2rem; transition: all 0.3s ease;">
+                    <span class="icon icon-star" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3L5.2 20l1-6.3L1 9.6l6.4-.9L12 3l2.6 5.7 6.4.9-4.2 4.1L18.8 20z"/></svg></span> <span data-translate="leave_review_cta"></span>
                 </a>
             </div>
         </div>

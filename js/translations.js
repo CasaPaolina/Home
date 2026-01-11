@@ -70,15 +70,15 @@ const translations = {
         filter_supermarkets: "Supermercati",
         filter_pharmacy: "Farmacie",
         filter_attractions: "Attrazioni",
-        nightlife_title: "🍹 Movida Locale",
-        attractions_title: "🏛️ Luoghi da Visitare",
+        nightlife_title: "Movida Locale",
+        attractions_title: "Luoghi da Visitare",
 
         // Beach Map Section
         beach_title: "Spiagge Consigliate",
         beach_subtitle: "Trova la spiaggia perfetta in base al vento",
         wind_direction: "Direzione vento:",
         wind_speed: "Velocità:",
-        beach_recommended: "🏖️ Spiaggia Consigliata",
+        beach_recommended: "Spiaggia Consigliata",
 
         // Contact Section
         contact_title: "Contattaci",
@@ -110,8 +110,8 @@ const translations = {
         outdoor_lighting: "Illuminazione Esterna",
 
         // Review
-        leave_review_cta: "⭐ Lascia una Recensione su Google",
-        leave_review: "✍️ Lascia una Recensione",
+        leave_review_cta: "Lascia una Recensione su Google",
+        leave_review: "Lascia una Recensione",
         review_subtext: "La tua recensione ci aiuta a migliorare!",
         excursions_guest_note: "Prenotazioni escursioni disponibili per gli ospiti. Accedi all'area riservata per maggiori dettagli.",
 
@@ -240,8 +240,8 @@ const translations = {
         filter_supermarkets: "Supermarkets",
         filter_pharmacy: "Pharmacies",
         filter_attractions: "Attractions",
-        nightlife_title: "🍹 Local Nightlife",
-        attractions_title: "🏛️ Places to Visit",
+        nightlife_title: "Local Nightlife",
+        attractions_title: "Places to Visit",
 
         // Beach Map Section
         beach_title: "Recommended Beaches",
@@ -396,8 +396,8 @@ const translations = {
         filter_supermarkets: "Supermarchés",
         filter_pharmacy: "Pharmacies",
         filter_attractions: "Attractions",
-        nightlife_title: "🍹 Vie Nocturne Locale",
-        attractions_title: "🏛️ Lieux à Visiter",
+        nightlife_title: "Vie Nocturne Locale",
+        attractions_title: "Lieux à Visiter",
 
         // Beach Map Section
         beach_title: "Plages Recommandées",
@@ -405,7 +405,7 @@ const translations = {
         beach_subtitle: "Trouvez la plage parfaite selon le vent",
         wind_direction: "Direction du vent:",
         wind_speed: "Vitesse:",
-        beach_recommended: "🏖️ Plage Recommandée",
+        beach_recommended: "Plage Recommandée",
 
         // Contact Section
         contact_title: "Contactez-nous",
@@ -531,8 +531,8 @@ const translations = {
         service_wifi_title: "Wi‑Fi",
 
         // Review
-        leave_review: "✍️ Deja una Reseña",
-        leave_review_cta: "⭐ Deja una reseña en Google",
+        leave_review: "Deja una Reseña",
+        leave_review_cta: "Deja una reseña en Google",
         review_subtext: "¡Tu reseña nos ayuda a mejorar!",
 
         // Contact Section
@@ -559,7 +559,7 @@ const translations = {
         filter_supermarkets: "Supermercados",
         filter_pharmacy: "Farmacias",
         filter_attractions: "Atracciones",
-        nightlife_title: "🍹 Vida Nocturna Local",
+        nightlife_title: "Vida Nocturna Local",
         attractions_title: "🏛️ Lugares para Visitar",
 
         // Guest Area
@@ -643,8 +643,8 @@ const translations = {
         service_wifi_title: "Wi‑Fi",
 
         // Review
-        leave_review: "✍️ Bewertung Hinterlassen",
-        leave_review_cta: "⭐ Hinterlasse eine Bewertung auf Google",
+        leave_review: "Bewertung Hinterlassen",
+        leave_review_cta: "Hinterlasse eine Bewertung auf Google",
         review_subtext: "Ihre Bewertung hilft uns, uns zu verbessern!",
 
         // Contact Section
@@ -671,7 +671,7 @@ const translations = {
         filter_supermarkets: "Supermärkte",
         filter_pharmacy: "Apotheken",
         filter_attractions: "Sehenswürdigkeiten",
-        nightlife_title: "🍹 Lokales Nachtleben",
+        nightlife_title: "Lokales Nachtleben",
         attractions_title: "🏛️ Orte zu Besuchen",
 
         // Guest Area

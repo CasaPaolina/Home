@@ -1,15 +1,18 @@
 /* Guest Page Specific Styles */
 
 .guest-page {
-    background: var(--light-color);
+    background: #f8fafc;
 }
 
 /* Header */
 .guest-header {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
     color: var(--white);
-    padding: 20px 0;
-    box-shadow: var(--shadow);
+    padding: 24px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header-content {
@@ -24,51 +27,182 @@
     color: var(--white);
     font-weight: 600;
     transition: all 0.3s ease;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .back-link:hover {
-    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(-3px);
 }
 
 .guest-header h1 {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 /* Language Flags */
 .language-flags {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .flag-btn {
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1.5rem;
 }
 
-.flag-btn:hover,
+.flag-btn:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
 .flag-btn.active {
     border-color: var(--white);
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
 /* Weather & Beaches Section */
 .weather-beaches {
     padding: 60px 0;
-    background: var(--white);
+    background: white;
 }
 
 .weather-beaches h2 {
     text-align: center;
-    color: var(--dark-color);
+    color: #1e293b;
     margin-bottom: 40px;
     font-size: 2rem;
+    font-weight: 700;
+}
+
+/* Two Day Forecast */
+.forecast-days {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.day-forecast {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 25px;
+    border: 2px solid #e2e8f0;
+}
+
+.day-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.day-header h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.4rem;
+    color: #2c7873;
+    font-weight: 700;
+}
+
+.forecast-date {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.day-timeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.time-block {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.time-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 10px;
+}
+
+.wind-compact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.wind-arrow-sm {
+    font-size: 1.5rem;
+}
+
+.wind-speed-sm {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.wind-dir-sm {
+    display: block;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.recommended-beaches-compact {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.recommended-beaches-compact h4 {
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.recommended-beaches-compact #recommended-beaches-today,
+.recommended-beaches-compact #recommended-beaches-tomorrow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.beach-compact-item {
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #2c7873;
+    font-size: 0.9rem;
+    color: #1e293b;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .weather-timeline {
@@ -185,110 +319,156 @@
 
 /* Essential Info */
 .essential-info {
-    padding: 60px 0;
-    background: var(--white);
+    padding: 40px 0 30px;
+    background: white;
 }
 
 .essential-info h2 {
     text-align: center;
-    color: var(--dark-color);
-    margin-bottom: 40px;
-    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+    font-weight: 700;
 }
 
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
 }
 
 .info-card {
-    background: var(--light-color);
-    padding: 30px;
-    border-radius: 15px;
-    border-left: 4px solid var(--primary-color);
-    transition: transform 0.3s ease;
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
 }
 
 .info-card:hover {
-    transform: translateY(-5px);
+    border-color: #2c7873;
 }
 
 .info-card.emergency {
-    border-left-color: var(--accent-color);
-    background: #fff5f5;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+.info-card.emergency:hover {
+    border-color: #ef4444;
 }
 
 .info-card .info-icon {
-    width: 40px;
-    height: 40px;
-    color: var(--primary-color);
-    margin-bottom: 15px;
+    width: 20px;
+    height: 20px;
+    color: #2c7873;
+    margin-bottom: 6px;
+}
+
+.info-card.emergency .info-icon {
+    color: #ef4444;
 }
 
 .info-card h3 {
-    color: var(--dark-color);
-    margin-bottom: 15px;
-    font-size: 1.3rem;
+    color: #1e293b;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
 }
 
 .info-card p {
-    margin: 8px 0;
-    color: var(--text-dark);
+    margin: 3px 0;
+    color: #475569;
+    line-height: 1.3;
+    font-size: 0.8rem;
+}
+
+.info-card strong {
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 0.8rem;
 }
 
 .info-card a {
-    color: var(--primary-color);
+    color: #2c7873;
     font-weight: 600;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.info-card a:hover {
+    text-decoration: underline;
+}
+
+/* Old waste collection styles removed - now using calendar view */
+
+/* Redundant styles cleaned up */
+
+/* Beach thumbnail polished look */
+.beach-thumbnail {
+    width: 72px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e6eef0;
 }
 
 /* House Rules */
 .house-rules {
     padding: 60px 0;
-    background: var(--light-color);
+    background: #f8fafc;
 }
 
 .house-rules h2 {
     text-align: center;
-    color: var(--dark-color);
+    color: #1e293b;
     margin-bottom: 40px;
     font-size: 2rem;
+    font-weight: 700;
 }
 
 .rules-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .rule-item {
-    background: var(--white);
-    padding: 25px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: var(--shadow);
-    transition: transform 0.3s ease;
+    background: white;
+    padding: 18px 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
 }
 
 .rule-item:hover {
-    transform: scale(1.05);
+    border-color: #2c7873;
+    transform: translateX(3px);
 }
 
 .rule-icon {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 15px;
+    font-size: 2rem;
+    flex-shrink: 0;
 }
 
 .rule-item p {
-    color: var(--text-dark);
-    font-weight: 500;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin: 0;
+    text-align: left;
 }
 
 /* POI Map Section */
 .poi-map-section {
-    padding: 60px 0;
-    background: var(--white);
+    padding: 80px 0;
+    background: white;
 }
 
 /* Excursion Highlight */
@@ -368,8 +548,22 @@
 .poi-map-section h2 {
     text-align: center;
     color: var(--dark-color);
-    margin-bottom: 30px;
-    font-size: 2rem;
+    margin-bottom: 50px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    position: relative;
+}
+
+.poi-map-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    border-radius: 2px;
 }
 
 .poi-filters {
@@ -444,12 +638,17 @@
     font-size: 0.95rem;
 }
 
+/* Reviews Section */
+.reviews {
+    padding: 40px 0;
+}
+
 /* Review Section */
 .review-section {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%);
     padding: 40px;
     border-radius: 15px;
-    margin-top: 30px;
+    margin-top: 0;
     text-align: center;
     color: var(--white);
 }
@@ -482,12 +681,17 @@
     transform: scale(1.05);
 }
 
+/* Excursions Section */
+.excursions {
+    padding: 40px 0 20px;
+}
+
 /* Excursion Card */
 .excursion-card {
     background: linear-gradient(135deg, rgba(254, 243, 199, 0.6), rgba(255, 248, 248, 0.4));
     padding: 24px;
     border-radius: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 0;
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     text-align: left;
 }
@@ -569,7 +773,161 @@
     text-decoration: underline;
 }
 
-/* Mobile Responsive */
+/* Add modern popup and waste styles */
+.beach-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+}
+
+.beach-popup-content {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(16,24,40,0.25);
+    max-width: 980px;
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.popup-image img {
+    width: 260px;
+    height: 220px;
+    object-fit: cover;
+}
+
+.popup-body {
+    padding: 22px;
+    flex: 1 1 auto;
+}
+
+.popup-body h3 {
+    margin-top: 0;
+    font-size: 1.35rem;
+    color: var(--dark-color);
+}
+
+.popup-type {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin: 6px 0;
+}
+
+.popup-desc {
+    color: var(--text-light);
+    margin: 8px 0 14px;
+}
+
+.popup-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.popup-btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.popup-btn-primary {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+.popup-btn-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.popup-close {
+    position: absolute;
+    right: 18px;
+    top: 12px;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+/* Waste collection — compact professional list */
+.waste-collection-section .waste-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.waste-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid rgba(16,24,40,0.05);
+}
+
+.waste-item .waste-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.1rem;
+    flex: 0 0 42px;
+}
+
+.waste-item .waste-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.waste-item .waste-title { font-weight: 700; color: var(--dark-color); }
+.waste-item .waste-sub { font-size: 0.95rem; color: var(--text-light); }
+
+/* Color-coded icons */
+.waste-item.plastic .waste-icon { background: var(--secondary-color); }
+.waste-item.paper .waste-icon { background: var(--primary-color); }
+.waste-item.indiff .waste-icon { background: #6b7280; }
+.waste-item.glass .waste-icon { background: #10b981; }
+.waste-item.organic .waste-icon { background: #16a34a; }
+
+/* Slight hover lift for clarity */
+.waste-item:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(12,18,28,0.06); }
+
+/* Beach list item improvements */
+.beach-list-item { background: var(--white); padding: 12px; border-radius: 10px; box-shadow: 0 6px 18px rgba(16,24,40,0.04); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: transform 0.12s ease; }
+.beach-list-item:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(12,18,28,0.06); }
+.beach-list-name { font-weight: 700; color: var(--dark-color); }
+.beach-list-info { color: var(--text-light); }
+
+/* Compact recommendation items */
+.beach-compact-item { padding: 8px 0; border-bottom: 1px dashed rgba(0,0,0,0.06); }
+.beach-compact-item .beach-name-link { color: var(--primary-color); font-weight: 700; cursor: pointer; }
+
+
+/* Modernize info-card */
+.info-card {
+    background: var(--white);
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+}
+
+.info-card h3 { margin-top: 0; color: var(--dark-color); }
+
 @media (max-width: 900px) {
     .header-content {
         flex-direction: column;
@@ -607,5 +965,1173 @@
     .review-btn {
         width: 100%;
         padding: 14px;
+    }
+}
+
+/* ========== BEACH MAP STYLES ========== */
+
+.beaches-map-section {
+    margin-top: 30px;
+}
+
+.beaches-map-section h4 {
+    text-align: center;
+    color: var(--dark-color);
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.map-container {
+    height: 500px;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+@media (max-width: 768px) {
+    .map-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .map-container {
+        height: 350px;
+    }
+
+    .beaches-map-section h4 {
+        font-size: 1.2rem;
+    }
+}
+
+/* ========== MODERN BEACH MAP & LIST STYLES ========== */
+
+.beaches-map-section {
+    margin-top: 40px;
+}
+
+.beaches-map-section h4 {
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+/* Modern Filters */
+.beach-filters-modern {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.beach-filter-btn {
+    background: #f1f5f9;
+    border: 2px solid transparent;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #475569;
+}
+
+.beach-filter-btn:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+}
+
+.beach-filter-btn.active {
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    color: white;
+    border-color: #2c7873;
+    box-shadow: 0 4px 12px rgba(44, 120, 115, 0.25);
+}
+
+/* Modern Map Container */
+.map-container-modern {
+    height: 550px;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    margin-bottom: 40px;
+}
+
+/* Modern Beach List */
+.beaches-list-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.beach-card-item {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.beach-card-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.beach-card-item.selected {
+    border-color: #2c7873;
+    box-shadow: 0 8px 24px rgba(44, 120, 115, 0.2);
+}
+
+.beach-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.beach-card-header h5 {
+    font-size: 1.3rem;
+    color: #1e293b;
+    margin: 0;
+    font-weight: 700;
+}
+
+.beach-type-tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.beach-card-distance {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 8px 0;
+}
+
+.beach-card-description {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 12px 0;
+}
+
+.beach-facilities-tags {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.facility-tag {
+    font-size: 1.2rem;
+}
+
+.beach-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.beach-view-btn {
+    flex: 1;
+    padding: 12px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.beach-view-btn:hover {
+    background: #e2e8f0;
+}
+
+.beach-book-btn {
+    flex: 1;
+    padding: 12px;
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.beach-book-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(44, 120, 115, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .map-container-modern {
+        height: 450px;
+    }
+
+    .beaches-list-modern {
+        grid-template-columns: 1fr;
+    }
+
+    .beach-filter-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .beaches-map-section h4 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .map-container-modern {
+        height: 400px;
+    }
+
+    .beach-card-item {
+        padding: 20px;
+    }
+
+    .beach-card-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .beach-card-actions {
+        flex-direction: column;
+    }
+
+    .beaches-map-section h4 {
+        font-size: 1.3rem;
+    }
+
+    .beach-filter-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Additional Responsive Improvements for Modernized Sections */
+@media (max-width: 968px) {
+    .essential-info h2,
+    .house-rules h2,
+    .weather-beaches h2,
+    .poi-map-section h2 {
+        font-size: 2.2rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    
+    .rules-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .guest-header {
+        padding: 20px 0;
+    }
+    
+    .guest-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .essential-info,
+    .house-rules,
+    .weather-beaches,
+    .poi-map-section {
+        padding: 60px 0;
+    }
+    
+    .essential-info h2,
+    .house-rules h2,
+    .weather-beaches h2,
+    .poi-map-section h2 {
+        font-size: 2rem;
+        margin-bottom: 40px;
+    }
+    
+    .info-grid,
+    .rules-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .info-card,
+    .rule-item {
+        padding: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .guest-header {
+        padding: 16px 0;
+    }
+    
+    .guest-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .back-link {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .flag-btn {
+        padding: 8px 10px;
+        font-size: 1.3rem;
+    }
+    
+    .essential-info,
+    .house-rules,
+    .weather-beaches,
+    .poi-map-section {
+        padding: 50px 0;
+    }
+    
+    .essential-info h2,
+    .house-rules h2,
+    .weather-beaches h2,
+    .poi-map-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 35px;
+    }
+    
+    .essential-info h2::after,
+    .house-rules h2::after,
+    .weather-beaches h2::after,
+    .poi-map-section h2::after {
+        width: 60px;
+        height: 3px;
+    }
+    
+    .info-card,
+    .rule-item {
+        padding: 24px;
+    }
+    
+    .info-card h3,
+    .rule-item h3 {
+        font-size: 1.2rem;
+    }
+    
+    .rule-icon {
+        font-size: 3rem;
+    }
+    
+    .waste-item {
+        padding: 15px 18px;
+    }
+    
+    .waste-note {
+        padding: 14px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== LEAFLET MAP CUSTOM STYLES ========== */
+.custom-home-marker,
+.custom-beach-marker {
+    background: none;
+    border: none;
+}
+
+.marker-pin {
+    width: 35px;
+    height: 35px;
+    border-radius: 50% 50% 50% 0;
+    background: #2c7873;
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -20px 0 0 -17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.marker-pin::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    margin: 0;
+    background: white;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.home-pin {
+    background: #2c7873 !important;
+    width: 40px;
+    height: 40px;
+}
+
+.beach-pin {
+    width: 35px;
+    height: 35px;
+}
+
+.marker-pin span {
+    transform: rotate(45deg);
+}
+
+/* Beach Popup Styles */
+.beach-popup {
+    min-width: 200px;
+}
+
+.beach-popup h3 {
+    margin: 0 0 10px 0;
+    color: #2c7873;
+    font-size: 1.1rem;
+}
+
+.beach-popup p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.popup-book-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #2c7873;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.popup-book-btn:hover {
+    background: #1e5f5a;
+}
+
+/* Compact Beach List */
+.beaches-list-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 30px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.beach-list-item {
+    background: white;
+    padding: 16px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.beach-list-item:hover {
+    border-left-color: #2c7873;
+    box-shadow: 0 2px 12px rgba(44, 120, 115, 0.15);
+    transform: translateX(3px);
+}
+
+.beach-list-item.selected {
+    border-left-color: #2c7873;
+    background: linear-gradient(135deg, rgba(44, 120, 115, 0.05) 0%, rgba(44, 120, 115, 0.02) 100%);
+    box-shadow: 0 3px 15px rgba(44, 120, 115, 0.2);
+}
+
+.beach-list-img {
+    width: 90px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.beach-list-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.beach-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.beach-list-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #1e293b;
+}
+
+.beach-list-type {
+    font-size: 0.85rem;
+    padding: 4px 12px;
+    background: #f1f5f9;
+    border-radius: 20px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.beach-list-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.beach-list-distance {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.beach-list-book-btn {
+    padding: 6px 14px;
+    background: #2c7873;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.beach-list-book-btn:hover {
+    background: #1e5f5a;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .beaches-list-modern {
+        max-height: 400px;
+    }
+    
+    .beach-list-item {
+        padding: 14px 16px;
+    }
+}
+
+/* Weather Section Responsive */
+@media (max-width: 768px) {
+    .forecast-days {
+        grid-template-columns: 1fr;
+    }
+    
+    .day-timeline {
+        gap: 10px;
+    }
+    
+    .time-block {
+        padding: 12px 10px;
+    }
+    
+    .time-label {
+        font-size: 0.8rem;
+    }
+    
+    .wind-speed-sm {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .day-forecast {
+        padding: 20px;
+    }
+    
+    .day-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .day-timeline {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .time-block {
+        padding: 12px;
+    }
+}
+
+/* Beach Name Link */
+.beach-name-link {
+    color: #2c7873;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.beach-name-link:hover {
+    color: #1e5f5a;
+}
+
+/* Beach Popup */
+.beach-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+}
+
+.beach-popup-content {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.popup-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #f1f5f9;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.popup-close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.beach-popup-content h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.8rem;
+    color: #1e293b;
+    padding-right: 40px;
+}
+
+.popup-type {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.popup-distance {
+    font-size: 0.95rem;
+    margin: 8px 0;
+    color: #64748b;
+}
+
+.popup-description {
+    margin: 20px 0;
+    line-height: 1.6;
+    color: #475569;
+}
+
+.popup-facilities {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 3px solid #2c7873;
+}
+
+.popup-facilities strong {
+    color: #1e293b;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.popup-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.popup-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.popup-btn-primary {
+    background: #2c7873;
+    color: white;
+}
+
+.popup-btn-primary:hover {
+    background: #1e5f5a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(44, 120, 115, 0.3);
+}
+
+.popup-btn-secondary {
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 2px solid #e2e8f0;
+}
+
+.popup-btn-secondary:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+@media (max-width: 480px) {
+    .beach-popup-content {
+        padding: 25px 20px;
+    }
+
+    .beach-popup-content h3 {
+        font-size: 1.4rem;
+    }
+
+    .popup-actions {
+        flex-direction: column;
+    }
+
+    .popup-btn {
+        width: 100%;
+    }
+}
+
+/* Waste Collection Calendar - Clean Design */
+.waste-collection-section {
+    max-width: 1200px;
+    margin: 30px auto 0;
+    padding: 0;
+}
+
+.waste-collection-section h3 {
+    margin: 0 0 30px 0;
+    font-size: 1.6rem;
+    color: #0f172a;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.waste-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.waste-day-cell {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.waste-day-cell:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+.waste-day-cell.today {
+    border-color: #2c7873;
+    border-width: 3px;
+    box-shadow: 0 8px 32px rgba(44, 120, 115, 0.2);
+}
+
+.waste-day-cell.empty {
+    background: #f8fafc;
+    border-style: dashed;
+    opacity: 0.6;
+}
+
+.day-header {
+    background: #f8fafc;
+    padding: 12px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.waste-day-cell.today .day-header {
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    color: white;
+}
+
+.day-name {
+    font-weight: 800;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    color: #475569;
+}
+
+.waste-day-cell.today .day-name {
+    color: white;
+}
+
+.today-badge {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-top: 4px;
+    color: #2c7873;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.day-content {
+    padding: 16px 12px;
+    min-height: 120px;
+}
+
+.waste-material {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.waste-material:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.material-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.material-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.waste-material.plastic .material-icon {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.waste-material.paper .material-icon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.waste-material.glass .material-icon {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.waste-material.indiff .material-icon {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.material-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.3;
+}
+
+.material-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.no-collection {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-style: italic;
+    margin: 0;
+    padding: 20px 0;
+}
+
+/* Organic waste note */
+.organic-note {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 2px solid #10b981;
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
+    transition: all 0.3s ease;
+}
+
+.organic-note:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.25);
+}
+
+.organic-icon {
+    width: 56px;
+    height: 56px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    color: #059669;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.organic-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.organic-text {
+    color: #065f46;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    flex: 1;
+}
+
+.organic-text strong {
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #047857;
+}
+
+/* Duplicate waste styles removed - using calendar layout */
+
+/* Compact recommended beaches */
+.beach-thumbnail {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e6eef0;
+}
+.beach-thumbnail.placeholder {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: #f1faf8;
+    color: #2c7873;
+}
+.beach-compact-item {
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+.beach-compact-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(2,6,23,0.08);
+}
+.beach-compact-item .beach-thumbnail {
+    width: 72px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+.beach-compact-item .beach-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+.beach-compact-item .beach-distance {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+}
+.beach-compact-item .beach-name-link {
+    cursor: pointer;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Responsive Design for Waste Calendar */
+@media (max-width: 1024px) {
+    .waste-calendar-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .waste-collection-section {
+        padding: 0 16px;
+    }
+
+    .waste-collection-section h3 {
+        font-size: 1.4rem;
+        margin-bottom: 24px;
+    }
+
+    .waste-calendar-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .day-content {
+        min-height: 100px;
+        padding: 12px 10px;
+    }
+
+    .material-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .material-info h4 {
+        font-size: 0.8rem;
+    }
+
+    .material-info p {
+        font-size: 0.7rem;
+    }
+
+    .organic-note {
+        padding: 18px 20px;
+        flex-direction: row;
+        gap: 16px;
+        max-width: 100%;
+    }
+
+    .organic-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .organic-text {
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
+    .organic-text strong {
+        font-size: 0.95rem;
+    }
+
+    .beach-compact-item { padding: 10px; }
+}
+
+@media (max-width: 480px) {
+    .waste-calendar-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .waste-day-cell {
+        border-radius: 10px;
+    }
+
+    .day-header {
+        padding: 10px;
+    }
+
+    .day-name {
+        font-size: 0.85rem;
+    }
+
+    .today-badge {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
+
+    .waste-material {
+        gap: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+
+    .organic-note {
+        padding: 16px 18px;
+        gap: 12px;
+    }
+
+    .organic-icon {
+        width: 40px;
+        height: 40px;
+        padding: 10px;
+    }
+
+    .organic-text {
+        font-size: 0.82rem;
+    }
+
+    .organic-text strong {
+        font-size: 0.88rem;
     }
 }

@@ -522,50 +522,9 @@ window.getBeachImageCandidates = function getBeachImageCandidates(beach) {
     return [...new Set(candidates)];
 };
 
-// Render a compact calendar-week view of waste collection
-function renderWasteCalendar() {
-    const container = document.getElementById('waste-calendar');
-    if (!container) return;
+// Old waste collection functions removed - now using calendar view
 
-    const items = Array.from(document.querySelectorAll('.waste-item'));
-    if (!items.length) return;
 
-    // Build day cells Monday..Saturday
-    const cells = items.map(item => {
-        const day = item.getAttribute('data-day');
-        const dayLabel = item.querySelector('.waste-day') ? item.querySelector('.waste-day').textContent.trim() : '';
-        const pills = Array.from(item.querySelectorAll('.material-pill')).map(p => p.outerHTML).join('');
-        return { day, dayLabel, pills };
-    });
-
-    // Determine today's index (Mon=1..Sat=6)
-    const today = new Date().getDay();
-
-    // Compute next pickup: if today is Mon..Sat use today, else (Sun) choose Monday
-    const nextPickup = (today >= 1 && today <= 6) ? today : 1;
-
-    const html = cells.map(c => {
-        const dayNum = parseInt(c.day, 10);
-        const isToday = (dayNum === today);
-        const isNext = (dayNum === nextPickup);
-        const className = `waste-day-cell ${isToday ? 'today' : ''} ${isNext ? 'next-pickup' : ''}`.trim();
-        return `<div class="${className}" data-day="${c.day}">
-            <div class="calendar-day">${c.dayLabel}</div>
-            <div class="calendar-pills">${c.pills}</div>
-        </div>`;
-    }).join('');
-
-    container.innerHTML = html;
-
-    // On small screens allow horizontal scrolling
-    container.style.overflowX = 'auto';
-}
-
-// Utility: call both highlight and render calendar together
-function refreshWasteUI() {
-    if (typeof highlightTodayWaste === 'function') highlightTodayWaste();
-    renderWasteCalendar();
-} 
 
 // Error handler for img elements; tries next fallback candidate
 window.handleBeachImgError = function handleBeachImgError(img) {
@@ -604,7 +563,7 @@ function displayTop3BeachesCompact(beaches, day) {
 
         return `<div class="beach-compact-item">
             ${imageHTML}
-            <div>
+            <div class="beach-info">
                 <span class="beach-name-link" onclick="showBeachPopup('${escapedName}')">${beach.name}</span>
                 <div class="beach-distance">${beach.distance}</div>
             </div>
@@ -883,21 +842,7 @@ function displayCurrentDate() {
     dateDisplay.textContent = `${emoji} ${dateString}`;
 }
 
-// Highlight today's collection card (adds .today class to .waste-item[data-day=X])
-function highlightTodayWaste() {
-    try {
-        const today = new Date().getDay(); // 0=Sunday, 1=Monday ... 6=Saturday
-        // If Sunday (0), do not highlight — no collection scheduled in our list
-        if (today === 0) return;
-        // In our markup Monday=1 ... Saturday=6
-        const el = document.querySelector(`.waste-item[data-day="${today}"]`);
-        if (!el) return;
-        document.querySelectorAll('.waste-item').forEach(node => node.classList.remove('today'));
-        el.classList.add('today');
-    } catch (e) {
-        console.warn('highlightTodayWaste error', e);
-    }
-}
+// Removed - highlighting handled in calendar view
 
 // Open Google Maps directions from current device location to destination
 function navigateTo(destLat, destLng, destName) {
@@ -1020,34 +965,78 @@ function initBeachesMap() {
         beachMarkers.push({ marker, type: (beach.type || '').toLowerCase(), beach });
     });
 
-    // Apply initial filter state (buttons default to 'all')
+    // Function to check if a beach matches the filter
+    function beachMatchesFilter(beach, filter) {
+        if (!filter || filter === 'all') return true;
+
+        const typeStr = ((beach.sandType || beach.type) || '').toString().toLowerCase();
+        const isCliff = typeStr.includes('rock') || typeStr.includes('scogl') || typeStr.includes('ciott') || typeStr.includes('pebbl');
+        // Per your note: everything not classified as rock is considered sand
+        const isSand = !isCliff;
+
+        const isAdriatic = typeof beach.lng === 'number' ? beach.lng > 18.2 : false;
+        const isIonian = typeof beach.lng === 'number' ? beach.lng <= 18.2 : false;
+
+        if (filter === 'sand' && isSand) return true;
+        if (filter === 'rocks' && isCliff) return true;
+        if (filter === 'adriatic' && isAdriatic) return true;
+        if (filter === 'ionian' && isIonian) return true;
+
+        return false;
+    }
+
+    // Apply filter to map markers
     function applyBeachFilter(filter) {
         beachMarkers.forEach(({ marker, beach }) => {
-            if (!filter || filter === 'all') {
-                if (!map.hasLayer(marker)) map.addLayer(marker);
-                return;
-            }
-
-            const typeStr = ((beach.sandType || beach.type) || '').toString().toLowerCase();
-            const isCliff = typeStr.includes('rock') || typeStr.includes('scogl') || typeStr.includes('ciott') || typeStr.includes('pebbl');
-            // Per your note: everything not classified as rock is considered sand
-            const isSand = !isCliff;
-
-            const isAdriatic = typeof beach.lng === 'number' ? beach.lng > 18.2 : false;
-            const isIonian = typeof beach.lng === 'number' ? beach.lng <= 18.2 : false;
-
-            let show = false;
-            if (filter === 'sand' && isSand) show = true;
-            if (filter === 'rocks' && isCliff) show = true;
-            if (filter === 'adriatic' && isAdriatic) show = true;
-            if (filter === 'ionian' && isIonian) show = true;
-
+            const show = beachMatchesFilter(beach, filter);
             if (show) {
                 if (!map.hasLayer(marker)) map.addLayer(marker);
             } else {
                 if (map.hasLayer(marker)) map.removeLayer(marker);
             }
         });
+
+        // Update beach list
+        updateBeachList(filter);
+    }
+
+    // Populate beach list below map
+    function updateBeachList(filter) {
+        const listContainer = document.getElementById('beaches-list');
+        if (!listContainer) return;
+
+        // Get all beaches that match the current filter
+        const filteredBeaches = beaches.filter(beach => beachMatchesFilter(beach, filter));
+
+        if (filteredBeaches.length === 0) {
+            listContainer.innerHTML = '<p style="text-align: center; color: #64748b; padding: 20px;">Nessuna spiaggia corrisponde al filtro selezionato.</p>';
+            return;
+        }
+
+        listContainer.innerHTML = filteredBeaches.map(beach => {
+            const escapedName = beach.name.replace(/'/g, "\\'");
+            const candidates = window.getBeachImageCandidates(beach);
+            const first = candidates[0];
+            const dataFallbacks = candidates.join('|');
+
+            const bookingBtn = beach.booking
+                ? `<a href="${beach.booking}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation();">Prenota</a>`
+                : '';
+
+            return `
+                <div class="beach-list-item" onclick="showBeachPopup('${escapedName}')">
+                    <img src="${first}" data-fallbacks="${dataFallbacks}" data-current="0" onerror="handleBeachImgError(this)" alt="${beach.name}" class="beach-list-img">
+                    <div class="beach-list-content">
+                        <div class="beach-list-name">${beach.name}</div>
+                        <div class="beach-list-info">
+                            <span class="beach-list-type">${beach.type}</span>
+                            <span class="beach-list-distance">${beach.distance}</span>
+                        </div>
+                    </div>
+                    ${bookingBtn}
+                </div>
+            `;
+        }).join('');
     }
 
     // Wire up filter buttons (use the .beach-filter-btn class to match markup)
@@ -1059,50 +1048,17 @@ function initBeachesMap() {
             applyBeachFilter(f);
         });
     });
+
+    // Initial population of beach list
+    updateBeachList('all');
 }
 
-// Ensure translations are loaded correctly
-function loadTranslations(language) {
-    const translations = guestTranslations[language];
-    if (!translations) {
-        console.error(`Translations for language ${language} not found.`);
-        return;
-    }
-
-    document.querySelectorAll('[data-translate]').forEach(el => {
-        const key = el.getAttribute('data-translate');
-        if (translations[key]) {
-            el.textContent = translations[key];
-        }
-    });
-}
-
-// Ensure beaches and weather data are displayed
-async function displayBeachesAndWeather() {
-    try {
-        const locations = await locationsData.load();
-        const beaches = locations.getBeaches();
-        const weather = await fetchWeatherData();
-
-        // Update UI with beaches and weather data
-        updateBeachesUI(beaches);
-        updateWeatherUI(weather);
-    } catch (error) {
-        console.error('Error displaying beaches and weather:', error);
-    }
-}
+// Note: Translation function moved to guest-translations.js for better organization
 
 // Call functions on page load
 document.addEventListener('DOMContentLoaded', () => {
-    const userLang = localStorage.getItem('language') || 'it';
-    loadTranslations(userLang);
-    displayBeachesAndWeather();
-    
     // Display current date
     displayCurrentDate();
-
-    // Highlight today's waste collection and render calendar
-    if (typeof refreshWasteUI === 'function') refreshWasteUI();
 
     // Fetch weather and beach recommendations
     fetchWeatherForecast();
@@ -1134,4 +1090,86 @@ document.addEventListener('DOMContentLoaded', () => {
             // user denied or error - ignore silently
         }, { timeout: 10000 });
     }
+
+    // SVG Icons for waste materials
+    const wasteSVGs = {
+        plastic: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
+        paper: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+        glass: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2h8l1 18H7L8 2z"/><line x1="7" y1="10" x2="17" y2="10"/></svg>`,
+        indiff: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
+        organic: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M8 12a4 4 0 0 0 8 0"/><path d="M12 2v20"/></svg>`
+    };
+
+    // Populate waste calendar dynamically with correct schedule
+    function populateWasteCalendar() {
+        const wasteData = [
+            { day: 1, dayName: 'Lunedì', dayShort: 'LUN', materials: [{ name: 'Indifferenziato', type: 'indiff', desc: 'Tutto ciò che non è riciclabile' }] },
+            { day: 2, dayName: 'Martedì', dayShort: 'MAR', materials: [{ name: 'Plastica e Metalli', type: 'plastic', desc: 'Bottiglie, flaconi, vaschette, lattine' }] },
+            { day: 3, dayName: 'Mercoledì', dayShort: 'MER', materials: [{ name: 'Indifferenziato', type: 'indiff', desc: 'Rifiuti non riciclabili' }, { name: 'Vetro', type: 'glass', desc: 'Bottiglie e vasetti (senza tappi)' }] },
+            { day: 4, dayName: 'Giovedì', dayShort: 'GIO', materials: [{ name: 'Carta e Cartone', type: 'paper', desc: 'Giornali, riviste, scatole appiattite' }] },
+            { day: 5, dayName: 'Venerdì', dayShort: 'VEN', materials: [{ name: 'Plastica e Metalli', type: 'plastic', desc: 'Bottiglie, flaconi, vaschette, lattine' }] },
+            { day: 6, dayName: 'Sabato', dayShort: 'SAB', materials: [{ name: 'Indifferenziato', type: 'indiff', desc: 'Rifiuti non riciclabili' }]
+            }
+        ];
+
+        const calendarGrid = document.getElementById('waste-calendar-grid');
+        if (!calendarGrid) return;
+
+        const today = new Date().getDay();
+
+        const calendarHTML = wasteData.map(({ day, dayName, dayShort, materials }) => {
+            const isToday = day === today;
+            const isEmpty = materials.length === 0;
+
+            if (isEmpty) {
+                return `<div class="waste-day-cell empty ${isToday ? 'today' : ''}" data-day="${day}">
+                    <div class="day-header">
+                        <span class="day-name">${dayShort}</span>
+                        ${isToday ? '<span class="today-badge">Oggi</span>' : ''}
+                    </div>
+                    <div class="day-content">
+                        <p class="no-collection">Nessuna raccolta</p>
+                    </div>
+                </div>`;
+            }
+
+            const materialsHTML = materials.map(m => `
+                <div class="waste-material ${m.type}">
+                    <div class="material-icon">${wasteSVGs[m.type]}</div>
+                    <div class="material-info">
+                        <h4>${m.name}</h4>
+                        <p>${m.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            return `<div class="waste-day-cell ${isToday ? 'today' : ''}" data-day="${day}">
+                <div class="day-header">
+                    <span class="day-name">${dayShort}</span>
+                    ${isToday ? '<span class="today-badge">Oggi</span>' : ''}
+                </div>
+                <div class="day-content">
+                    ${materialsHTML}
+                </div>
+            </div>`;
+        }).join('');
+
+        calendarGrid.innerHTML = calendarHTML;
+
+        // Add organic waste note
+        if (!document.querySelector('.organic-note')) {
+            const organicNote = document.createElement('div');
+            organicNote.className = 'organic-note';
+            organicNote.innerHTML = `
+                <div class="organic-icon">${wasteSVGs.organic}</div>
+                <div class="organic-text">
+                    <strong>Organico:</strong> Raccolta quotidiana - Utilizzare sacchetti compostabili<br>
+                    <strong>⏰ Nota:</strong> Mettere la spazzatura fuori la sera prima del giorno di raccolta
+                </div>
+            `;
+            calendarGrid.parentElement.appendChild(organicNote);
+        }
+    }
+
+    populateWasteCalendar();
 });
