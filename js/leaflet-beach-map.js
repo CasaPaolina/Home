@@ -26,8 +26,13 @@ class LeafletBeachMap {
         const mapElement = document.getElementById('beaches-map');
         if (!mapElement) return;
 
-        // Center on Salento region
-        this.map = L.map('beaches-map').setView([40.15, 18.35], 10);
+        // Center on Salento region with fullscreen control
+        this.map = L.map('beaches-map', {
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+                position: 'topleft'
+            }
+        }).setView([40.15, 18.35], 10);
 
         // Add CartoDB Voyager tiles (cleaner, less roads)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -35,6 +40,21 @@ class LeafletBeachMap {
             maxZoom: 19,
             subdomains: 'abcd'
         }).addTo(this.map);
+
+        // Add Center on Casa Paolina button
+        L.Control.CenterHome = L.Control.extend({
+            onAdd: (map) => {
+                const btn = L.DomUtil.create('button', 'leaflet-center-home');
+                btn.innerHTML = '🏠';
+                btn.title = 'Center on Casa Paolina';
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    this.map.setView([this.casaPaolina.lat, this.casaPaolina.lng], 13);
+                };
+                return btn;
+            }
+        });
+        this.map.addControl(new L.Control.CenterHome({ position: 'topleft' }));
 
         // Add Casa Paolina marker
         this.addHomeMarker();

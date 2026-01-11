@@ -6,6 +6,7 @@
     <title>Casa Paolina - Uggiano la Chiesa, Salento</title>
     <meta name="description" content="Casa Paolina - An oasis of peace and tranquility in the heart of Salento, Puglia">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.3.8/dist/photoswipe.css" />
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/guest-page.css">
@@ -419,12 +420,12 @@
                     </div>
                 </div>
             <!-- Review Section -->
-            <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-color) 100%); padding: 40px; border-radius: 15px; margin-top: 40px; text-align: center; color: var(--white);">
-                <h3 style="margin-bottom: 25px; font-size: 1.8rem;"><span class="icon icon-review" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a1 1 0 0 1-1 1H7l-4 2V5a1 1 0 0 1 1-1h14"/></svg></span> <span data-translate="leave_review"></span></h3>
-                <p data-translate="review_subtext" style="margin-bottom: 20px; font-size: 1.1rem;">La tua recensione ci aiuta a migliorare!</p>
-                <a href="https://g.page/r/YOUR_GOOGLE_PLACE_ID/review" target="_blank" style="display: inline-block; background: var(--white); color: var(--primary-color); padding: 15px 40px; border-radius: 25px; font-weight: 600; text-decoration: none; font-size: 1.2rem; transition: all 0.3s ease;">
-                    <span class="icon icon-star" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3L5.2 20l1-6.3L1 9.6l6.4-.9L12 3l2.6 5.7 6.4.9-4.2 4.1L18.8 20z"/></svg></span> <span data-translate="leave_review_cta"></span>
-                </a>
+            <div class="review-section">
+                <h3 data-translate="leave_review">✍️ Lascia una Recensione su Google</h3>
+                <p class="review-subtext" data-translate="review_subtext">La tua recensione ci aiuta a migliorare!</p>
+                <div class="review-links">
+                    <a href="https://maps.app.goo.gl/xqoVeJmRU9mDvPQj6" target="_blank" class="review-btn" data-translate="leave_review_cta">⭐ Lascia una Recensione su Google</a>
+                </div>
             </div>
         </div>
     </section>
@@ -513,6 +514,7 @@
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
     <script src="js/translations.js"></script>
     <script src="js/main.js"></script>
 </body>

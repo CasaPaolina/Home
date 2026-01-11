@@ -83,7 +83,7 @@
     text-align: center;
     color: #1e293b;
     margin-bottom: 40px;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
 }
 
@@ -574,21 +574,50 @@
     flex-wrap: wrap;
 }
 
-.poi-filter-btn {
-    padding: 12px 25px;
-    border: 2px solid var(--primary-color);
-    background: var(--white);
-    color: var(--primary-color);
-    border-radius: 25px;
+/* Unified filter button style - matches main page */
+.poi-filter-btn,
+.beach-filter-btn {
+    padding: 12px 28px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 30px;
     cursor: pointer;
     font-weight: 600;
-    transition: all 0.3s ease;
+    color: var(--text-dark);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.poi-filter-btn::before,
+.beach-filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(44, 120, 115, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.poi-filter-btn:hover::before,
+.beach-filter-btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .poi-filter-btn:hover,
-.poi-filter-btn.active {
+.poi-filter-btn.active,
+.beach-filter-btn:hover,
+.beach-filter-btn.active {
     background: var(--primary-color);
-    color: var(--white);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(44, 120, 115, 0.3);
 }
 
 .poi-categories {
@@ -688,12 +717,14 @@
 
 /* Excursion Card */
 .excursion-card {
-    background: linear-gradient(135deg, rgba(254, 243, 199, 0.6), rgba(255, 248, 248, 0.4));
+    background: linear-gradient(135deg, rgba(44, 120, 115, 0.08) 0%, rgba(44, 120, 115, 0.05) 100%);
     padding: 24px;
     border-radius: 15px;
     margin-bottom: 0;
+    border: 2px solid rgba(44, 120, 115, 0.2);
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     text-align: left;
+    transition: all 0.3s ease;
 }
 .excursion-card h3 {
     margin-top: 0;
@@ -1028,29 +1059,7 @@
     flex-wrap: wrap;
 }
 
-.beach-filter-btn {
-    background: #f1f5f9;
-    border: 2px solid transparent;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #475569;
-}
-
-.beach-filter-btn:hover {
-    background: #e2e8f0;
-    transform: translateY(-1px);
-}
-
-.beach-filter-btn.active {
-    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
-    color: white;
-    border-color: #2c7873;
-    box-shadow: 0 4px 12px rgba(44, 120, 115, 0.25);
-}
+/* Beach filter buttons now use unified style above */
 
 /* Modern Map Container */
 .map-container-modern {
@@ -2134,4 +2143,45 @@
     .organic-text strong {
         font-size: 0.88rem;
     }
+}
+
+/* ========== ENHANCED MAP CONTROLS FOR MOBILE ========== */
+.leaflet-control-zoom a {
+    width: 40px !important;
+    height: 40px !important;
+    line-height: 40px !important;
+    font-size: 24px !important;
+}
+
+.leaflet-control-fullscreen a {
+    width: 44px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    font-size: 20px !important;
+}
+
+.leaflet-center-home {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    background: white;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.leaflet-center-home:hover {
+    background: #f4f4f4;
+    transform: scale(1.05);
+}
+
+.leaflet-container.leaflet-fullscreen-on {
+    width: 100% !important;
+    height: 100% !important;
 }

@@ -802,7 +802,7 @@ function showGuestInfo() {
                         <line x1="12" y1="20" x2="12.01" y2="20"/>
                     </svg> Wi-Fi</h3>
                     <p><strong>Nome rete:</strong> CasaPaolina_WiFi</p>
-                    <p><strong>Password:</strong> Salento2024!</p>
+                    <p><strong>Password:</strong> Salento2026!</p>
                 </div>
 
                 <div class="guest-info-section">
@@ -1034,13 +1034,33 @@ function initMainPOIMap() {
     const mapElement = document.getElementById('main-poi-map');
     if (!mapElement) return;
 
-    // Create map centered on Casa Paolina
-    const map = L.map('main-poi-map').setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
+    // Create map centered on Casa Paolina with fullscreen control
+    const map = L.map('main-poi-map', {
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
+    }).setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
+
+    // Add Center on Casa Paolina button
+    L.Control.CenterHome = L.Control.extend({
+        onAdd: function(map) {
+            const btn = L.DomUtil.create('button', 'leaflet-center-home');
+            btn.innerHTML = '🏠';
+            btn.title = 'Center on Casa Paolina';
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                map.setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
+            };
+            return btn;
+        }
+    });
+    map.addControl(new L.Control.CenterHome({ position: 'topleft' }));
 
     // Add Casa Paolina marker
     const homeIcon = L.divIcon({
