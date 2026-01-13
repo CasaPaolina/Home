@@ -60,7 +60,7 @@ const translations = {
         // Area Map Section
         area_title: "Scopri la Zona",
         area_subtitle: "Servizi e punti di interesse nelle vicinanze",
-        poi_title: "Punti di Interesse",
+        poi_title: "Punti di interesse vicino a te",
         filter_all: "Tutti",
         filter_nightlife: "Movida",
         filter_beaches: "Spiagge",
@@ -230,7 +230,7 @@ const translations = {
         // Area Map Section
         area_title: "Discover the Area",
         area_subtitle: "Services and points of interest nearby",
-        poi_title: "Points of Interest",
+        poi_title: "Points of interest near you",
         filter_all: "All",
         filter_nightlife: "Nightlife",
         filter_beaches: "Beaches",
@@ -386,7 +386,7 @@ const translations = {
         // Area Map Section
         area_title: "Découvrez la Région",
         area_subtitle: "Services et points d'intérêt à proximité",
-        poi_title: "Points d'Intérêt",
+        poi_title: "Points d'intérêt à proximité",
         filter_all: "Tous",
         filter_nightlife: "Vie Nocturne",
         filter_beaches: "Plages",

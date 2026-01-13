@@ -213,7 +213,7 @@
       "bookingLink": "https://www.booking.com/beach/it/otranto",
       "distance": "5 km",
       "facilities": ["parking", "restaurants", "umbrellas", "showers"],
-      "images": []
+      "images": ["spiaggia_dei_gradoni.jpg"]
     },
     {
       "id": "porto-selvaggio",
@@ -388,8 +388,8 @@
     {
       "id": "cava-bauxite",
       "name": "Cava di Bauxite",
-      "lat": 40.11,
-      "lng": 18.47,
+      "lat": 40.131925, 
+      "lng": 18.500634,
       "type": "attraction",
       "category": "natural",
       "description": "Former bauxite quarry with emerald lake and red earth",
@@ -443,19 +443,7 @@
     }
   ],
   "nightlife": [
-    {
-      "id": "avamposto",
-      "name": "Avamposto",
-      "lat": 40.0975,
-      "lng": 18.392,
-      "type": "nightlife",
-      "category": "beach_club",
-      "description": "Popular beach club with music and cocktails",
-      "translationKey": "nightlife_avamposto",
-      "address": "Castro Marina, LE",
-      "distance": "12 km",
-      "images": []
-    },
+
     {
       "id": "skafe",
       "name": "Skafe al Casotto",
@@ -463,9 +451,9 @@
       "lng": 18.4916,
       "type": "nightlife",
       "category": "bar",
-      "description": "Trendy bar in Otranto historic center",
+      "description": "Trendy bar in front of the sea",
       "translationKey": "nightlife_skafe",
-      "address": "Otranto, LE",
+      "address": "Porto Badisco, LE",
       "distance": "6 km",
       "images": []
     },

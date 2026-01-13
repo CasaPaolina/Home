@@ -12,6 +12,8 @@ let guestLastPosition = null;
 
 // Markers for beach map (used for filtering)
 let beachMarkers = [];
+// Names of beaches recommended for today (popolato da recommendTop3Beaches)
+let recommendedTodayNames = [];
 
 // Calculate distance between two points (Haversine formula)
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -358,10 +360,42 @@ async function fetchWeatherForecast() {
         updateWindDisplay('noon-tomorrow', tomorrowSlots.noon);
         updateWindDisplay('afternoon-tomorrow', tomorrowSlots.afternoon);
 
-        // Beach recommendations for today
-        const avgWindDirectionToday = getWindDirection((todaySlots.morning.direction + todaySlots.noon.direction + todaySlots.afternoon.direction) / 3);
-        const avgWindSpeedToday = (todaySlots.morning.speed + todaySlots.noon.speed + todaySlots.afternoon.speed) / 3;
-        recommendTop3Beaches(avgWindDirectionToday, avgWindSpeedToday, 'today');
+        // Beach recommendations for today: choose time slot based on current local hour
+        const nowHour = new Date().getHours();
+        let slotName = 'noon';
+        if (nowHour >= 15 && nowHour < 18) slotName = 'afternoon';
+        else if (nowHour >= 12 && nowHour < 15) slotName = 'noon';
+        else /* before 12 or other */ if (nowHour >= 9 && nowHour < 12) slotName = 'morning';
+        else if (nowHour < 9) slotName = 'morning';
+        else if (nowHour >= 18) slotName = 'afternoon';
+
+        const slotWind = todaySlots[slotName] || todaySlots.noon;
+        const slotWindDirDegrees = slotWind.direction;
+        const slotWindSpeed = slotWind.speed;
+        const slotWindCardinal = getWindDirection(slotWindDirDegrees);
+
+        // Populate recommendedTodayNames from locations.json (preferred) or fallback to local `beaches`
+        try {
+            let allBeaches = beaches;
+            if (typeof locationsData !== 'undefined') {
+                try {
+                    if (!locationsData.loaded && typeof locationsData.load === 'function') {
+                        await locationsData.load();
+                    }
+                    const remote = locationsData.getBeaches();
+                    if (Array.isArray(remote) && remote.length) allBeaches = remote;
+                } catch (e) {
+                    allBeaches = beaches;
+                }
+            }
+
+            recommendedTodayNames = allBeaches.filter(b => Array.isArray(b.protectedFrom) && b.protectedFrom.includes(slotWindCardinal)).map(b => b.name);
+        } catch (e) {
+            recommendedTodayNames = [];
+        }
+
+        // Use slot-based wind for today's top recommendations display
+        recommendTop3Beaches(slotWindCardinal, slotWindSpeed, 'today');
 
         // Beach recommendations for tomorrow
         const avgWindDirectionTomorrow = getWindDirection((tomorrowSlots.morning.direction + tomorrowSlots.noon.direction + tomorrowSlots.afternoon.direction) / 3);
@@ -473,6 +507,8 @@ function recommendTop3Beaches(windDirection, windSpeed, day) {
 
     // Sort by score and get top 3
     const top3 = scoredBeaches.sort((a, b) => b.score - a.score).slice(0, 3);
+
+    // (do not populate recommendedTodayNames here - it's driven by current wind direction)
 
     displayTop3BeachesCompact(top3, day);
 }
@@ -981,6 +1017,9 @@ function initBeachesMap() {
         if (filter === 'rocks' && isCliff) return true;
         if (filter === 'adriatic' && isAdriatic) return true;
         if (filter === 'ionian' && isIonian) return true;
+        if (filter === 'recommended-today') {
+            return Array.isArray(recommendedTodayNames) && recommendedTodayNames.includes(beach.name);
+        }
 
         return false;
     }

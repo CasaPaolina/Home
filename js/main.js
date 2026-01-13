@@ -161,19 +161,19 @@ const beaches = [
 
 // Points of Interest used on the main POI map (kept in sync with guest page)
 const pointsOfInterest = [
-    { name: "Avamposto", address: "Via Dante De Blasi, Uggiano La Chiesa", lat: 40.0975, lng: 18.3920, category: "nightlife" },
-    { name: "Skafe al Casotto", address: "Via Bastione Pelasgi, 12, Otranto", lat: 40.1436, lng: 18.4916, category: "nightlife" },
-    { name: "Spinnaker", address: "Via Filippo Turati, 3, Torre dell'Orso", lat: 40.2667, lng: 18.4167, category: "nightlife" },
-    { name: "La Casaccia", address: "Otranto", lat: 40.1430, lng: 18.4900, category: "nightlife" },
-    { name: "Blu Bay", address: "Via Sant'Antonio, Castro", lat: 40.0167, lng: 18.4300, category: "nightlife" },
+   
+    { name: "Skafe al Casotto", address: "Porto Badisco", lat: 40.078924, lng: 18.484168, category: "nightlife" },
+    { name: "Spinnaker", address: "Via dei Bastioni, Otranto", lat: 40.145284, lng: 18.493389, category: "nightlife" },
+    { name: "La Casaccia", address: "Torre dell'Orso", lat: 40.274210,  lng: 18.429274, category: "nightlife" },
+    { name: "Blu Bay", address: "Via Sant'Antonio, Castro", lat: 40.019186, lng: 18.429158, category: "nightlife" },
 
     { name: "Lecce", address: "Città barocca", lat: 40.3515, lng: 18.1750, category: "attractions", description: "Città barocca con architettura storica" },
     { name: "Gallipoli", address: "Città costiera", lat: 40.0556, lng: 17.9922, category: "attractions", description: "Città costiera sul Mar Ionio" },
     { name: "Santa Maria di Leuca", address: "Punta estrema", lat: 39.7972, lng: 18.3611, category: "attractions", description: "Punta estrema del Salento" },
     { name: "Otranto", address: "Città storica", lat: 40.1436, lng: 18.4908, category: "attractions", description: "Città storica sul mare Adriatico" },
-    { name: "Cava di Bauxite", address: "Otranto", lat: 40.1100, lng: 18.4700, category: "attractions", description: "Lago verde smeraldo - 15km" },
-    { name: "Grotta Zinzulusa", address: "Castro", lat: 40.0083, lng: 18.4250, category: "attractions", description: "Grotta marina spettacolare" },
-    { name: "Punta Palascia", address: "Otranto", lat: 40.1083, lng: 18.5194, category: "attractions", description: "Punto più a est d'Italia" },
+    { name: "Cava di Bauxite", address: "Otranto", lat: 40.131955, lng: 18.500661, category: "attractions", description: "Lago verde smeraldo - 15km" },
+    { name: "Grotta Zinzulusa", address: "Castro", lat: 40.012632,  lng: 18.433055, category: "attractions", description: "Grotta marina spettacolare" },
+    { name: "Punta Palascia", address: "Otranto", lat: 40.107317,  lng: 18.520341, category: "attractions", description: "Punto più a est d'Italia" },
 
 
 
