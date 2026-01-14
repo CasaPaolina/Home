@@ -466,7 +466,7 @@
       "category": "beach_club",
       "description": "Beach club with restaurant and evening entertainment",
       "translationKey": "nightlife_spinnaker",
-      "address": "Torre dell'Orso, LE",
+      "address": "Otranto, LE",
       "distance": "19 km",
       "images": []
     },
@@ -479,7 +479,7 @@
       "category": "restaurant_bar",
       "description": "Restaurant and cocktail bar in Otranto",
       "translationKey": "nightlife_casaccia",
-      "address": "Otranto, LE",
+      "address": "Torre dell'Orso, LE",
       "distance": "6 km",
       "images": []
     },

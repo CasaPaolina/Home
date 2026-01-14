@@ -43,6 +43,7 @@ const translations = {
 
         // Services Section
         services_title: "Servizi e Comfort",
+        services_title_town: "Servizi in Città",
         services_subtitle: "Servizi principali e punti di forza della struttura",
         service_ac_title: "Aria Condizionata",
         service_ac_desc: "Ogni appartamento è dotato di aria condizionata",
@@ -213,6 +214,7 @@ const translations = {
 
         // Services Section
         services_title: "Services & Comfort",
+        services_title_town: "Services in Town",
         services_subtitle: "Main services and highlights of the property",
         service_ac_title: "Air Conditioning",
         service_ac_desc: "Every apartment is equipped with air conditioning",
@@ -369,6 +371,7 @@ const translations = {
 
         // Services Section
         services_title: "Services & Confort",
+        services_title_town: "Services in Town",
         services_subtitle: "Principaux services et atouts de l'établissement",
         service_ac_title: "Climatisation",
         service_ac_desc: "Chaque appartement est équipé de climatisation",
@@ -517,6 +520,7 @@ const translations = {
 
         // Services Section
         services_title: "Servicios y Comodidades",
+        services_title_town: "Servicios en la Ciudad",
         service_ac_title: "Aire Acondicionado",
         service_ac_desc: "Cada apartamento está equipado con aire acondicionado",
         service_wifi_desc: "Conexión a internet gratuita y rápida",
@@ -629,6 +633,7 @@ const translations = {
 
         // Services Section
         services_title: "Dienstleistungen & Komfort",
+        services_title_town: "Dienstleistungen in der Stadt",
         service_ac_title: "Klimaanlage",
         service_ac_desc: "Jedes Apartment ist mit Klimaanlage ausgestattet",
         service_wifi_desc: "Kostenlose und schnelle Internetverbindung",
