@@ -6,6 +6,10 @@
     <title>Area Ospiti - Casa Paolina</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/guest-page.css">
+    <!-- Google Fonts for improved typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -100,13 +104,7 @@
                 <!-- Security card removed per request -->
             </div>
 
-            <!-- Waste Collection Calendar -->
-            <div class="waste-collection-section">
-                <h3 data-translate="waste">Raccolta Differenziata</h3>
-                <div class="waste-calendar-grid" id="waste-calendar-grid">
-                    <!-- Filled by JS -->
-                </div>
-            </div>
+            <!-- Waste collection removed for a cleaner guest experience -->
         </div>
     </section>
 
@@ -149,95 +147,11 @@
     <!-- Weather & Beach Recommendations (moved here after info & rules) -->
     <section class="weather-beaches">
         <div class="container">
-            <h2 data-translate="weather_beaches_title">Previsioni Vento & Spiagge Consigliate</h2>
-
-            <!-- Two Day Forecast -->
-            <div class="forecast-days">
-                <!-- Today -->
-                <div class="day-forecast">
-                    <div class="day-header">
-                        <h3 data-translate="today">Oggi</h3>
-                        <p class="forecast-date" id="today-date"></p>
-                    </div>
-                    <div class="day-timeline">
-                        <div class="time-block">
-                            <span class="time-label" data-translate="morning_short">Mattina</span>
-                            <div class="wind-compact">
-                                <span class="wind-arrow-sm" id="wind-morning-today">🧭</span>
-                                <span class="wind-speed-sm" id="wind-speed-morning-today">-- km/h</span>
-                            </div>
-                            <span class="wind-dir-sm" id="wind-dir-morning-today">--</span>
-                        </div>
-                        <div class="time-block">
-                            <span class="time-label" data-translate="noon_short">Mezzo.</span>
-                            <div class="wind-compact">
-                                <span class="wind-arrow-sm" id="wind-noon-today">🧭</span>
-                                <span class="wind-speed-sm" id="wind-speed-noon-today">-- km/h</span>
-                            </div>
-                            <span class="wind-dir-sm" id="wind-dir-noon-today">--</span>
-                        </div>
-                        <div class="time-block">
-                            <span class="time-label" data-translate="afternoon_short">Pomer.</span>
-                            <div class="wind-compact">
-                                <span class="wind-arrow-sm" id="wind-afternoon-today">🧭</span>
-                                <span class="wind-speed-sm" id="wind-speed-afternoon-today">-- km/h</span>
-                            </div>
-                            <span class="wind-dir-sm" id="wind-dir-afternoon-today">--</span>
-                        </div>
-                    </div>
-                    <div class="recommended-beaches-compact">
-                        <h4 data-translate="top_beaches_today">🏖️ Spiagge Consigliate</h4>
-                        <div id="recommended-beaches-today"></div>
-                    </div>
-                </div>
-
-                <!-- Tomorrow -->
-                <div class="day-forecast">
-                    <div class="day-header">
-                        <h3 data-translate="tomorrow">Domani</h3>
-                        <p class="forecast-date" id="tomorrow-date"></p>
-                    </div>
-                    <div class="day-timeline">
-                        <div class="time-block">
-                            <span class="time-label" data-translate="morning_short">Mattina</span>
-                            <div class="wind-compact">
-                                <span class="wind-arrow-sm" id="wind-morning-tomorrow">🧭</span>
-                                <span class="wind-speed-sm" id="wind-speed-morning-tomorrow">-- km/h</span>
-                            </div>
-                            <span class="wind-dir-sm" id="wind-dir-morning-tomorrow">--</span>
-                        </div>
-                        <div class="time-block">
-                            <span class="time-label" data-translate="noon_short">Mezzo.</span>
-                            <div class="wind-compact">
-                                <span class="wind-arrow-sm" id="wind-noon-tomorrow">🧭</span>
-                                <span class="wind-speed-sm" id="wind-speed-noon-tomorrow">-- km/h</span>
-                            </div>
-                            <span class="wind-dir-sm" id="wind-dir-noon-tomorrow">--</span>
-                        </div>
-                        <div class="time-block">
-                            <span class="time-label" data-translate="afternoon_short">Pomer.</span>
-                            <div class="wind-compact">
-                                <span class="wind-arrow-sm" id="wind-afternoon-tomorrow">🧭</span>
-                                <span class="wind-speed-sm" id="wind-speed-afternoon-tomorrow">-- km/h</span>
-                            </div>
-                            <span class="wind-dir-sm" id="wind-dir-afternoon-tomorrow">--</span>
-                        </div>
-                    </div>
-                    <div class="recommended-beaches-compact">
-                        <h4 data-translate="top_beaches_tomorrow">🏖️ Spiagge Consigliate</h4>
-                        <div id="recommended-beaches-tomorrow"></div>
-                    </div>
-                </div>
-            </div>
+            <h2 data-translate="weather_beaches_title">Spiagge Consigliate</h2>
 
             <!-- All Beaches List -->
             <div class="beach-recommendations">
-                <h3 data-translate="all_beaches">Tutte le Spiagge</h3>
-                <div class="beaches-grid" id="recommended-beaches">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-
-                <!-- Beach Map & List -->
+                <!-- Removed the large 'All Beaches' grid to avoid redundancy with the map/list and recommendations. -->
                 <div class="beaches-map-section">
                     <!-- Filters -->
                     <div class="beach-filters-modern">
@@ -245,6 +159,8 @@
                         <button class="beach-filter-btn" data-filter="sand" data-translate="filter_sand">Sabbia</button>
                         <button class="beach-filter-btn" data-filter="rocks" data-translate="filter_rocks">Scogliera</button>
                         <button class="beach-filter-btn" data-filter="recommended-today" data-translate="filter_recommended_today">Consigliato oggi</button>
+                        <p id="recommendation-status" class="recommendation-status" aria-live="polite">Caricamento delle spiagge consigliate...</p>
+
                     </div>
 
                     <!-- Map & List Container -->
