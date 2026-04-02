@@ -1050,13 +1050,112 @@
     font-weight: 700;
 }
 
+/* 3-day forecast widget */
+.daily-forecast {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.forecast-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px 24px;
+    min-width: 110px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    flex: 1;
+    max-width: 160px;
+}
+
+.forecast-card.skeleton {
+    background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    min-height: 110px;
+    border: none;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.forecast-day {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.forecast-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.forecast-label {
+    font-size: 0.8rem;
+    color: #475569;
+    margin-bottom: 8px;
+}
+
+.forecast-temps {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.temp-max {
+    color: #e25822;
+}
+
+.temp-min {
+    color: #3b82f6;
+    margin-left: 4px;
+}
+
+.forecast-wind {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
 /* Modern Filters */
 .beach-filters-modern {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.beach-filter-buttons {
+    display: flex;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 25px;
     flex-wrap: wrap;
+}
+
+/* Wind info bar above filters */
+.current-wind-info {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    border: 1px solid #7dd3fc;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    color: #0c4a6e;
+    text-align: center;
+    margin: 0;
+}
+
+.wind-info-icon {
+    margin-right: 4px;
 }
 
 /* Beach filter buttons now use unified style above */
@@ -1080,14 +1179,14 @@
 
 /* Modern Beach List - Scrollable Sidebar */
 .beaches-list-modern {
-    max-height: 650px;
+    height: 650px;
     overflow-y: auto;
     background: #f8fafc;
     border-radius: 15px;
-    padding: 16px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -1483,14 +1582,14 @@
 
 .beach-list-item {
     background: white;
-    padding: 16px 20px;
+    padding: 12px 14px;
     border-radius: 10px;
     border-left: 4px solid #e2e8f0;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .beach-list-item:hover {
@@ -1523,20 +1622,26 @@
 .beach-list-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+    align-items: flex-start;
+    gap: 8px;
 }
 
 .beach-list-name {
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.92rem;
     color: #1e293b;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .beach-list-type {
-    font-size: 0.85rem;
-    padding: 4px 12px;
+    font-size: 0.75rem;
+    padding: 2px 8px;
     background: #f1f5f9;
+    flex-shrink: 0;
     border-radius: 20px;
     color: #64748b;
     font-weight: 600;
@@ -1544,8 +1649,9 @@
 
 .beach-list-info {
     display: flex;
-    gap: 12px;
+    justify-content: space-between;
     align-items: center;
+    gap: 8px;
 }
 
 .beach-list-distance {
@@ -1555,14 +1661,21 @@
 }
 
 .beach-list-book-btn {
-    padding: 6px 14px;
+    padding: 5px 10px;
     background: #2c7873;
+    flex-shrink: 0;
     color: white;
     text-decoration: none;
     border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
+    font-size: 0.78rem;
+    font-weight: 700;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+/* Reduce other list text slightly to prevent horizontal scroll */
+.beach-list-item, .beach-card-item, .beach-list-name, .beach-list-info {
+    font-size: 0.92rem;
 }
 
 .beach-list-book-btn:hover {
@@ -1572,7 +1685,7 @@
 
 @media (max-width: 768px) {
     .beaches-list-modern {
-        max-height: 400px;
+        height: 400px;
     }
     
     .beach-list-item {

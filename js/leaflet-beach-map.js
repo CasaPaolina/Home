@@ -172,7 +172,7 @@ class LeafletBeachMap {
         const filterButtons = document.querySelectorAll('.beach-filter-btn');
 
         filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
                 // Update active state
                 filterButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -180,6 +180,70 @@ class LeafletBeachMap {
                 // Apply filter
                 const filter = btn.dataset.filter;
                 this.currentFilter = filter;
+
+                // If user clicked 'recommended-today', compute recommendations from today's wind
+                if (filter === 'recommended-today') {
+                    // Ensure locations and wind data are available
+                    try {
+                        if (typeof fetchWeatherForecast === 'function') {
+                            await fetchWeatherForecast(); // refresh wind and populate recommendedTodayNames
+                        }
+                    } catch (e) {
+                        console.error('Error updating wind for recommendations:', e);
+                    }
+
+                    // Determine recommended set (prefer window.recommendedTodayNames if populated)
+                    let recommendedNames = Array.isArray(window.recommendedTodayNames) && window.recommendedTodayNames.length
+                        ? window.recommendedTodayNames.slice()
+                        : [];
+
+                    // Fallback: if recommendations empty, pick nearest 3 beaches
+                    if (!recommendedNames.length) {
+                        try {
+                            const all = locationsData.getBeaches();
+                            if (Array.isArray(all) && all.length) {
+                                // sort by distance from casa using locationsData.calculateDistance if available
+                                if (typeof locationsData.calculateDistance === 'function') {
+                                    all.sort((a, b) => locationsData.calculateDistance(a.lat, a.lng) - locationsData.calculateDistance(b.lat, b.lng));
+                                }
+                                recommendedNames = all.map(b => b.name);
+                                const status = document.getElementById('recommendation-status');
+                                if (status) status.textContent = 'Visualizzo le spiagge più vicine come raccomandazione alternativa.';
+                            }
+                        } catch (e) {
+                            console.error('Fallback recommendation failed:', e);
+                        }
+                    }
+
+                    if (recommendedNames.length) {
+                        this.addBeachMarkers('all');
+                        this.renderBeachList('all');
+
+                        const recommendedSet = new Set(recommendedNames);
+                        // Filter markers shown on map
+                        this.markers.forEach(({ marker, beach }) => {
+                            const shouldShow = recommendedSet.has(beach.name);
+                            if (shouldShow) marker.addTo(this.map); else this.map.removeLayer(marker);
+                        });
+
+                        // Render list only with recommended items
+                        const listContainer = document.getElementById('beaches-list');
+                        if (listContainer) {
+                            listContainer.innerHTML = this.beaches.filter(b => recommendedSet.has(b.name)).map(b => this.createBeachListItem(b)).join('');
+                        }
+
+                        return;
+                    } else {
+                        // No recommendation possible
+                        this.addBeachMarkers('all');
+                        this.renderBeachList('all');
+                        const status = document.getElementById('recommendation-status');
+                        if (status) status.textContent = 'Nessuna raccomandazione disponibile per oggi.';
+                        return;
+                    }
+                }
+
+                // Default behaviour for other filters
                 this.addBeachMarkers(filter);
                 this.renderBeachList(filter);
             });

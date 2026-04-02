@@ -14,6 +14,8 @@ let guestLastPosition = null;
 let beachMarkers = [];
 // Names of beaches recommended for today (popolato da recommendTop3Beaches)
 let recommendedTodayNames = [];
+// expose globally for other modules (leaflet map) to read
+window.recommendedTodayNames = recommendedTodayNames;
 
 // Calculate distance between two points (Haversine formula)
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -321,7 +323,7 @@ const pointsOfInterest = [
 async function fetchWeatherForecast() {
     try {
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&timezone=Europe/Rome&forecast_days=2`
+            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,windspeed_10m_max,winddirection_10m_dominant&timezone=Europe/Rome&forecast_days=3`
         );
         if (!response.ok) {
             throw new Error(`Weather API error: ${response.status}`);
@@ -333,8 +335,13 @@ async function fetchWeatherForecast() {
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
 
-        document.getElementById('today-date').textContent = today.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
-        document.getElementById('tomorrow-date').textContent = tomorrow.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+        const todayDateEl = document.getElementById('today-date');
+        if (todayDateEl) todayDateEl.textContent = today.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+        const tomorrowDateEl = document.getElementById('tomorrow-date');
+        if (tomorrowDateEl) tomorrowDateEl.textContent = tomorrow.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+
+        // Render 3-day daily forecast widget
+        if (data.daily) renderDailyForecast(data.daily);
 
         const hourlyData = data.hourly;
 
@@ -374,6 +381,14 @@ async function fetchWeatherForecast() {
         const slotWindSpeed = slotWind.speed;
         const slotWindCardinal = getWindDirection(slotWindDirDegrees);
 
+        // Update wind info bar above beach filters
+        const windInfoEl = document.getElementById('current-wind-info');
+        if (windInfoEl) {
+            const dirLabels = { N: 'Nord', NE: 'Nord-Est', E: 'Est', SE: 'Sud-Est', S: 'Sud', SW: 'Sud-Ovest', W: 'Ovest', NW: 'Nord-Ovest' };
+            const dirLabel = dirLabels[slotWindCardinal] || slotWindCardinal;
+            windInfoEl.innerHTML = `<span class="wind-info-icon">💨</span> Vento attuale: <strong>${dirLabel}</strong> a <strong>${slotWindSpeed} km/h</strong>`;
+        }
+
         // Populate recommendedTodayNames from locations.json (preferred) or fallback to local `beaches`
         try {
             let allBeaches = beaches;
@@ -389,7 +404,13 @@ async function fetchWeatherForecast() {
                 }
             }
 
-            recommendedTodayNames = allBeaches.filter(b => Array.isArray(b.protectedFrom) && b.protectedFrom.includes(slotWindCardinal)).map(b => b.name);
+            // Build recommendedTodayNames using locationsData protectedFrom or fallback to sheltered property
+            recommendedTodayNames = allBeaches.filter(b => {
+                const prot = Array.isArray(b.protectedFrom) ? b.protectedFrom : (Array.isArray(b.sheltered) ? b.sheltered : []);
+                return prot.includes(slotWindCardinal);
+            }).map(b => b.name);
+            // keep global reference updated
+            window.recommendedTodayNames = recommendedTodayNames;
         } catch (e) {
             recommendedTodayNames = [];
         }
@@ -584,6 +605,52 @@ window.getBeachImageSrc = function getBeachImageSrc(beach) {
     const c = window.getBeachImageCandidates(beach);
     return c.length ? c[0] : '';
 };
+
+// Map WMO weather code to emoji + label
+function getWeatherIcon(code) {
+    if (code === 0) return { icon: '☀️', label: 'Sereno' };
+    if (code === 1) return { icon: '🌤️', label: 'Quasi sereno' };
+    if (code === 2) return { icon: '⛅', label: 'Parz. nuvoloso' };
+    if (code === 3) return { icon: '☁️', label: 'Coperto' };
+    if (code === 45 || code === 48) return { icon: '🌫️', label: 'Nebbia' };
+    if (code >= 51 && code <= 55) return { icon: '🌦️', label: 'Pioggerella' };
+    if (code >= 61 && code <= 65) return { icon: '🌧️', label: 'Pioggia' };
+    if (code >= 71 && code <= 77) return { icon: '❄️', label: 'Neve' };
+    if (code >= 80 && code <= 82) return { icon: '🌦️', label: 'Rovesci' };
+    if (code === 95) return { icon: '⛈️', label: 'Temporale' };
+    if (code >= 96) return { icon: '⛈️', label: 'Temporale con grandine' };
+    return { icon: '🌡️', label: 'Variabile' };
+}
+
+// Render 3-day daily forecast cards in #daily-forecast
+function renderDailyForecast(daily) {
+    const container = document.getElementById('daily-forecast');
+    if (!container) return;
+
+    const dayNames = ['Oggi', 'Domani', 'Dopodomani'];
+    const dirLabels = { N: 'N', NE: 'NE', E: 'E', SE: 'SE', S: 'S', SW: 'SO', W: 'O', NW: 'NO' };
+
+    container.innerHTML = daily.time.slice(0, 3).map((dateStr, i) => {
+        const { icon, label } = getWeatherIcon(daily.weathercode[i]);
+        const tMax = Math.round(daily.temperature_2m_max[i]);
+        const tMin = Math.round(daily.temperature_2m_min[i]);
+        const windSpeed = Math.round(daily.windspeed_10m_max[i]);
+        const windDir = getWindDirection(daily.winddirection_10m_dominant[i]);
+        const windDirLabel = dirLabels[windDir] || windDir;
+        const date = new Date(dateStr);
+        const dayLabel = dayNames[i] || date.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
+
+        return `
+            <div class="forecast-card">
+                <div class="forecast-day">${dayLabel}</div>
+                <div class="forecast-icon">${icon}</div>
+                <div class="forecast-label">${label}</div>
+                <div class="forecast-temps"><span class="temp-max">${tMax}°</span> <span class="temp-min">${tMin}°</span></div>
+                <div class="forecast-wind">💨 ${windSpeed} km/h ${windDirLabel}</div>
+            </div>
+        `;
+    }).join('');
+}
 
 // Display compact beach recommendations for today/tomorrow (no numbering) — uses fallback-enabled <img>
 function displayTop3BeachesCompact(beaches, day) {

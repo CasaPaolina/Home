@@ -149,18 +149,27 @@
         <div class="container">
             <h2 data-translate="weather_beaches_title">Spiagge Consigliate</h2>
 
+            <!-- 3-day weather forecast -->
+            <div id="daily-forecast" class="daily-forecast">
+                <div class="forecast-card skeleton"></div>
+                <div class="forecast-card skeleton"></div>
+                <div class="forecast-card skeleton"></div>
+            </div>
+
             <!-- All Beaches List -->
             <div class="beach-recommendations">
                 <!-- Removed the large 'All Beaches' grid to avoid redundancy with the map/list and recommendations. -->
                 <div class="beaches-map-section">
                     <!-- Filters -->
                     <div class="beach-filters-modern">
-                        <button class="beach-filter-btn active" data-filter="all" data-translate="filter_all">Tutte</button>
-                        <button class="beach-filter-btn" data-filter="sand" data-translate="filter_sand">Sabbia</button>
-                        <button class="beach-filter-btn" data-filter="rocks" data-translate="filter_rocks">Scogliera</button>
-                        <button class="beach-filter-btn" data-filter="recommended-today" data-translate="filter_recommended_today">Consigliato oggi</button>
-                        <p id="recommendation-status" class="recommendation-status" aria-live="polite">Caricamento delle spiagge consigliate...</p>
-
+                        <p id="current-wind-info" class="current-wind-info">Caricamento vento in corso...</p>
+                        <div class="beach-filter-buttons">
+                            <button class="beach-filter-btn active" data-filter="all" data-translate="filter_all">Tutte</button>
+                            <button class="beach-filter-btn" data-filter="sand" data-translate="filter_sand">Sabbia</button>
+                            <button class="beach-filter-btn" data-filter="rocks" data-translate="filter_rocks">Scogliera</button>
+                            <button class="beach-filter-btn" data-filter="recommended-today" data-translate="filter_recommended_today">Spiagge consigliate in base al vento</button>
+                        </div>
+                        <p id="recommendation-status" class="recommendation-status" aria-live="polite"></p>
                     </div>
 
                     <!-- Map & List Container -->
