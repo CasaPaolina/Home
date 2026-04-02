@@ -627,8 +627,19 @@ function renderDailyForecast(daily) {
     const container = document.getElementById('daily-forecast');
     if (!container) return;
 
-    const dayNames = ['Oggi', 'Domani', 'Dopodomani'];
-    const dirLabels = { N: 'N', NE: 'NE', E: 'E', SE: 'SE', S: 'S', SW: 'SO', W: 'O', NW: 'NO' };
+    const tr = (typeof guestTranslations !== 'undefined' && typeof currentGuestLang !== 'undefined')
+        ? (guestTranslations[currentGuestLang] || guestTranslations.it)
+        : { today: 'Oggi', tomorrow: 'Domani', day_after_tomorrow: 'Dopodomani' };
+
+    const relativeLabels = [
+        tr.today || 'Oggi',
+        tr.tomorrow || 'Domani',
+        tr.day_after_tomorrow || 'Dopodomani'
+    ];
+
+    const localeMap = { it: 'it-IT', en: 'en-GB', fr: 'fr-FR', es: 'es-ES', de: 'de-DE' };
+    const locale = localeMap[currentGuestLang] || 'it-IT';
+    const windDirLabels = { N: 'N', NE: 'NE', E: 'E', SE: 'SE', S: 'S', SW: 'SO', W: 'O', NW: 'NO' };
 
     container.innerHTML = daily.time.slice(0, 3).map((dateStr, i) => {
         const { icon, label } = getWeatherIcon(daily.weathercode[i]);
@@ -636,13 +647,17 @@ function renderDailyForecast(daily) {
         const tMin = Math.round(daily.temperature_2m_min[i]);
         const windSpeed = Math.round(daily.windspeed_10m_max[i]);
         const windDir = getWindDirection(daily.winddirection_10m_dominant[i]);
-        const windDirLabel = dirLabels[windDir] || windDir;
-        const date = new Date(dateStr);
-        const dayLabel = dayNames[i] || date.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
+        const windDirLabel = windDirLabels[windDir] || windDir;
+        const date = new Date(dateStr + 'T12:00:00'); // noon to avoid DST offset issues
+        const dayOfWeek = date.toLocaleDateString(locale, { weekday: 'short' });
+        const dayNum = date.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
 
         return `
             <div class="forecast-card">
-                <div class="forecast-day">${dayLabel}</div>
+                <div class="forecast-day">
+                    <span class="forecast-relative">${relativeLabels[i]}</span>
+                    <span class="forecast-date">${dayOfWeek} ${dayNum}</span>
+                </div>
                 <div class="forecast-icon">${icon}</div>
                 <div class="forecast-label">${label}</div>
                 <div class="forecast-temps"><span class="temp-max">${tMax}°</span> <span class="temp-min">${tMin}°</span></div>

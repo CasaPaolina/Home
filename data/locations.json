@@ -85,7 +85,7 @@
       "bookingLink": null,
       "distance": "3 km",
       "facilities": ["parking", "restaurant"],
-      "images": []
+      "images": ["spiaggia-porto-badisco.jpg"]
     },
     {
       "id": "castro-marina",
@@ -213,7 +213,7 @@
       "bookingLink": "https://www.booking.com/beach/it/otranto",
       "distance": "5 km",
       "facilities": ["parking", "restaurants", "umbrellas", "showers"],
-      "images": ["spiaggia_dei_gradoni.jpg"]
+      "images": ["spiaggia_gradoni.jpg"]
     },
     {
       "id": "porto-selvaggio",

@@ -758,7 +758,7 @@ function showGuestLogin() {
         const password = passwordInput.value;
 
         // Simple password check (in production, this should be server-side)
-        if (password === 'chiara' || password === 'ale') {
+        if (password === 'chiara') {
             localStorage.setItem('guestLoggedIn', 'true');
             document.body.removeChild(modal);
             document.body.style.overflow = '';

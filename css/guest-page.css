@@ -1085,12 +1085,24 @@
 }
 
 .forecast-day {
-    font-size: 0.8rem;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.forecast-relative {
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #64748b;
-    margin-bottom: 8px;
+    color: #1e293b;
+}
+
+.forecast-date {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
 }
 
 .forecast-icon {
@@ -1156,6 +1168,26 @@
 
 .wind-info-icon {
     margin-right: 4px;
+}
+
+/* Inline map button (laundry, etc.) */
+.inline-map-btn {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 3px 10px;
+    background: #2c7873;
+    color: white !important;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+
+.inline-map-btn:hover {
+    background: #1e5f5a;
+    color: white !important;
 }
 
 /* Beach filter buttons now use unified style above */
@@ -1602,21 +1634,6 @@
     border-left-color: #2c7873;
     background: linear-gradient(135deg, rgba(44, 120, 115, 0.05) 0%, rgba(44, 120, 115, 0.02) 100%);
     box-shadow: 0 3px 15px rgba(44, 120, 115, 0.2);
-}
-
-.beach-list-img {
-    width: 90px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-}
-
-.beach-list-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
 }
 
 .beach-list-header {
