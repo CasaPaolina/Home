@@ -1087,7 +1087,8 @@ function initMainPOIMap() {
 
     // Add all POI markers to category layer groups
     const markers = {};
-    pointsOfInterest.forEach(poi => {
+    const markerRefs = {}; // Store marker references for click events
+    pointsOfInterest.forEach((poi, index) => {
         const icon = L.divIcon({
             html: categoryIcons[poi.category] || '📍',
             className: 'custom-marker',
@@ -1108,11 +1109,56 @@ function initMainPOIMap() {
             markers[poi.category] = L.layerGroup().addTo(map);
         }
         marker.addTo(markers[poi.category]);
+        markerRefs[`poi-${index}`] = { marker, poi };
     });
 
-    // Wire up the filter buttons to show/hide layer groups and toggle category lists
+    // Render interactive POI list
+    function renderPOIList(filter = 'all') {
+        const listContainer = document.getElementById('poi-interactive-list');
+        if (!listContainer) return;
+
+        const filteredPOIs = filter === 'all'
+            ? pointsOfInterest
+            : pointsOfInterest.filter(poi => poi.category === filter);
+
+        listContainer.innerHTML = filteredPOIs.map((poi, index) => {
+            const globalIndex = pointsOfInterest.indexOf(poi);
+            const emoji = categoryIcons[poi.category] || '📍';
+            return `
+                <div class="poi-list-item" data-poi-id="poi-${globalIndex}">
+                    <div class="poi-list-header">
+                        <span class="poi-list-name">${emoji} ${poi.name}</span>
+                    </div>
+                    <div class="poi-list-info">
+                        <span class="poi-list-desc">${poi.description || poi.address || ''}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Add click handlers to list items
+        listContainer.querySelectorAll('.poi-list-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const poiId = item.dataset.poiId;
+                const ref = markerRefs[poiId];
+                if (ref) {
+                    // Remove previous selection
+                    document.querySelectorAll('.poi-list-item').forEach(el => el.classList.remove('selected'));
+                    item.classList.add('selected');
+
+                    // Pan to marker and open popup
+                    map.setView([ref.poi.lat, ref.poi.lng], 13);
+                    ref.marker.openPopup();
+                }
+            });
+        });
+    }
+
+    // Initial render
+    renderPOIList();
+
+    // Wire up the filter buttons to show/hide layer groups and update interactive list
     const filterButtons = document.querySelectorAll('.poi-filter-btn');
-    const categoryElements = document.querySelectorAll('.poi-category');
 
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1135,15 +1181,8 @@ function initMainPOIMap() {
                 });
             }
 
-            // Toggle POI category list visibility
-            categoryElements.forEach(catEl => {
-                const catId = catEl.id.replace('cat-', '');
-                if (category === 'all' || category === catId) {
-                    catEl.style.display = 'block';
-                } else {
-                    catEl.style.display = 'none';
-                }
-            });
+            // Update interactive list
+            renderPOIList(category);
         });
     });
 }

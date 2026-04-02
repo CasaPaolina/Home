@@ -1155,16 +1155,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!calendarGrid) return;
 
         const today = new Date().getDay();
+        const tomorrow = (today + 1) % 7; // Wrap to 0 if today is Saturday (6)
 
         const calendarHTML = wasteData.map(({ day, dayName, dayShort, materials }) => {
-            const isToday = day === today;
+            const isTomorrow = day === tomorrow;
             const isEmpty = materials.length === 0;
 
             if (isEmpty) {
-                return `<div class="waste-day-cell empty ${isToday ? 'today' : ''}" data-day="${day}">
+                return `<div class="waste-day-cell empty ${isTomorrow ? 'today' : ''}" data-day="${day}">
                     <div class="day-header">
                         <span class="day-name">${dayShort}</span>
-                        ${isToday ? '<span class="today-badge">Oggi</span>' : ''}
+                        ${isTomorrow ? '<span class="today-badge">Domani</span>' : ''}
                     </div>
                     <div class="day-content">
                         <p class="no-collection">Nessuna raccolta</p>
@@ -1182,10 +1183,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `).join('');
 
-            return `<div class="waste-day-cell ${isToday ? 'today' : ''}" data-day="${day}">
+            return `<div class="waste-day-cell ${isTomorrow ? 'today' : ''}" data-day="${day}">
                 <div class="day-header">
                     <span class="day-name">${dayShort}</span>
-                    ${isToday ? '<span class="today-badge">Oggi</span>' : ''}
+                    ${isTomorrow ? '<span class="today-badge">Domani</span>' : ''}
                 </div>
                 <div class="day-content">
                     ${materialsHTML}

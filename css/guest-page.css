@@ -1061,21 +1061,34 @@
 
 /* Beach filter buttons now use unified style above */
 
-/* Modern Map Container */
-.map-container-modern {
-    height: 550px;
-    width: 100%;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-    margin-bottom: 40px;
+/* Beach Map & List Container - Side by Side Layout */
+.beach-map-list-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    margin-top: 30px;
 }
 
-/* Modern Beach List */
+/* Modern Map Container */
+.map-container-modern {
+    height: 650px;
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern Beach List - Scrollable Sidebar */
 .beaches-list-modern {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
+    max-height: 650px;
+    overflow-y: auto;
+    background: #f8fafc;
+    border-radius: 15px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .beach-card-item {
@@ -1188,18 +1201,26 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+    /* Stack map and list vertically on tablets and mobile */
+    .beach-map-list-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
     .map-container-modern {
         height: 450px;
     }
 
     .beaches-list-modern {
-        grid-template-columns: 1fr;
+        max-height: 400px;
+        order: 2;
     }
 
     .beach-filter-btn {
-        padding: 10px 20px;
+        padding: 12px 20px;
         font-size: 0.9rem;
+        min-height: 44px;
     }
 
     .beaches-map-section h4 {
@@ -1210,6 +1231,12 @@
 @media (max-width: 480px) {
     .map-container-modern {
         height: 400px;
+    }
+
+    .beaches-list-modern {
+        max-height: 350px;
+        padding: 12px;
+        gap: 10px;
     }
 
     .beach-card-item {
@@ -1223,6 +1250,15 @@
 
     .beach-card-actions {
         flex-direction: column;
+    }
+
+    .beach-filters-modern {
+        gap: 8px;
+    }
+
+    .beach-filter-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
     }
 
     .beaches-map-section h4 {
@@ -1443,18 +1479,7 @@
     background: #1e5f5a;
 }
 
-/* Compact Beach List */
-.beaches-list-modern {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 30px;
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 10px;
-    background: #f8fafc;
-    border-radius: 12px;
-}
+/* Beach list items are already styled above in the main .beaches-list-modern definition */
 
 .beach-list-item {
     background: white;
