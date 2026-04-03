@@ -612,8 +612,8 @@ const LOCATIONS_DATA = {
     {
       "id": "forno",
       "name": "Forno",
-      "lat": 40.101336,  
-      "lng": 18.454711, 
+      "lat": 40.1013344,
+      "lng": 18.4544464, 
       "type": "service",
       "category": "bakery",
       "description": "Local bakery",
@@ -654,8 +654,8 @@ const LOCATIONS_DATA = {
     {
       "id": "Tabacchi",
       "name": "Tabacchi",
-      "lat": 40.101485,     
-      "lng": 18.448144, 
+      "lat": 40.1014692,    
+      "lng": 18.4479412, 
       "type": "service",
       "category": "tabacchi",
       "description": "Local tobacco shop",

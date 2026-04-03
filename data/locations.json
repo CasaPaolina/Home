@@ -555,8 +555,8 @@
     {
       "id": "farmacia-comunale",
       "name": "Farmacia Camboa",
-      "lat": 40.100935,
-      "lng": 18.446268,
+      "lat": 40.100886, 
+      "lng": 18.446254,
       "type": "service",
       "category": "pharmacy",
       "description": "Local pharmacy",
