@@ -1247,10 +1247,34 @@ function initPOIQuickGrid() {
     });
 }
 
+// Beach map/list mobile tab toggle
+function initBeachViewTabs() {
+    const tabs = document.querySelectorAll('.beach-view-tab');
+    const container = document.querySelector('.beach-map-list-container');
+    if (!tabs.length || !container) return;
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const view = tab.dataset.view;
+            container.classList.toggle('tab-map', view === 'map');
+            container.classList.toggle('tab-list', view === 'list');
+            // Invalidate leaflet map size when switching back to map tab
+            if (view === 'map' && typeof leafletBeachMap !== 'undefined' && leafletBeachMap && leafletBeachMap.map) {
+                setTimeout(() => leafletBeachMap.map.invalidateSize(), 50);
+            }
+        });
+    });
+}
+
 // Call functions on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Display current date
     displayCurrentDate();
+
+    // Beach view tab toggle (mobile)
+    initBeachViewTabs();
 
     // Load locations data once, then kick off weather + POI grid
     locationsData.load().catch(() => {}).finally(() => {
