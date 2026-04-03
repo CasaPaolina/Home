@@ -6,7 +6,6 @@
     <title>Area Ospiti - Casa Paolina</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/guest-page.css">
-    <!-- Google Fonts for improved typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
@@ -14,19 +13,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
-
-    <!-- Favicon -->
     <link rel="icon" href="images/favicon.ico" sizes="32x32 64x64" type="image/x-icon">
     <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="images/favicon-180.png" sizes="180x180">
 </head>
 <body class="guest-page">
     <script>
-        // Protect guest area: redirect to homepage if not authenticated
         if (localStorage.getItem('guestLoggedIn') !== 'true') {
             window.location.href = 'index.html';
         }
     </script>
+
     <!-- Header -->
     <header class="guest-header">
         <div class="container">
@@ -34,120 +31,110 @@
                 <a href="index.html" class="back-link">← <span data-translate="back_to_site">Torna al sito</span></a>
                 <h1 data-translate="guest_page_title">Area Riservata Ospiti</h1>
                 <div class="language-flags">
-                    <button class="flag-btn active" data-lang="it" title="Italiano">
-                        <span class="flag">🇮🇹</span>
-                    </button>
-                    <button class="flag-btn" data-lang="en" title="English">
-                        <span class="flag">🇬🇧</span>
-                    </button>
-                    <button class="flag-btn" data-lang="es" title="Español">
-                        <span class="flag">🇪🇸</span>
-                    </button>
-                    <button class="flag-btn" data-lang="de" title="Deutsch">
-                        <span class="flag">🇩🇪</span>
-                    </button>
-                    <button class="flag-btn" data-lang="fr" title="Français">
-                        <span class="flag">🇫🇷</span>
-                    </button>
+                    <button class="flag-btn active" data-lang="it" title="Italiano"><span class="flag">🇮🇹</span></button>
+                    <button class="flag-btn" data-lang="en" title="English"><span class="flag">🇬🇧</span></button>
+                    <button class="flag-btn" data-lang="es" title="Español"><span class="flag">🇪🇸</span></button>
+                    <button class="flag-btn" data-lang="de" title="Deutsch"><span class="flag">🇩🇪</span></button>
+                    <button class="flag-btn" data-lang="fr" title="Français"><span class="flag">🇫🇷</span></button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Weather & Beach Recommendations moved below Essential Info & House Rules -->
-    <!-- See later in the document -->
+    <!-- Hero Welcome Banner -->
+    <section class="guest-hero">
+        <div class="guest-hero-overlay"></div>
+        <div class="guest-hero-content">
+            <div class="guest-hero-badge">🏠 Casa Paolina</div>
+            <h2 data-translate="guest_welcome_title">Benvenuti nel vostro angolo di Salento</h2>
+            <p data-translate="guest_welcome_sub">Tutto quello che vi serve per un soggiorno perfetto</p>
+            <div class="guest-hero-pills">
+                <a href="#essential-info" class="hero-pill" data-translate="hero_pill_info">📋 Info</a>
+                <a href="#beaches-section" class="hero-pill" data-translate="hero_pill_beaches">🏖️ Spiagge</a>
+                <a href="#poi-section" class="hero-pill" data-translate="hero_pill_places">📍 Luoghi</a>
+                <a href="#excursion-section" class="hero-pill" data-translate="hero_pill_excursions">🚤 Escursioni</a>
+            </div>
+        </div>
+    </section>
 
     <!-- Essential Info -->
-    <section class="essential-info">
+    <section class="essential-info" id="essential-info">
         <div class="container">
-            <h2 data-translate="essential_info_title">Informazioni Essenziali</h2>
+            <div class="section-header">
+                <div class="section-tag">🏡 Casa</div>
+                <h2 data-translate="essential_info_title">Informazioni Essenziali</h2>
+            </div>
             <div class="info-grid">
                 <!-- WiFi -->
-                <div class="info-card">
-                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
-                        <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
-                        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-                        <line x1="12" y1="20" x2="12.01" y2="20"/>
-                    </svg>
-                    <h3>Wi-Fi</h3>
-                    <p><strong data-translate="network">Rete:</strong> CUDY-ADAC</p>
-                    <p><strong>Password:</strong> 91581662</p>
+                <div class="info-card info-card--wifi">
+                    <div class="info-card-icon">📶</div>
+                    <div class="info-card-body">
+                        <h3>Wi-Fi</h3>
+                        <p><span class="info-label" data-translate="network">Rete</span><strong>CUDY-ADAC</strong></p>
+                        <p><span class="info-label">Password</span><strong class="copyable" onclick="navigator.clipboard && navigator.clipboard.writeText('91581662')">91581662 📋</strong></p>
+                    </div>
                 </div>
 
                 <!-- Schedules -->
-                <div class="info-card">
-                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                    <h3 data-translate="schedules">Orari</h3>
-                    <p><strong>Check-in:</strong> 14:00-20:00</p>
-                    <p><strong>Check-out:</strong> <span data-translate="by">entro le</span> 10:00</p>
-                    <p><strong data-translate="quiet_hours">Silenzio:</strong> 23:00-07:00</p>
-                    <p><strong data-translate="irrigation">Irrigazione:</strong> 04:00-04:30</p>
-                    <p><strong data-translate="outdoor_lighting">Illuminazione esterna:</strong> 20:30-23:30</p>
+                <div class="info-card info-card--clock">
+                    <div class="info-card-icon">🕐</div>
+                    <div class="info-card-body">
+                        <h3 data-translate="schedules">Orari</h3>
+                        <p><span class="info-label">Check-in</span><strong>14:00 – 20:00</strong></p>
+                        <p><span class="info-label">Check-out</span><strong><span data-translate="by">entro le</span> 10:00</strong></p>
+                        <p><span class="info-label" data-translate="quiet_hours">Silenzio</span><strong>23:00 – 07:00</strong></p>
+                        <p><span class="info-label" data-translate="irrigation">Irrigazione</span><strong>04:00 – 04:30</strong></p>
+                        <p><span class="info-label" data-translate="outdoor_lighting">Illuminazione esterna</span><strong>20:30 – 23:30</strong></p>
+                    </div>
                 </div>
 
-                <!-- Linens & Laundry (merged) -->
-                <div class="info-card">
-                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <path d="M3 9h18M9 21V9"/>
-                    </svg>
-                    <h3>Biancheria e Lavanderia</h3>
-                    <p><strong>Lenzuola e asciugamani:</strong> incluse</p>
-                    <p><strong>Cambio biancheria:</strong> ogni 3 giorni</p>
-                    <p><strong>Lavanderia:</strong> "Profumo di Pulito" self-service a 5 min (Lun-Sab: 8:00-20:00) <a href="https://www.google.com/maps/place/%22Profumo+di+Pulito%22+lavanderia+self+service/@40.0999233,18.433688,16z/data=!4m10!1m2!2m1!1sLavanderia+self+service+Via+Roma+Uggiano+la+Chiesa!3m6!1s0x13446aa4450a84fd:0xd8ef8b48d2f4ea6a!8m2!3d40.0999233!4d18.4432152!15sCjJMYXZhbmRlcmlhIHNlbGYgc2VydmljZSBWaWEgUm9tYSBVZ2dpYW5vIGxhIENoaWVzYZIBCmxhdW5kcm9tYXTgAQA!16s%2Fg%2F11hbrdsr84?entry=ttu&g_ep=EgoyMDI2MDMzMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="inline-map-btn">📍 Vai qui</a></p>
+                <!-- Linens & Laundry -->
+                <div class="info-card info-card--laundry">
+                    <div class="info-card-icon">🧺</div>
+                    <div class="info-card-body">
+                        <h3 data-translate="linens">Biancheria</h3>
+                        <p><span class="info-label" data-translate="linens_label">Lenzuola</span><strong data-translate="linens_detail">incluse, cambio ogni 3 giorni</strong></p>
+                        <p><span class="info-label" data-translate="laundry">Lavanderia</span><strong>"Profumo di Pulito" <span class="info-hours" data-translate="laundry_hours_short">Lun–Sab 8–20</span></strong></p>
+                        <a href="https://www.google.com/maps/place/%22Profumo+di+Pulito%22+lavanderia+self+service/@40.0999233,18.433688,16z/data=!4m10!1m2!2m1!1sLavanderia+self+service+Via+Roma+Uggiano+la+Chiesa!3m6!1s0x13446aa4450a84fd:0xd8ef8b48d2f4ea6a!8m2!3d40.0999233!4d18.4432152!15sCjJMYXZhbmRlcmlhIHNlbGYgc2VydmljZSBWaWEgUm9tYSBVZ2dpYW5vIGxhIENoaWVzYZIBCmxhdW5kcm9tYXTgAQA!16s%2Fg%2F11hbrdsr84?entry=ttu&g_ep=EgoyMDI2MDMzMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="inline-map-btn" data-translate="go_here">📍 Vai qui</a>
+                    </div>
                 </div>
-
-                <!-- Security card removed per request -->
             </div>
-
-            <!-- Waste collection removed for a cleaner guest experience -->
         </div>
     </section>
 
     <!-- House Rules -->
     <section class="house-rules">
         <div class="container">
-            <h2 data-translate="house_rules_title">Regole della Casa</h2>
+            <div class="section-header">
+                <div class="section-tag">📜 Regole</div>
+                <h2 data-translate="house_rules_title">Regole della Casa</h2>
+            </div>
             <div class="rules-grid">
+                <div class="rule-item"><span class="rule-icon">🚭</span><p data-translate="no_smoking">Vietato fumare all'interno</p></div>
+                <div class="rule-item"><span class="rule-icon">🔇</span><p data-translate="respect_quiet">Rispetta gli orari di silenzio</p></div>
+                <div class="rule-item"><span class="rule-icon">♻️</span><p data-translate="separate_waste">Differenzia i rifiuti</p></div>
+                <div class="rule-item"><span class="rule-icon">💡</span><p data-translate="turn_off_lights">Spegni luci e A/C quando esci</p></div>
                 <div class="rule-item">
-                    <span class="rule-icon">🚭</span>
-                    <p data-translate="no_smoking">Vietato fumare all'interno</p>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-icon">🔇</span>
-                    <p data-translate="respect_quiet">Rispetta gli orari di silenzio</p>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-icon">♻️</span>
-                    <p data-translate="separate_waste">Differenzia i rifiuti</p>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-icon">💡</span>
-                    <p data-translate="turn_off_lights">Spegni luci e A/C quando esci</p>
-                </div>
-                <div class="rule-item">
-                    <svg class="rule-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                        <path d="M21 7h-3.2l-2-2H8.2l-2 2H3v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7z" fill="#2c7873"/>
-                        <circle cx="12" cy="13" r="3" fill="#ffffff"/>
+                    <svg class="rule-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#2c7873"/>
+                        <rect x="8" y="8" width="8" height="6" rx="1.5" fill="white"/>
+                        <polygon points="16,9 19,7 19,15 16,13" fill="white"/>
+                        <circle cx="11" cy="11" r="1.2" fill="#2c7873"/>
                     </svg>
                     <p data-translate="area_monitored">Area videosorvegliata</p>
                 </div>
-                <div class="rule-item">
-                    <span class="rule-icon">🧹</span>
-                    <p data-translate="keep_clean">Mantieni pulito l'appartamento</p>
-                </div>
+                <div class="rule-item"><span class="rule-icon">🧹</span><p data-translate="keep_clean">Mantieni pulito l'appartamento</p></div>
             </div>
         </div>
     </section>
 
-    <!-- Weather & Beach Recommendations (moved here after info & rules) -->
-    <section class="weather-beaches">
+    <!-- Weather & Beaches -->
+    <section class="weather-beaches" id="beaches-section">
         <div class="container">
-            <h2 data-translate="weather_beaches_title">Previsioni Meteo e Spiagge Consigliate</h2>
+            <div class="section-header">
+                <div class="section-tag">🌤️ Meteo</div>
+                <h2 data-translate="weather_beaches_title">Previsioni Meteo e Spiagge Consigliate</h2>
+            </div>
 
             <!-- 3-day weather forecast -->
             <div id="daily-forecast" class="daily-forecast">
@@ -156,13 +143,11 @@
                 <div class="forecast-card skeleton"></div>
             </div>
 
-            <!-- All Beaches List -->
+            <!-- Beach map & filters -->
             <div class="beach-recommendations">
-                <!-- Removed the large 'All Beaches' grid to avoid redundancy with the map/list and recommendations. -->
                 <div class="beaches-map-section">
-                    <!-- Filters -->
                     <div class="beach-filters-modern">
-                        <p id="current-wind-info" class="current-wind-info">Caricamento vento in corso...</p>
+                        <p id="current-wind-info" class="current-wind-info">💨 Caricamento vento in corso…</p>
                         <div class="beach-filter-buttons">
                             <button class="beach-filter-btn active" data-filter="all" data-translate="filter_all">Tutte</button>
                             <button class="beach-filter-btn" data-filter="sand" data-translate="filter_sand">Sabbia</button>
@@ -171,8 +156,6 @@
                         </div>
                         <p id="recommendation-status" class="recommendation-status" aria-live="polite"></p>
                     </div>
-
-                    <!-- Map & List Container -->
                     <div class="beach-map-list-container">
                         <div id="beaches-map" class="map-container-modern"></div>
                         <div id="beaches-list" class="beaches-list-modern"></div>
@@ -182,16 +165,42 @@
         </div>
     </section>
 
-    <!-- Excursions (guest-only) -->
-    <section class="excursions">
+    <!-- POI Quick Access -->
+    <section class="poi-quick-section" id="poi-section">
         <div class="container">
-            <div class="excursion-card">
-                <h3 data-translate="excursions_title">🚤 Escursione in Gommone</h3>
-                <p><strong data-translate="excursions_departure">Partenza:</strong> <span data-translate="excursions_port">Porto Badisco</span></p>
-                <p><strong data-translate="excursions_service">Servizio:</strong> <span data-translate="excursions_service_desc">Foto ricordo incluse</span></p>
-                <p data-translate="excursions_desc">Scopri le meravigliose grotte marine e le calette nascoste della costa adriatica del Salento con un'emozionante escursione in gommone.</p>
-                <div class="excursion-actions">
-                    <a class="btn btn-primary btn-cta" href="https://wa.me/393208086738" target="_blank" data-translate="book_excursion_btn">Prenota Escursione</a>
+            <div class="section-header">
+                <div class="section-tag" data-translate="poi_around">📍 Dintorni</div>
+                <h2 data-translate="poi_recommended_title">Luoghi Consigliati</h2>
+            </div>
+
+            <div class="poi-quick-filters">
+                <button class="poi-quick-btn active" data-poi-filter="all" data-translate="poi_filter_all">Tutti</button>
+                <button class="poi-quick-btn" data-poi-filter="attractions" data-translate="poi_btn_attractions">🏛️ Attrazioni</button>
+                <button class="poi-quick-btn" data-poi-filter="nightlife" data-translate="poi_btn_nightlife">🍹 Movida</button>
+                <button class="poi-quick-btn" data-poi-filter="restaurants" data-translate="poi_btn_restaurants">🍽️ Ristoranti</button>
+                <button class="poi-quick-btn" data-poi-filter="services" data-translate="poi_btn_services">🛒 Servizi</button>
+            </div>
+
+            <div class="poi-quick-grid" id="poi-quick-grid">
+                <!-- populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Excursions -->
+    <section class="excursions" id="excursion-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">🚤 Escursioni</div>
+                <h2 data-translate="excursions_title">Escursione in Gommone</h2>
+            </div>
+            <div class="excursion-card-new">
+                <div class="excursion-card-emoji">🚤</div>
+                <div class="excursion-card-body">
+                    <p><strong data-translate="excursions_departure">Partenza:</strong> <span data-translate="excursions_port">Porto Badisco</span></p>
+                    <p><strong data-translate="excursions_service">Servizio:</strong> <span data-translate="excursions_service_desc">Foto ricordo incluse</span></p>
+                    <p data-translate="excursions_desc">Scopri le meravigliose grotte marine e le calette nascoste della costa adriatica del Salento con un'emozionante escursione in gommone.</p>
+                    <a class="btn-excursion" href="https://wa.me/393208086738" target="_blank" data-translate="book_excursion_btn">📲 Prenota su WhatsApp</a>
                 </div>
             </div>
         </div>
@@ -201,11 +210,10 @@
     <section class="reviews">
         <div class="container">
             <div class="review-section">
-                <h3 data-translate="leave_review">✍️ Lascia una Recensione su Google</h3>
-                <p class="review-subtext" data-translate="review_subtext">La tua recensione ci aiuta a migliorare!</p>
-                <div class="review-links">
-                    <a href="https://maps.app.goo.gl/xqoVeJmRU9mDvPQj6" target="_blank" class="review-btn" data-translate="leave_review_cta">⭐ Lascia una Recensione su Google</a>
-                </div>
+                <div class="review-icon">⭐</div>
+                <h3 data-translate="leave_review">Lascia una Recensione su Google</h3>
+                <p class="review-subtext" data-translate="review_subtext">La tua recensione ci aiuta a migliorare e aiuta altri viaggiatori!</p>
+                <a href="https://maps.app.goo.gl/xqoVeJmRU9mDvPQj6" target="_blank" class="review-btn" data-translate="leave_review_cta">⭐ Lascia una Recensione</a>
             </div>
         </div>
     </section>
@@ -213,9 +221,13 @@
     <!-- Footer -->
     <footer class="guest-footer">
         <div class="container">
-            <p>Casa Paolina - Via Dante De Blasi, 15, Uggiano la Chiesa (LE)</p>
-            <p>Tel: <a href="tel:+393208086738">+39 320 808 6738</a> | WhatsApp: <a href="https://wa.me/393208086738">+39 320 808 6738</a></p>
-            <p>&copy; 2026 Casa Paolina. Tutti i diritti riservati.</p>
+            <p>🏠 Casa Paolina — Via Dante De Blasi, 15, Uggiano la Chiesa (LE)</p>
+            <p>
+                <a href="tel:+393208086738">📞 +39 320 808 6738</a>
+                &nbsp;·&nbsp;
+                <a href="https://wa.me/393208086738">💬 WhatsApp</a>
+            </p>
+            <p class="footer-copy">&copy; 2026 Casa Paolina. Tutti i diritti riservati.</p>
         </div>
     </footer>
 
@@ -223,7 +235,5 @@
     <script src="js/guest-translations.js"></script>
     <script src="js/leaflet-beach-map.js"></script>
     <script src="js/guest-page.js"></script>
-
-    <!-- Waste styles moved to css/guest-page.css for a cleaner, professional look -->
 </body>
 </html>

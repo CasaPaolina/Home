@@ -270,21 +270,40 @@ class LeafletBeachMap {
     createBeachListItem(beach) {
         const isSand = beach.sandType.includes('sand');
         const typeIcon = isSand ? '🏖️' : '🪨';
-        const typeLabel = isSand ? 'Sabbia' : 'Scogliera';
+
+        // Translated labels
+        const lang = (typeof currentGuestLang !== 'undefined' ? currentGuestLang : null)
+            || (typeof window.currentGuestLang !== 'undefined' ? window.currentGuestLang : 'it');
+        const t = (typeof guestTranslations !== 'undefined' && guestTranslations[lang]) ? guestTranslations[lang] : {};
+        const typeLabel = isSand ? (t.filter_sand || 'Sabbia') : (t.filter_rocks || 'Scogliera');
+        const bookLabel = t.book_beach || 'Prenota';
 
         const bookingBtn = beach.bookingLink
-            ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">Prenota</a>`
+            ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">${bookLabel}</a>`
             : '';
+
+        let thumbHTML;
+        if (typeof window.getBeachImageCandidates === 'function') {
+            const candidates = window.getBeachImageCandidates(beach);
+            if (candidates.length) {
+                const fallbacks = candidates.join('|');
+                thumbHTML = `<img class="beach-list-thumb" src="${candidates[0]}" data-fallbacks="${fallbacks}" data-current="0" onerror="handleBeachImgError(this)" alt="${beach.name}">`;
+            }
+        }
+        if (!thumbHTML) {
+            thumbHTML = `<div class="beach-list-thumb beach-list-thumb-empty">${typeIcon}</div>`;
+        }
 
         return `
             <div class="beach-list-item" data-beach-id="${beach.id}">
-                <div class="beach-list-header">
-                    <span class="beach-list-name">${typeIcon} ${beach.name}</span>
-                    <span class="beach-list-type">${typeLabel}</span>
-                </div>
-                <div class="beach-list-info">
-                    <span class="beach-list-distance">📍 ${beach.distance}</span>
-                    ${bookingBtn}
+                <div class="beach-list-name">${typeIcon} ${beach.name}</div>
+                <div class="beach-list-row">
+                    ${thumbHTML}
+                    <div class="beach-list-meta">
+                        <span class="beach-list-distance">📍 ${beach.distance}</span>
+                        <span class="beach-list-type">${typeLabel}</span>
+                        ${bookingBtn}
+                    </div>
                 </div>
             </div>
         `;

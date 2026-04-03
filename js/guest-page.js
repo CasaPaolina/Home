@@ -384,9 +384,12 @@ async function fetchWeatherForecast() {
         // Update wind info bar above beach filters
         const windInfoEl = document.getElementById('current-wind-info');
         if (windInfoEl) {
-            const dirLabels = { N: 'Nord', NE: 'Nord-Est', E: 'Est', SE: 'Sud-Est', S: 'Sud', SW: 'Sud-Ovest', W: 'Ovest', NW: 'Nord-Ovest' };
-            const dirLabel = dirLabels[slotWindCardinal] || slotWindCardinal;
-            windInfoEl.innerHTML = `<span class="wind-info-icon">💨</span> Vento attuale: <strong>${dirLabel}</strong> a <strong>${slotWindSpeed} km/h</strong>`;
+            const lang = (typeof currentGuestLang !== 'undefined' ? currentGuestLang : 'it');
+            const t = (typeof guestTranslations !== 'undefined' && guestTranslations[lang]) ? guestTranslations[lang] : {};
+            const dirKey = 'dir_' + slotWindCardinal;
+            const dirLabel = t[dirKey] || slotWindCardinal;
+            const windLabel = t.current_wind || '💨 Vento attuale:';
+            windInfoEl.innerHTML = `${windLabel} <strong>${dirLabel}</strong> — <strong>${slotWindSpeed} km/h</strong>`;
         }
 
         // Populate recommendedTodayNames from locations.json (preferred) or fallback to local `beaches`
@@ -1176,6 +1179,81 @@ function initBeachesMap() {
 
 // Note: Translation function moved to guest-translations.js for better organization
 
+// POI Quick Grid — card list before map
+function initPOIQuickGrid() {
+    const grid = document.getElementById('poi-quick-grid');
+    if (!grid) return;
+
+    const categoryIcon = {
+        attractions: '🏛️',
+        nightlife: '🍹',
+        restaurants: '🍽️',
+        services: '🛒',
+        beaches: '🏖️'
+    };
+
+    // Collect POIs from locationsData or fallback to pointsOfInterest
+    let allPOIs = [];
+    try {
+        if (typeof locationsData !== 'undefined' && locationsData.loaded) {
+            const attrs = locationsData.getAttractions().map(p => ({ ...p, cat: 'attractions' }));
+            const night = locationsData.getNightlife().map(p => ({ ...p, cat: 'nightlife' }));
+            const rest = locationsData.getRestaurants().map(p => ({ ...p, cat: 'restaurants' }));
+            const svcs = locationsData.getServices().map(p => ({ ...p, cat: 'services' }));
+            allPOIs = [...attrs, ...night, ...rest, ...svcs];
+        }
+    } catch (e) {}
+
+    if (!allPOIs.length && typeof pointsOfInterest !== 'undefined') {
+        allPOIs = pointsOfInterest.filter(p => p.category !== 'beaches').map(p => ({ ...p, cat: p.category }));
+    }
+
+    function render(filter) {
+        const list = filter === 'all' ? allPOIs : allPOIs.filter(p => p.cat === filter || p.category === filter);
+        grid.innerHTML = list.map(poi => {
+            const icon = categoryIcon[poi.cat] || categoryIcon[poi.category] || '📍';
+            const name = poi.name || '';
+            const desc = poi.description || poi.address || '';
+            const dist = poi.distance || '';
+            const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${CASA_PAOLINA.lat},${CASA_PAOLINA.lng}&destination=${poi.lat},${poi.lng}`;
+            return `
+                <a href="${mapsUrl}" target="_blank" class="poi-quick-card" rel="noopener">
+                    <div class="poi-quick-card-icon">${icon}</div>
+                    <div class="poi-quick-card-body">
+                        <div class="poi-quick-card-name">${name}</div>
+                        ${desc ? `<div class="poi-quick-card-desc">${desc}</div>` : ''}
+                        ${dist ? `<div class="poi-quick-card-dist">📍 ${dist}</div>` : ''}
+                    </div>
+                </a>
+            `;
+        }).join('');
+    }
+
+    // Wait for locationsData to be ready
+    const tryRender = async () => {
+        if (!allPOIs.length && typeof locationsData !== 'undefined') {
+            try {
+                if (!locationsData.loaded) await locationsData.load();
+                const attrs = locationsData.getAttractions().map(p => ({ ...p, cat: 'attractions' }));
+                const night = locationsData.getNightlife().map(p => ({ ...p, cat: 'nightlife' }));
+                const rest = locationsData.getRestaurants().map(p => ({ ...p, cat: 'restaurants' }));
+                const svcs = locationsData.getServices().map(p => ({ ...p, cat: 'services' }));
+                allPOIs = [...attrs, ...night, ...rest, ...svcs];
+            } catch (e) {}
+        }
+        render('all');
+    };
+    tryRender();
+
+    document.querySelectorAll('.poi-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.poi-quick-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render(btn.dataset.poiFilter);
+        });
+    });
+}
+
 // Call functions on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Display current date
@@ -1186,6 +1264,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize POI map
     initPOIMap();
+
+    // Populate POI quick-access grid
+    initPOIQuickGrid();
 
     // Initialize beaches map
     initBeachesMap();
