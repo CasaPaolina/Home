@@ -4,7 +4,7 @@ const guestTranslations = {
     it: {
         back_to_site: "Torna al sito",
         guest_page_title: "Area Riservata Ospiti",
-        weather_beaches_title: "Previsioni Meteo e Spiagge Consigliate",
+        weather_beaches_title: "Previsioni Vento & Spiagge Consigliate",
         morning: "Mattina (9:00-12:00)",
         noon: "Mezzogiorno (12:00-15:00)",
         afternoon: "Pomeriggio (15:00-18:00)",
@@ -63,8 +63,7 @@ const guestTranslations = {
         excursions_service_desc: "Foto ricordo incluse",
         excursions_desc: "Scopri le meravigliose grotte marine e le calette nascoste della costa adriatica del Salento con un'emozionante escursione in gommone.",
         book_excursion_btn: "Prenota Escursione",
-        book_beach: "Prenota",
-
+        
         // House Rules
         house_rules_title: "Regole della Casa",
         no_smoking: "Vietato fumare all'interno",
@@ -84,7 +83,6 @@ const guestTranslations = {
         filter_recommended_today: "Consigliato oggi",
         today: "Oggi",
         tomorrow: "Domani",
-        day_after_tomorrow: "Dopodomani",
         morning_short: "Mattina",
         noon_short: "Mezzogiorno",
         afternoon_short: "Pomeriggio",
@@ -142,39 +140,12 @@ const guestTranslations = {
         from_you: "da te",
         from_casa_paolina: "da Casa Paolina",
 
-        // Hero pills
-        hero_pill_info: "📋 Info",
-        hero_pill_beaches: "🏖️ Spiagge",
-        hero_pill_places: "📍 Luoghi",
-        hero_pill_excursions: "🚤 Escursioni",
-
-        // Linens card
-        linens_label: "Lenzuola",
-        linens_detail: "incluse, cambio ogni 3 giorni",
-        laundry_hours_short: "Lun–Sab 8–20",
-        go_here: "📍 Vai qui",
-
-        // POI section
-        poi_around: "📍 Dintorni",
-        poi_recommended_title: "Luoghi Consigliati",
-        poi_filter_all: "Tutti",
-        filter_restaurants: "Ristoranti",
-        poi_btn_attractions: "🏛️ Attrazioni",
-        poi_btn_nightlife: "🍹 Movida",
-        poi_btn_restaurants: "🍽️ Ristoranti",
-        poi_btn_services: "🛒 Servizi",
-
-        // Wind
-        current_wind: "💨 Vento attuale:",
-        dir_N: "Nord", dir_NE: "Nord-Est", dir_E: "Est", dir_SE: "Sud-Est",
-        dir_S: "Sud", dir_SW: "Sud-Ovest", dir_W: "Ovest", dir_NW: "Nord-Ovest",
-
     },
     
     en: {
         back_to_site: "Back to site",
         guest_page_title: "Guest Area",
-        weather_beaches_title: "Weather Forecast & Recommended Beaches",
+        weather_beaches_title: "Wind Forecast & Recommended Beaches",
         morning: "Morning (9:00-12:00)",
         waste: "Waste Collection",
         waste_plastic_title: "Plastic & Metals",
@@ -200,7 +171,6 @@ const guestTranslations = {
         excursions_service_desc: "Photos included",
         excursions_desc: "Discover the wonderful sea caves and hidden coves of the Adriatic Salento coast with an exciting boat excursion.",
         book_excursion_btn: "Book Excursion",
-        book_beach: "Book",
 
         noon: "Noon (12:00-15:00)",
         afternoon: "Afternoon (15:00-18:00)",
@@ -254,7 +224,6 @@ const guestTranslations = {
         filter_recommended_today: "Recommended today",
         today: "Today",
         tomorrow: "Tomorrow",
-        day_after_tomorrow: "Day after tomorrow",
         morning_short: "Morning",
         noon_short: "Noon",
         afternoon_short: "Afternoon",
@@ -309,39 +278,12 @@ const guestTranslations = {
 
         leave_review_cta: "⭐ Leave a Review on Google",
         beaches_map_title: "Beaches Map of Salento",
-        area_monitored: "📹 Monitored Area",
-
-        // Hero pills
-        hero_pill_info: "📋 Info",
-        hero_pill_beaches: "🏖️ Beaches",
-        hero_pill_places: "📍 Places",
-        hero_pill_excursions: "🚤 Excursions",
-
-        // Linens card
-        linens_label: "Sheets",
-        linens_detail: "included, change every 3 days",
-        laundry_hours_short: "Mon–Sat 8–20",
-        go_here: "📍 Get directions",
-
-        // POI section
-        poi_around: "📍 Surroundings",
-        poi_recommended_title: "Recommended Places",
-        poi_filter_all: "All",
-        filter_restaurants: "Restaurants",
-        poi_btn_attractions: "🏛️ Attractions",
-        poi_btn_nightlife: "🍹 Nightlife",
-        poi_btn_restaurants: "🍽️ Restaurants",
-        poi_btn_services: "🛒 Services",
-
-        // Wind
-        current_wind: "💨 Current wind:",
-        dir_N: "North", dir_NE: "North-East", dir_E: "East", dir_SE: "South-East",
-        dir_S: "South", dir_SW: "South-West", dir_W: "West", dir_NW: "North-West",
+        area_monitored: "📹 Monitored Area"
     },
     fr: {
         back_to_site: "Retour au site",
         guest_page_title: "Espace Invités",
-        weather_beaches_title: "Météo & Plages Recommandées",
+        weather_beaches_title: "Prévisions du vent & Plages recommandées",
         morning: "Matin (9:00-12:00)",
         noon: "Midi (12:00-15:00)",
         afternoon: "Après-midi (15:00-18:00)",
@@ -395,7 +337,6 @@ const guestTranslations = {
         excursions_service_desc: "Photos incluses",
         excursions_desc: "Découvrez les merveilleuses grottes et criques cachées de la côte adriatique du Salento.",
         book_excursion_btn: "Réserver une excursion",
-        book_beach: "Réserver",
 
         // POI
         top_beaches_today: "Plages recommandées",
@@ -421,9 +362,6 @@ const guestTranslations = {
         poi_title: "Points d'Intérêt",
         filter_all: "Tous",
         filter_recommended_today: "Conseillé aujourd'hui",
-        today: "Aujourd'hui",
-        tomorrow: "Demain",
-        day_after_tomorrow: "Après-demain",
         filter_nightlife: "Vie nocturne",
         filter_attractions: "Attractions",
         filter_beaches: "Plages",
@@ -468,39 +406,12 @@ const guestTranslations = {
         // Distance labels
         from_you: "de vous",
         from_casa_paolina: "de Casa Paolina",
-
-        // Hero pills
-        hero_pill_info: "📋 Info",
-        hero_pill_beaches: "🏖️ Plages",
-        hero_pill_places: "📍 Lieux",
-        hero_pill_excursions: "🚤 Excursions",
-
-        // Linens card
-        linens_label: "Draps",
-        linens_detail: "inclus, changement tous les 3 jours",
-        laundry_hours_short: "Lun–Sam 8–20",
-        go_here: "📍 Y aller",
-
-        // POI section
-        poi_around: "📍 Environs",
-        poi_recommended_title: "Lieux Conseillés",
-        poi_filter_all: "Tous",
-        filter_restaurants: "Restaurants",
-        poi_btn_attractions: "🏛️ Attractions",
-        poi_btn_nightlife: "🍹 Vie nocturne",
-        poi_btn_restaurants: "🍽️ Restaurants",
-        poi_btn_services: "🛒 Services",
-
-        // Wind
-        current_wind: "💨 Vent actuel:",
-        dir_N: "Nord", dir_NE: "Nord-Est", dir_E: "Est", dir_SE: "Sud-Est",
-        dir_S: "Sud", dir_SW: "Sud-Ouest", dir_W: "Ouest", dir_NW: "Nord-Ouest",
     },
     
     es: {
         back_to_site: "Volver al sitio",
         guest_page_title: "Área de Huéspedes",
-        weather_beaches_title: "Previsión Meteorológica y Playas Recomendadas",
+        weather_beaches_title: "Pronóstico del Viento y Playas Recomendadas",
         waste: "Recogida de Residuos",
         waste_plastic_title: "♻️ Plástico y Metales",
         waste_plastic_days: "Mar y Vie",
@@ -525,7 +436,6 @@ const guestTranslations = {
         excursions_service_desc: "Fotos incluidas",
         excursions_desc: "Descubra las maravillosas cuevas marinas y calas escondidas de la costa adriática del Salento.",
         book_excursion_btn: "Reservar Excursión",
-        book_beach: "Reservar",
 
         top_beaches: "Top 3 Playas Recomendadas Hoy",
         top_beaches_today: "Playas Recomendadas",
@@ -610,7 +520,6 @@ const guestTranslations = {
         filter_recommended_today: "Recomendado hoy",
         today: "Hoy",
         tomorrow: "Mañana",
-        day_after_tomorrow: "Pasado mañana",
         morning_short: "Mañana",
         noon_short: "Mediodía",
         afternoon_short: "Tarde",
@@ -641,43 +550,16 @@ const guestTranslations = {
         ionian: "Jónico",
         protected_wind: "Protegida del viento",
         booking_available: "📅 Reservar sombrilla"
-        get_directions: "Llévame allí",
-        // Distance labels
+        ,get_directions: "Llévame allí"
+        ,// Distance labels
         from_you: "desde tu ubicación",
-        from_casa_paolina: "desde Casa Paolina",
-
-        // Hero pills
-        hero_pill_info: "📋 Info",
-        hero_pill_beaches: "🏖️ Playas",
-        hero_pill_places: "📍 Lugares",
-        hero_pill_excursions: "🚤 Excursiones",
-
-        // Linens card
-        linens_label: "Sábanas",
-        linens_detail: "incluidas, cambio cada 3 días",
-        laundry_hours_short: "Lun–Sáb 8–20",
-        go_here: "📍 Cómo llegar",
-
-        // POI section
-        poi_around: "📍 Alrededores",
-        poi_recommended_title: "Lugares Recomendados",
-        poi_filter_all: "Todos",
-        filter_restaurants: "Restaurantes",
-        poi_btn_attractions: "🏛️ Atracciones",
-        poi_btn_nightlife: "🍹 Vida Nocturna",
-        poi_btn_restaurants: "🍽️ Restaurantes",
-        poi_btn_services: "🛒 Servicios",
-
-        // Wind
-        current_wind: "💨 Viento actual:",
-        dir_N: "Norte", dir_NE: "Noreste", dir_E: "Este", dir_SE: "Sureste",
-        dir_S: "Sur", dir_SW: "Suroeste", dir_W: "Oeste", dir_NW: "Noroeste",
+        from_casa_paolina: "desde Casa Paolina"
     },
     
     de: {
         back_to_site: "Zurück zur Seite",
         guest_page_title: "Gästebereich",
-        weather_beaches_title: "Wettervorhersage & Empfohlene Strände",
+        weather_beaches_title: "Windvorhersage & Empfohlene Strände",
         waste: "Müllabfuhr",
         waste_plastic_title: "♻️ Plastik und Metall",
         waste_plastic_days: "Di & Fr",
@@ -702,7 +584,6 @@ const guestTranslations = {
         excursions_service_desc: "Fotos inklusive",
         excursions_desc: "Entdecken Sie die wunderbaren Meereshöhlen und versteckten Buchten an der Adriaküste des Salento bei einem aufregenden Boots-Ausflug.",
         book_excursion_btn: "Bootstour Buchen",
-        book_beach: "Buchen",
 
         // Beach descriptions (DE)
         beach_torre_dellorso_desc: "Sandstrand mit kristallklarem Wasser",
@@ -778,7 +659,6 @@ const guestTranslations = {
         filter_recommended_today: "Heute empfohlen",
         today: "Heute",
         tomorrow: "Morgen",
-        day_after_tomorrow: "Übermorgen",
         morning_short: "Morgen",
         noon_short: "Mittag",
         afternoon_short: "Nachmittag",
@@ -809,37 +689,10 @@ const guestTranslations = {
         ionian: "Ionisch",
         protected_wind: "Windgeschützt",
         booking_available: "📅 Sonnenschirm buchen"
-        get_directions: "Wegbeschreibung",
-        // Distance labels
+        ,get_directions: "Wegbeschreibung"
+        ,// Distance labels
         from_you: "von deinem Standort",
-        from_casa_paolina: "von Casa Paolina",
-
-        // Hero pills
-        hero_pill_info: "📋 Info",
-        hero_pill_beaches: "🏖️ Strände",
-        hero_pill_places: "📍 Orte",
-        hero_pill_excursions: "🚤 Ausflüge",
-
-        // Linens card
-        linens_label: "Bettwäsche",
-        linens_detail: "inklusive, Wechsel alle 3 Tage",
-        laundry_hours_short: "Mo–Sa 8–20",
-        go_here: "📍 Navigation",
-
-        // POI section
-        poi_around: "📍 Umgebung",
-        poi_recommended_title: "Empfohlene Orte",
-        poi_filter_all: "Alle",
-        filter_restaurants: "Restaurants",
-        poi_btn_attractions: "🏛️ Sehenswürdigkeiten",
-        poi_btn_nightlife: "🍹 Nachtleben",
-        poi_btn_restaurants: "🍽️ Restaurants",
-        poi_btn_services: "🛒 Dienstleistungen",
-
-        // Wind
-        current_wind: "💨 Aktueller Wind:",
-        dir_N: "Nord", dir_NE: "Nordost", dir_E: "Ost", dir_SE: "Südost",
-        dir_S: "Süd", dir_SW: "Südwest", dir_W: "West", dir_NW: "Nordwest",
+        from_casa_paolina: "von Casa Paolina"
     }
 };
 
@@ -872,17 +725,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             const lang = btn.getAttribute('data-lang');
             translateGuestPage(lang);
-            // Re-fetch weather data with new language (also updates wind info label)
+            // Re-fetch weather data with new language
             if (typeof fetchWeatherForecast === 'function') {
                 fetchWeatherForecast();
-            }
-            // Re-render beach list with new language
-            if (typeof leafletBeachMap !== 'undefined' && leafletBeachMap) {
-                leafletBeachMap.renderBeachList(leafletBeachMap.currentFilter === 'recommended-today' ? 'all' : leafletBeachMap.currentFilter);
-            }
-            // Re-render daily forecast with new language
-            if (typeof renderDailyForecast === 'function' && window._lastForecastData) {
-                renderDailyForecast(window._lastForecastData);
             }
         });
     });

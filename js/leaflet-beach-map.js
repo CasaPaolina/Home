@@ -172,7 +172,7 @@ class LeafletBeachMap {
         const filterButtons = document.querySelectorAll('.beach-filter-btn');
 
         filterButtons.forEach(btn => {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
                 // Update active state
                 filterButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -180,70 +180,6 @@ class LeafletBeachMap {
                 // Apply filter
                 const filter = btn.dataset.filter;
                 this.currentFilter = filter;
-
-                // If user clicked 'recommended-today', compute recommendations from today's wind
-                if (filter === 'recommended-today') {
-                    // Ensure locations and wind data are available
-                    try {
-                        if (typeof fetchWeatherForecast === 'function') {
-                            await fetchWeatherForecast(); // refresh wind and populate recommendedTodayNames
-                        }
-                    } catch (e) {
-                        console.error('Error updating wind for recommendations:', e);
-                    }
-
-                    // Determine recommended set (prefer window.recommendedTodayNames if populated)
-                    let recommendedNames = Array.isArray(window.recommendedTodayNames) && window.recommendedTodayNames.length
-                        ? window.recommendedTodayNames.slice()
-                        : [];
-
-                    // Fallback: if recommendations empty, pick nearest 3 beaches
-                    if (!recommendedNames.length) {
-                        try {
-                            const all = locationsData.getBeaches();
-                            if (Array.isArray(all) && all.length) {
-                                // sort by distance from casa using locationsData.calculateDistance if available
-                                if (typeof locationsData.calculateDistance === 'function') {
-                                    all.sort((a, b) => locationsData.calculateDistance(a.lat, a.lng) - locationsData.calculateDistance(b.lat, b.lng));
-                                }
-                                recommendedNames = all.map(b => b.name);
-                                const status = document.getElementById('recommendation-status');
-                                if (status) status.textContent = 'Visualizzo le spiagge più vicine come raccomandazione alternativa.';
-                            }
-                        } catch (e) {
-                            console.error('Fallback recommendation failed:', e);
-                        }
-                    }
-
-                    if (recommendedNames.length) {
-                        this.addBeachMarkers('all');
-                        this.renderBeachList('all');
-
-                        const recommendedSet = new Set(recommendedNames);
-                        // Filter markers shown on map
-                        this.markers.forEach(({ marker, beach }) => {
-                            const shouldShow = recommendedSet.has(beach.name);
-                            if (shouldShow) marker.addTo(this.map); else this.map.removeLayer(marker);
-                        });
-
-                        // Render list only with recommended items
-                        const listContainer = document.getElementById('beaches-list');
-                        if (listContainer) {
-                            listContainer.innerHTML = this.beaches.filter(b => recommendedSet.has(b.name)).map(b => this.createBeachListItem(b)).join('');
-                        }
-
-                        return;
-                    } else {
-                        // No recommendation possible
-                        this.addBeachMarkers('all');
-                        this.renderBeachList('all');
-                        const status = document.getElementById('recommendation-status');
-                        if (status) status.textContent = 'Nessuna raccomandazione disponibile per oggi.';
-                        return;
-                    }
-                }
-
-                // Default behaviour for other filters
                 this.addBeachMarkers(filter);
                 this.renderBeachList(filter);
             });
@@ -270,40 +206,21 @@ class LeafletBeachMap {
     createBeachListItem(beach) {
         const isSand = beach.sandType.includes('sand');
         const typeIcon = isSand ? '🏖️' : '🪨';
-
-        // Translated labels
-        const lang = (typeof currentGuestLang !== 'undefined' ? currentGuestLang : null)
-            || (typeof window.currentGuestLang !== 'undefined' ? window.currentGuestLang : 'it');
-        const t = (typeof guestTranslations !== 'undefined' && guestTranslations[lang]) ? guestTranslations[lang] : {};
-        const typeLabel = isSand ? (t.filter_sand || 'Sabbia') : (t.filter_rocks || 'Scogliera');
-        const bookLabel = t.book_beach || 'Prenota';
+        const typeLabel = isSand ? 'Sabbia' : 'Scogliera';
 
         const bookingBtn = beach.bookingLink
-            ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">${bookLabel}</a>`
+            ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">Prenota</a>`
             : '';
-
-        let thumbHTML;
-        if (typeof window.getBeachImageCandidates === 'function') {
-            const candidates = window.getBeachImageCandidates(beach);
-            if (candidates.length) {
-                const fallbacks = candidates.join('|');
-                thumbHTML = `<img class="beach-list-thumb" src="${candidates[0]}" data-fallbacks="${fallbacks}" data-current="0" onerror="handleBeachImgError(this)" alt="${beach.name}">`;
-            }
-        }
-        if (!thumbHTML) {
-            thumbHTML = `<div class="beach-list-thumb beach-list-thumb-empty">${typeIcon}</div>`;
-        }
 
         return `
             <div class="beach-list-item" data-beach-id="${beach.id}">
-                <div class="beach-list-name">${typeIcon} ${beach.name}</div>
-                <div class="beach-list-row">
-                    ${thumbHTML}
-                    <div class="beach-list-meta">
-                        <span class="beach-list-distance">📍 ${beach.distance}</span>
-                        <span class="beach-list-type">${typeLabel}</span>
-                        ${bookingBtn}
-                    </div>
+                <div class="beach-list-header">
+                    <span class="beach-list-name">${typeIcon} ${beach.name}</span>
+                    <span class="beach-list-type">${typeLabel}</span>
+                </div>
+                <div class="beach-list-info">
+                    <span class="beach-list-distance">📍 ${beach.distance}</span>
+                    ${bookingBtn}
                 </div>
             </div>
         `;

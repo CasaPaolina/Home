@@ -321,14 +321,20 @@ const pointsOfInterest = [
 
 // Fetch weather forecast for 2 days
 async function fetchWeatherForecast() {
+    const controller = new AbortController();
+    const timeoutMs = 9000;
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
     try {
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,windspeed_10m_max,winddirection_10m_dominant&timezone=Europe/Rome&forecast_days=3`
+            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,windspeed_10m_max,winddirection_10m_dominant&timezone=Europe/Rome&forecast_days=3`,
+            { signal: controller.signal }
         );
         if (!response.ok) {
             throw new Error(`Weather API error: ${response.status}`);
         }
         const data = await response.json();
+        window._lastForecastData = data;
 
         // Update dates
         const today = new Date();
@@ -395,16 +401,9 @@ async function fetchWeatherForecast() {
         // Populate recommendedTodayNames from locations.json (preferred) or fallback to local `beaches`
         try {
             let allBeaches = beaches;
-            if (typeof locationsData !== 'undefined') {
-                try {
-                    if (!locationsData.loaded && typeof locationsData.load === 'function') {
-                        await locationsData.load();
-                    }
-                    const remote = locationsData.getBeaches();
-                    if (Array.isArray(remote) && remote.length) allBeaches = remote;
-                } catch (e) {
-                    allBeaches = beaches;
-                }
+            if (typeof locationsData !== 'undefined' && locationsData.loaded) {
+                const remote = locationsData.getBeaches();
+                if (Array.isArray(remote) && remote.length) allBeaches = remote;
             }
 
             // Build recommendedTodayNames using locationsData protectedFrom or fallback to sheltered property
@@ -429,6 +428,8 @@ async function fetchWeatherForecast() {
     } catch (error) {
         console.error('Error fetching weather:', error);
         displayWeatherError();
+    } finally {
+        clearTimeout(timer);
     }
 }
 
@@ -835,6 +836,11 @@ function displayWeatherError() {
         if (dirElement) dirElement.textContent = '--';
         if (speedElement) speedElement.textContent = '--';
     });
+
+    const windInfoEl = document.getElementById('current-wind-info');
+    if (windInfoEl) {
+        windInfoEl.textContent = '💨 Vento non disponibile. Riprova tra pochi istanti.';
+    }
 }
 
 // Initialize POI Map
@@ -1259,17 +1265,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Display current date
     displayCurrentDate();
 
-    // Fetch weather and beach recommendations
-    fetchWeatherForecast();
-
-    // Initialize POI map
-    initPOIMap();
-
-    // Populate POI quick-access grid
-    initPOIQuickGrid();
-
-    // Initialize beaches map
-    initBeachesMap();
+    // Load locations data once, then kick off weather + POI grid
+    locationsData.load().catch(() => {}).finally(() => {
+        fetchWeatherForecast();
+        initPOIQuickGrid();
+    });
 
     // Refresh weather every 30 minutes
     setInterval(fetchWeatherForecast, 30 * 60 * 1000);
