@@ -140,6 +140,36 @@ const guestTranslations = {
         from_you: "da te",
         from_casa_paolina: "da Casa Paolina",
 
+        // Hero & welcome
+        guest_welcome_title: "Benvenuti nel vostro angolo di Salento",
+        guest_welcome_sub: "Tutto quello che vi serve per un soggiorno perfetto",
+        hero_pill_info: "📋 Info",
+        hero_pill_beaches: "🏖️ Spiagge",
+        hero_pill_places: "📍 Luoghi",
+        hero_pill_excursions: "🚤 Escursioni",
+
+        // Info card details
+        linens_label: "Lenzuola",
+        linens_detail: "incluse, cambio ogni 3 giorni",
+        laundry_hours_short: "Lun–Sab 8–20",
+        go_here: "📍 Vai qui",
+
+        // POI section
+        poi_around: "📍 Dintorni",
+        poi_recommended_title: "Luoghi Consigliati",
+        poi_filter_all: "Tutti",
+        poi_btn_attractions: "🏛️ Attrazioni",
+        poi_btn_nightlife: "🍹 Movida",
+        poi_btn_restaurants: "🍽️ Ristoranti",
+        poi_btn_services: "🛒 Servizi",
+
+        // Section tags & footer
+        section_tag_casa: "🏡 Casa",
+        section_tag_rules: "📜 Regole",
+        section_tag_meteo: "🌤️ Meteo",
+        section_tag_excursions: "🚤 Escursioni",
+        footer_copy: "© 2026 Casa Paolina. Tutti i diritti riservati.",
+
     },
     
     en: {
@@ -278,7 +308,37 @@ const guestTranslations = {
 
         leave_review_cta: "⭐ Leave a Review on Google",
         beaches_map_title: "Beaches Map of Salento",
-        area_monitored: "📹 Monitored Area"
+        area_monitored: "📹 Monitored Area",
+
+        // Hero & welcome
+        guest_welcome_title: "Welcome to your corner of Salento",
+        guest_welcome_sub: "Everything you need for a perfect stay",
+        hero_pill_info: "📋 Info",
+        hero_pill_beaches: "🏖️ Beaches",
+        hero_pill_places: "📍 Places",
+        hero_pill_excursions: "🚤 Excursions",
+
+        // Info card details
+        linens_label: "Linens",
+        linens_detail: "included, changed every 3 days",
+        laundry_hours_short: "Mon–Sat 8–20",
+        go_here: "📍 Get directions",
+
+        // POI section
+        poi_around: "📍 Nearby",
+        poi_recommended_title: "Recommended Places",
+        poi_filter_all: "All",
+        poi_btn_attractions: "🏛️ Attractions",
+        poi_btn_nightlife: "🍹 Nightlife",
+        poi_btn_restaurants: "🍽️ Restaurants",
+        poi_btn_services: "🛒 Services",
+
+        // Section tags & footer
+        section_tag_casa: "🏡 House",
+        section_tag_rules: "📜 Rules",
+        section_tag_meteo: "🌤️ Weather",
+        section_tag_excursions: "🚤 Excursions",
+        footer_copy: "© 2026 Casa Paolina. All rights reserved.",
     },
     fr: {
         back_to_site: "Retour au site",
@@ -406,6 +466,60 @@ const guestTranslations = {
         // Distance labels
         from_you: "de vous",
         from_casa_paolina: "de Casa Paolina",
+
+        // Missing filter/time keys
+        filter_sand: "Sable",
+        filter_rocks: "Rochers",
+        filter_adriatic: "Adriatique",
+        filter_ionian: "Ionien",
+        today: "Aujourd'hui",
+        tomorrow: "Demain",
+        morning_short: "Matin",
+        noon_short: "Midi",
+        afternoon_short: "Après-midi",
+        all_beaches: "Toutes les plages",
+        adriatic: "Adriatique",
+        ionian: "Ionien",
+        protected_wind: "Protégée du vent",
+        booking_available: "📅 Réserver un parasol",
+        get_directions: "Y aller",
+        lecce_desc: "Ville baroque à l'architecture historique",
+        gallipoli_desc: "Ville côtière sur la mer Ionienne",
+        leuca_desc: "Pointe méridionale du Salento",
+        otranto_desc: "Ville historique sur la mer Adriatique",
+        bauxite_desc: "Lac vert émeraude - 15km",
+        zinzulusa_desc: "Grotte marine spectaculaire",
+        palascia_desc: "Point le plus à l'est de l'Italie",
+
+        // Hero & welcome
+        guest_welcome_title: "Bienvenue dans votre coin de Salento",
+        guest_welcome_sub: "Tout ce qu'il vous faut pour un séjour parfait",
+        hero_pill_info: "📋 Info",
+        hero_pill_beaches: "🏖️ Plages",
+        hero_pill_places: "📍 Lieux",
+        hero_pill_excursions: "🚤 Excursions",
+
+        // Info card details
+        linens_label: "Draps",
+        linens_detail: "inclus, changement tous les 3 jours",
+        laundry_hours_short: "Lun–Sam 8–20",
+        go_here: "📍 Y aller",
+
+        // POI section
+        poi_around: "📍 Environs",
+        poi_recommended_title: "Lieux Recommandés",
+        poi_filter_all: "Tous",
+        poi_btn_attractions: "🏛️ Attractions",
+        poi_btn_nightlife: "🍹 Vie nocturne",
+        poi_btn_restaurants: "🍽️ Restaurants",
+        poi_btn_services: "🛒 Services",
+
+        // Section tags & footer
+        section_tag_casa: "🏡 Maison",
+        section_tag_rules: "📜 Règles",
+        section_tag_meteo: "🌤️ Météo",
+        section_tag_excursions: "🚤 Excursions",
+        footer_copy: "© 2026 Casa Paolina. Tous droits réservés.",
     },
     
     es: {
@@ -553,7 +667,37 @@ const guestTranslations = {
         ,get_directions: "Llévame allí"
         ,// Distance labels
         from_you: "desde tu ubicación",
-        from_casa_paolina: "desde Casa Paolina"
+        from_casa_paolina: "desde Casa Paolina",
+
+        // Hero & welcome
+        guest_welcome_title: "Bienvenidos a vuestro rincón de Salento",
+        guest_welcome_sub: "Todo lo que necesitáis para una estancia perfecta",
+        hero_pill_info: "📋 Info",
+        hero_pill_beaches: "🏖️ Playas",
+        hero_pill_places: "📍 Lugares",
+        hero_pill_excursions: "🚤 Excursiones",
+
+        // Info card details
+        linens_label: "Sábanas",
+        linens_detail: "incluidas, cambio cada 3 días",
+        laundry_hours_short: "Lun–Sáb 8–20",
+        go_here: "📍 Cómo llegar",
+
+        // POI section
+        poi_around: "📍 Alrededores",
+        poi_recommended_title: "Lugares Recomendados",
+        poi_filter_all: "Todos",
+        poi_btn_attractions: "🏛️ Atracciones",
+        poi_btn_nightlife: "🍹 Movida",
+        poi_btn_restaurants: "🍽️ Restaurantes",
+        poi_btn_services: "🛒 Servicios",
+
+        // Section tags & footer
+        section_tag_casa: "🏡 Casa",
+        section_tag_rules: "📜 Reglas",
+        section_tag_meteo: "🌤️ Tiempo",
+        section_tag_excursions: "🚤 Excursiones",
+        footer_copy: "© 2026 Casa Paolina. Todos los derechos reservados.",
     },
     
     de: {
@@ -692,7 +836,37 @@ const guestTranslations = {
         ,get_directions: "Wegbeschreibung"
         ,// Distance labels
         from_you: "von deinem Standort",
-        from_casa_paolina: "von Casa Paolina"
+        from_casa_paolina: "von Casa Paolina",
+
+        // Hero & welcome
+        guest_welcome_title: "Willkommen in Ihrem Stück Salento",
+        guest_welcome_sub: "Alles, was Sie für einen perfekten Aufenthalt brauchen",
+        hero_pill_info: "📋 Info",
+        hero_pill_beaches: "🏖️ Strände",
+        hero_pill_places: "📍 Orte",
+        hero_pill_excursions: "🚤 Ausflüge",
+
+        // Info card details
+        linens_label: "Bettwäsche",
+        linens_detail: "inklusive, Wechsel alle 3 Tage",
+        laundry_hours_short: "Mo–Sa 8–20",
+        go_here: "📍 Wegbeschreibung",
+
+        // POI section
+        poi_around: "📍 Umgebung",
+        poi_recommended_title: "Empfohlene Orte",
+        poi_filter_all: "Alle",
+        poi_btn_attractions: "🏛️ Attraktionen",
+        poi_btn_nightlife: "🍹 Nachtleben",
+        poi_btn_restaurants: "🍽️ Restaurants",
+        poi_btn_services: "🛒 Dienste",
+
+        // Section tags & footer
+        section_tag_casa: "🏡 Haus",
+        section_tag_rules: "📜 Regeln",
+        section_tag_meteo: "🌤️ Wetter",
+        section_tag_excursions: "🚤 Ausflüge",
+        footer_copy: "© 2026 Casa Paolina. Alle Rechte vorbehalten.",
     }
 };
 
