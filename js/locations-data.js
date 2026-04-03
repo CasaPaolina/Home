@@ -20,6 +20,12 @@ class LocationsData {
             console.log('Locations data loaded successfully');
             return this.data;
         } catch (error) {
+            // Fallback to embedded data (works under file:// protocol)
+            if (typeof LOCATIONS_DATA !== 'undefined') {
+                this.data = LOCATIONS_DATA;
+                this.loaded = true;
+                return this.data;
+            }
             console.error('Error loading locations data:', error);
             throw error;
         }

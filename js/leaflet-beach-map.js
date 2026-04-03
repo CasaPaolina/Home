@@ -16,6 +16,11 @@ class LeafletBeachMap {
         this.beaches = locationsData.getBeaches();
         this.casaPaolina = locationsData.getCasaPaolina();
 
+        if (!this.casaPaolina) {
+            console.error('LeafletBeachMap: Casa Paolina data is missing from locations.json. Map will not initialize.');
+            return;
+        }
+
         // Initialize map and list
         this.initMap();
         this.renderBeachList();
@@ -89,7 +94,7 @@ class LeafletBeachMap {
         const filteredBeaches = this.filterBeaches(filter);
 
         filteredBeaches.forEach(beach => {
-            const isSand = beach.sandType.includes('sand');
+            const isSand = (beach.sandType || '').toString().toLowerCase().includes('sand');
             const emoji = isSand ? '🏖️' : '🪨';
             const color = isSand ? '#fbbf24' : '#3b82f6';
 
@@ -125,6 +130,14 @@ class LeafletBeachMap {
 
         const imageSrc = beach.image || beach.photo || (beach.photos && beach.photos[0]) || '';
 
+        const facilityLabel = (facility) => {
+            if (typeof window.getFacilityLabel === 'function') {
+                return window.getFacilityLabel(facility);
+            }
+            if (!facility) return '';
+            return facility.toString().replace(/_/g, ' ');
+        };
+
         return `
             <div class="beach-popup popup-grid">
                 ${imageSrc ? `
@@ -138,7 +151,7 @@ class LeafletBeachMap {
                     <p class="popup-distance">📍 ${beach.distance}</p>
                     <p class="popup-desc">${beach.description}</p>
                     ${beach.facilities && beach.facilities.length > 0 ? `
-                        <div class="popup-facilities"><strong>Servizi:</strong> ${beach.facilities.map(f => getFacilityLabel(f)).join(', ')}</div>
+                        <div class="popup-facilities"><strong>Servizi:</strong> ${beach.facilities.map(f => facilityLabel(f)).join(', ')}</div>
                     ` : ''}
                     <div class="popup-actions">
                         <a href="https://www.google.com/maps/dir/?api=1&origin=${this.casaPaolina.lat},${this.casaPaolina.lng}&destination=${beach.lat},${beach.lng}" target="_blank" class="popup-btn popup-btn-secondary">Portami qui</a>
@@ -162,6 +175,12 @@ class LeafletBeachMap {
                     return beach.lng > 18.2;
                 case 'ionian':
                     return beach.lng <= 18.2;
+                case 'recommended-today':
+                    if (typeof locationsData !== 'undefined' && locationsData.getRecommendedBeach) {
+                        const recommended = locationsData.getRecommendedBeach(window.currentWindDirection || 'W');
+                        return recommended && recommended.id === beach.id;
+                    }
+                    return true;
                 default:
                     return true;
             }
@@ -204,7 +223,7 @@ class LeafletBeachMap {
     }
 
     createBeachListItem(beach) {
-        const isSand = beach.sandType.includes('sand');
+        const isSand = (beach.sandType || '').toString().toLowerCase().includes('sand');
         const typeIcon = isSand ? '🏖️' : '🪨';
         const typeLabel = isSand ? 'Sabbia' : 'Scogliera';
 
@@ -212,16 +231,23 @@ class LeafletBeachMap {
             ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">Prenota</a>`
             : '';
 
+        // Get beach image
+        const imageSrc = beach.image || (beach.images && beach.images[0]) || beach.photo || '';
+        const imageHTML = imageSrc 
+            ? `<img src="images/${imageSrc}" alt="${beach.name}" class="beach-list-thumb">`
+            : `<div class="beach-list-thumb-placeholder">${typeIcon}</div>`;
+
         return `
             <div class="beach-list-item" data-beach-id="${beach.id}">
-                <div class="beach-list-header">
-                    <span class="beach-list-name">${typeIcon} ${beach.name}</span>
-                    <span class="beach-list-type">${typeLabel}</span>
+                ${imageHTML}
+                <div class="beach-list-content">
+                    <span class="beach-list-name">${beach.name}</span>
+                    <div class="beach-list-info">
+                        <span class="beach-list-type">${typeLabel}</span>
+                        <span class="beach-list-distance">📍 ${beach.distance}</span>
+                    </div>
                 </div>
-                <div class="beach-list-info">
-                    <span class="beach-list-distance">📍 ${beach.distance}</span>
-                    ${bookingBtn}
-                </div>
+                ${bookingBtn}
             </div>
         `;
     }
@@ -238,9 +264,10 @@ class LeafletBeachMap {
         }
 
         // Find beach and marker
-        const beach = this.beaches.find(b => b.id === beachId);
+        const selectedBeachId = String(beachId);
+        const beach = this.beaches.find(b => String(b.id) === selectedBeachId);
         if (beach) {
-            const markerData = this.markers.find(m => m.beach.id === beachId);
+            const markerData = this.markers.find(m => String(m.beach.id) === selectedBeachId);
             if (markerData) {
                 this.map.setView([beach.lat, beach.lng], 13);
                 markerData.marker.openPopup();
@@ -252,9 +279,9 @@ class LeafletBeachMap {
 // Initialize
 let leafletBeachMap;
 
-function initLeafletBeachMap() {
+async function initLeafletBeachMap() {
     leafletBeachMap = new LeafletBeachMap();
-    leafletBeachMap.init();
+    await leafletBeachMap.init();
 }
 
 // Auto-initialize when ready

@@ -321,20 +321,14 @@ const pointsOfInterest = [
 
 // Fetch weather forecast for 2 days
 async function fetchWeatherForecast() {
-    const controller = new AbortController();
-    const timeoutMs = 9000;
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-
     try {
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,windspeed_10m_max,winddirection_10m_dominant&timezone=Europe/Rome&forecast_days=3`,
-            { signal: controller.signal }
+            `https://api.open-meteo.com/v1/forecast?latitude=${CASA_PAOLINA.lat}&longitude=${CASA_PAOLINA.lng}&hourly=windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,windspeed_10m_max,winddirection_10m_dominant&timezone=Europe/Rome&forecast_days=3`
         );
         if (!response.ok) {
             throw new Error(`Weather API error: ${response.status}`);
         }
         const data = await response.json();
-        window._lastForecastData = data;
 
         // Update dates
         const today = new Date();
@@ -428,8 +422,6 @@ async function fetchWeatherForecast() {
     } catch (error) {
         console.error('Error fetching weather:', error);
         displayWeatherError();
-    } finally {
-        clearTimeout(timer);
     }
 }
 
@@ -836,11 +828,6 @@ function displayWeatherError() {
         if (dirElement) dirElement.textContent = '--';
         if (speedElement) speedElement.textContent = '--';
     });
-
-    const windInfoEl = document.getElementById('current-wind-info');
-    if (windInfoEl) {
-        windInfoEl.textContent = '💨 Vento non disponibile. Riprova tra pochi istanti.';
-    }
 }
 
 // Initialize POI Map

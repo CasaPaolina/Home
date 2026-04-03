@@ -457,6 +457,101 @@
     border-radius: 14px;
     overflow: hidden;
     box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+    border: 1px solid #e2e8f0;
+}
+
+/* Leaflet map specific styles */
+.map-container-modern .leaflet-container {
+    background: linear-gradient(135deg, #e8f0f7 0%, #ffffff 100%);
+    border-radius: 14px;
+}
+
+/* Custom map markers - beach pins */
+.marker-pin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    border-radius: 50%;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border: 3px solid white;
+    width: 40px;
+    height: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.marker-pin:hover {
+    transform: scale(1.15);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Beach pin variant */
+.beach-pin {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+}
+
+.beach-pin[style*="rgb(59, 130, 246)"] {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white;
+}
+
+/* Home pin variant */
+.home-pin {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    font-size: 1.6rem;
+}
+
+/* Leaflet controls styling */
+.map-container-modern .leaflet-control-zoom,
+.map-container-modern .leaflet-fullscreen-button {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.map-container-modern .leaflet-center-home {
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-container-modern .leaflet-center-home:hover {
+    background: linear-gradient(135deg, #1e5f5a 0%, #144d48 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Beach popup styling */
+.beach-popup {
+    font-size: 0.9rem;
+}
+
+.beach-popup h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #1e293b;
+}
+
+.beach-popup p {
+    margin: 4px 0;
+    color: #475569;
 }
 
 .beaches-list-modern {
@@ -485,19 +580,42 @@
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
 }
+
 .beach-list-item:hover {
     border-left-color: #2c7873;
     background: white;
     box-shadow: 0 2px 10px rgba(44,120,115,0.12);
     transform: translateX(2px);
 }
+
 .beach-list-item.selected {
     border-left-color: #2c7873;
     background: linear-gradient(135deg, rgba(44,120,115,0.06) 0%, white 100%);
     box-shadow: 0 2px 14px rgba(44,120,115,0.18);
+}
+
+/* Beach list item image thumbnail */
+.beach-list-thumb {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #e0f2f1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Beach list content wrapper */
+.beach-list-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .beach-list-name {
@@ -507,7 +625,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
 }
 
 /* Row: small round thumb + meta */
@@ -539,6 +656,21 @@
     font-size: 0.9rem;
     flex-shrink: 0;
     border: 2px solid #e0f2f1;
+}
+
+.beach-list-thumb-placeholder {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #e0f2f1 0%, #d1f4f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    border: 2px solid #a8d5d1;
+    color: #2c7873;
 }
 
 .beach-list-meta {
@@ -580,6 +712,13 @@
     margin-left: auto;
 }
 .beach-list-book-btn:hover { background: #1e5f5a; }
+
+.beach-list-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
 
 /* ── POI Quick Section ── */
 .poi-quick-section {
