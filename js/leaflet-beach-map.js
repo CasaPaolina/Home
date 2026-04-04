@@ -71,9 +71,11 @@ class LeafletBeachMap {
     addHomeMarker() {
         const homeIcon = L.divIcon({
             className: 'custom-home-marker',
-            html: '<div class="marker-pin home-pin">🏠</div>',
-            iconSize: [40, 40],
-            iconAnchor: [20, 40]
+            html: `<div class="map-badge map-badge--home">
+                     <span class="map-badge-emoji">🏠</span>
+                   </div>`,
+            iconSize: [42, 46],
+            iconAnchor: [21, 46]
         });
 
         const marker = L.marker([this.casaPaolina.lat, this.casaPaolina.lng], { icon: homeIcon })
@@ -94,15 +96,18 @@ class LeafletBeachMap {
         const filteredBeaches = this.filterBeaches(filter);
 
         filteredBeaches.forEach(beach => {
-            const isSand = (beach.sandType || '').toString().toLowerCase().includes('sand');
+            const sandTypeRaw = (beach.sandType || '').toString().toLowerCase();
+            const isSand = sandTypeRaw.includes('sand');
             const emoji = isSand ? '🏖️' : '🪨';
-            const color = isSand ? '#fbbf24' : '#3b82f6';
+            const typeClass = isSand ? 'map-badge--sand' : 'map-badge--rock';
 
             const beachIcon = L.divIcon({
                 className: 'custom-beach-marker',
-                html: `<div class="marker-pin beach-pin" style="background: ${color}">${emoji}</div>`,
-                iconSize: [35, 35],
-                iconAnchor: [17, 35]
+                html: `<div class="map-badge ${typeClass}">
+                         <span class="map-badge-emoji">${emoji}</span>
+                       </div>`,
+                iconSize: [38, 42],
+                iconAnchor: [19, 42]
             });
 
             const marker = L.marker([beach.lat, beach.lng], { icon: beachIcon })
