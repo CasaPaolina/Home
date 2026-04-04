@@ -1223,7 +1223,8 @@ function initPOIQuickGrid() {
             const name = poi.name || '';
             const desc = (poi.translationKey && t[poi.translationKey]) || poi.description || poi.address || '';
             const dist = poi.distance || '';
-            const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${CASA_PAOLINA.lat},${CASA_PAOLINA.lng}&destination=${poi.lat},${poi.lng}`;
+            const mapsUrl = poi.mapsUrl
+                || `https://www.google.com/maps/search/${encodeURIComponent(name)}/@${poi.lat},${poi.lng},17z`;
             return `
                 <a href="${mapsUrl}" target="_blank" class="poi-quick-card" rel="noopener">
                     <div class="poi-quick-card-icon">${icon}</div>

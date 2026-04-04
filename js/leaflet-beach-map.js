@@ -230,16 +230,20 @@ class LeafletBeachMap {
     createBeachListItem(beach) {
         const isSand = (beach.sandType || '').toString().toLowerCase().includes('sand');
         const typeIcon = isSand ? '🏖️' : '🪨';
-        const typeLabel = isSand ? 'Sabbia' : 'Scogliera';
+        const t = (typeof guestTranslations !== 'undefined' && typeof currentGuestLang !== 'undefined')
+            ? (guestTranslations[currentGuestLang] || guestTranslations.it)
+            : { filter_sand: 'Sabbia', filter_rocks: 'Scogliera', book_beach: 'Prenota' };
+        const typeLabel = isSand ? (t.filter_sand || 'Sabbia') : (t.filter_rocks || 'Scogliera');
 
         const bookingBtn = beach.bookingLink
-            ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">Prenota</a>`
+            ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">${t.book_beach || 'Prenota'}</a>`
             : '';
 
-        // Get beach image
-        const imageSrc = beach.image || (beach.images && beach.images[0]) || beach.photo || '';
-        const imageHTML = imageSrc 
-            ? `<img src="images/${imageSrc}" alt="${beach.name}" class="beach-list-thumb">`
+        // Get beach image — prefer images[] array from locations.json
+        const imageSrc = (beach.images && beach.images[0]) || beach.image || beach.photo || '';
+        const imageHTML = imageSrc
+            ? `<img src="images/${imageSrc}" alt="${beach.name}" class="beach-list-thumb" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+              + `<div class="beach-list-thumb-placeholder" style="display:none">${typeIcon}</div>`
             : `<div class="beach-list-thumb-placeholder">${typeIcon}</div>`;
 
         return `

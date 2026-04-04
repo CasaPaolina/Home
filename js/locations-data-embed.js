@@ -16,14 +16,29 @@ const LOCATIONS_DATA = {
       "lng": 18.430545,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["W", "NW", "SW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "NW",
+        "SW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "Beautiful sandy beach with crystal clear water and two famous rock formations",
       "translationKey": "beach_torre_orso",
-      "bookingLink": "https://www.booking.com/beach/it/torre-dell-orso",
+      "bookingLink": null,
       "distance": "19 km",
-      "facilities": ["parking", "restaurants", "umbrellas", "sunbeds"],
-      "images": ["torre-orso-1.jpg"]
+      "facilities": [
+        "parking",
+        "restaurants",
+        "umbrellas",
+        "sunbeds"
+      ],
+      "images": [
+        "torre-orso-1.jpg"
+      ]
     },
     {
       "id": "faraglioni-santandrea",
@@ -32,14 +47,26 @@ const LOCATIONS_DATA = {
       "lng": 18.444069,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["W", "NW", "SW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "NW",
+        "SW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "Spectacular rocky coastline with dramatic cliff formations",
       "translationKey": "beach_faraglioni",
       "bookingLink": null,
       "distance": "18 km",
-      "facilities": ["parking"],
-      "images": []
+      "facilities": [
+        "parking"
+      ],
+      "images": [
+        "faraglioni-santandrea.jpg"
+      ]
     },
     {
       "id": "baia-turchi",
@@ -48,14 +75,28 @@ const LOCATIONS_DATA = {
       "lng": 18.463585,
       "type": "beach",
       "sandType": "white_sand",
-      "protectedFrom": ["W", "NW", "N"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "W",
+        "NW",
+        "N"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Pristine white sand beach surrounded by pine forest",
       "translationKey": "beach_baia_turchi",
-      "bookingLink": "https://www.booking.com/beach/it/baia-dei-turchi",
+      "bookingLink": null,
       "distance": "10 km",
-      "facilities": ["parking", "beach_bar", "umbrellas"],
-      "images": []
+      "facilities": [
+        "parking",
+        "beach_bar",
+        "umbrellas"
+      ],
+      "images": [
+        "baia-dei-turchi.jpg"
+      ]
     },
     {
       "id": "alimini",
@@ -64,14 +105,29 @@ const LOCATIONS_DATA = {
       "lng": 18.459818,
       "type": "beach",
       "sandType": "golden_sand",
-      "protectedFrom": ["W", "NW", "N"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "W",
+        "NW",
+        "N"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Long stretch of golden sand backed by natural lagoons",
       "translationKey": "beach_alimini",
-      "bookingLink": "https://www.booking.com/beach/it/laghi-alimini",
+      "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=d972edd0-f3c7-4b63-8933-25bfc79f0835&&query=alimini",
       "distance": "11 km",
-      "facilities": ["parking", "restaurants", "beach_clubs", "water_sports"],
-      "images": []
+      "facilities": [
+        "parking",
+        "restaurants",
+        "beach_clubs",
+        "water_sports"
+      ],
+      "images": [
+        "alimini.jpg"
+      ]
     },
     {
       "id": "porto-badisco",
@@ -80,14 +136,27 @@ const LOCATIONS_DATA = {
       "lng": 18.4883,
       "type": "beach",
       "sandType": "pebbles",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Small, sheltered bay with clear water and ancient history",
       "translationKey": "beach_porto_badisco",
       "bookingLink": null,
       "distance": "3 km",
-      "facilities": ["parking", "restaurant"],
-      "images": ["spiaggia-porto-badisco.jpg"]
+      "facilities": [
+        "parking",
+        "restaurant"
+      ],
+      "images": [
+        "spiaggia-porto-badisco.jpg"
+      ]
     },
     {
       "id": "castro-marina",
@@ -96,14 +165,29 @@ const LOCATIONS_DATA = {
       "lng": 18.4294,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Charming coastal town with sea caves and crystal waters",
       "translationKey": "beach_castro",
       "bookingLink": null,
       "distance": "12 km",
-      "facilities": ["parking", "restaurants", "boat_tours", "diving"],
-      "images": ["castro-marina.jpg"]
+      "facilities": [
+        "parking",
+        "restaurants",
+        "boat_tours",
+        "diving"
+      ],
+      "images": [
+        "castro-marina.jpg"
+      ]
     },
     {
       "id": "porto-miggiano",
@@ -112,15 +196,27 @@ const LOCATIONS_DATA = {
       "lng": 18.446058,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "NE"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "NE"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Natural inlet with turquoise water perfect for snorkeling",
       "translationKey": "beach_porto_miggiano",
       "bookingLink": null,
       "distance": "9 km",
-      "facilities": ["parking"],
-      "images": ["Porto_Miggiano.jpg"]
-    }, 
+      "facilities": [
+        "parking"
+      ],
+      "images": [
+        "Porto_Miggiano.jpg"
+      ]
+    },
     {
       "id": "marina-serra",
       "name": "Marina Serra",
@@ -128,14 +224,27 @@ const LOCATIONS_DATA = {
       "lng": 18.393354,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NE", "NW"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "NW"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Natural rocky pool with crystal clear water",
       "translationKey": "beach_marina_serra",
       "bookingLink": null,
       "distance": "22 km",
-      "facilities": ["parking", "bar"],
-      "images": ["marina-serra.jpg"]
+      "facilities": [
+        "parking",
+        "bar"
+      ],
+      "images": [
+        "marina-serra.jpg"
+      ]
     },
     {
       "id": "cala-acquaviva",
@@ -144,14 +253,24 @@ const LOCATIONS_DATA = {
       "lng": 18.413863,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Hidden natural inlet with emerald waters",
       "translationKey": "beach_acquaviva",
       "bookingLink": null,
       "distance": "14 km",
       "facilities": [],
-      "images": []
+      "images": [
+        "cala-acquaviva.jpg"
+      ]
     },
     {
       "id": "grotta-poesia",
@@ -160,14 +279,26 @@ const LOCATIONS_DATA = {
       "lng": 18.429564,
       "type": "attraction",
       "sandType": "rocks",
-      "protectedFrom": ["W", "SW", "NW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "SW",
+        "NW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "Famous natural cave pool with crystal clear water",
       "translationKey": "beach_grotta_poesia",
       "bookingLink": null,
       "distance": "20 km",
-      "facilities": ["parking"],
-      "images": []
+      "facilities": [
+        "parking"
+      ],
+      "images": [
+        "grotta-poesia.jpg"
+      ]
     },
     {
       "id": "grotta-verde",
@@ -176,14 +307,26 @@ const LOCATIONS_DATA = {
       "lng": 18.4041,
       "type": "attraction",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Natural sea cave with green luminescence phenomenon",
       "translationKey": "beach_grotta_verde",
       "bookingLink": null,
       "distance": "17 km",
-      "facilities": ["boat_access"],
-      "images": []
+      "facilities": [
+        "boat_access"
+      ],
+      "images": [
+        "grotta-verde.jpg"
+      ]
     },
     {
       "id": "santa-cesarea",
@@ -192,14 +335,28 @@ const LOCATIONS_DATA = {
       "lng": 18.45,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Thermal spa town with therapeutic waters",
       "translationKey": "beach_santa_cesarea",
       "bookingLink": null,
       "distance": "11 km",
-      "facilities": ["parking", "restaurants", "thermal_spa"],
-      "images": ["santa-cesarea.jpg"]
+      "facilities": [
+        "parking",
+        "restaurants",
+        "thermal_spa"
+      ],
+      "images": [
+        "santa-cesarea.jpg"
+      ]
     },
     {
       "id": "gradoni",
@@ -208,14 +365,29 @@ const LOCATIONS_DATA = {
       "lng": 18.486969,
       "type": "beach",
       "sandType": "pebbles",
-      "protectedFrom": ["W", "NW", "N"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "W",
+        "NW",
+        "N"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "City beach with easy access and amenities",
       "translationKey": "beach_gradoni",
-      "bookingLink": "https://www.booking.com/beach/it/otranto",
+      "bookingLink": null,
       "distance": "5 km",
-      "facilities": ["parking", "restaurants", "umbrellas", "showers"],
-      "images": ["spiaggia_gradoni.jpg"]
+      "facilities": [
+        "parking",
+        "restaurants",
+        "umbrellas",
+        "showers"
+      ],
+      "images": [
+        "spiaggia_gradoni.jpg"
+      ]
     },
     {
       "id": "porto-selvaggio",
@@ -224,14 +396,27 @@ const LOCATIONS_DATA = {
       "lng": 17.975022,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["E", "NE", "SE"],
-      "exposed": ["W", "NW", "SW"],
+      "protectedFrom": [
+        "E",
+        "NE",
+        "SE"
+      ],
+      "exposed": [
+        "W",
+        "NW",
+        "SW"
+      ],
       "description": "Wild natural reserve with pristine rocky coastline",
       "translationKey": "beach_porto_selvaggio",
       "bookingLink": null,
       "distance": "45 km",
-      "facilities": ["hiking", "nature_reserve"],
-      "images": ["porto_selvaggio.jpg"]
+      "facilities": [
+        "hiking",
+        "nature_reserve"
+      ],
+      "images": [
+        "porto_selvaggio.jpg"
+      ]
     },
     {
       "id": "baia-verde",
@@ -240,14 +425,29 @@ const LOCATIONS_DATA = {
       "lng": 17.9833,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["E", "NE", "SE"],
-      "exposed": ["W", "NW", "SW"],
+      "protectedFrom": [
+        "E",
+        "NE",
+        "SE"
+      ],
+      "exposed": [
+        "W",
+        "NW",
+        "SW"
+      ],
       "description": "Lively beach with nightlife and beach clubs",
       "translationKey": "beach_baia_verde",
-      "bookingLink": null,
+      "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=4aef3697-5276-4e89-beec-6fb808c7f494&&query=gallipoli",
       "distance": "55 km",
-      "facilities": ["parking", "beach_clubs", "restaurants", "nightlife"],
-      "images": []
+      "facilities": [
+        "parking",
+        "beach_clubs",
+        "restaurants",
+        "nightlife"
+      ],
+      "images": [
+        "baia-verde.jpg"
+      ]
     },
     {
       "id": "punta-suina",
@@ -256,14 +456,28 @@ const LOCATIONS_DATA = {
       "lng": 17.95,
       "type": "beach",
       "sandType": "golden_sand",
-      "protectedFrom": ["E", "NE", "SE"],
-      "exposed": ["W", "NW", "SW"],
+      "protectedFrom": [
+        "E",
+        "NE",
+        "SE"
+      ],
+      "exposed": [
+        "W",
+        "NW",
+        "SW"
+      ],
       "description": "Beautiful golden sand beach on Ionian coast",
       "translationKey": "beach_punta_suina",
       "bookingLink": null,
       "distance": "58 km",
-      "facilities": ["parking", "beach_bar", "umbrellas"],
-      "images": ["punta-della-suina.jpg"]
+      "facilities": [
+        "parking",
+        "beach_bar",
+        "umbrellas"
+      ],
+      "images": [
+        "punta-della-suina.jpg"
+      ]
     },
     {
       "id": "porto-cesareo",
@@ -272,14 +486,29 @@ const LOCATIONS_DATA = {
       "lng": 17.9,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["E", "NE", "SE"],
-      "exposed": ["W", "NW", "SW"],
+      "protectedFrom": [
+        "E",
+        "NE",
+        "SE"
+      ],
+      "exposed": [
+        "W",
+        "NW",
+        "SW"
+      ],
       "description": "Marine protected area with crystal clear water",
       "translationKey": "beach_porto_cesareo",
-      "bookingLink": null,
+      "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=84db2e7a-23cb-4046-94d9-74580ab98ec3&&query=porto+cesareo",
       "distance": "40 km",
-      "facilities": ["parking", "restaurants", "boat_tours", "diving"],
-      "images": []
+      "facilities": [
+        "parking",
+        "restaurants",
+        "boat_tours",
+        "diving"
+      ],
+      "images": [
+        "porto-cesareo.jpg"
+      ]
     },
     {
       "id": "santa-maria-bagno",
@@ -288,14 +517,27 @@ const LOCATIONS_DATA = {
       "lng": 17.9667,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["E", "NE", "SE"],
-      "exposed": ["W", "NW", "SW"],
+      "protectedFrom": [
+        "E",
+        "NE",
+        "SE"
+      ],
+      "exposed": [
+        "W",
+        "NW",
+        "SW"
+      ],
       "description": "Rocky cliffs with natural pools",
       "translationKey": "beach_santa_maria_bagno",
-      "bookingLink": null,
+      "bookingLink": "https://www.bagnomaria.com/",
       "distance": "48 km",
-      "facilities": ["parking", "restaurants"],
-      "images": []
+      "facilities": [
+        "parking",
+        "restaurants"
+      ],
+      "images": [
+        "santa-maria-bagno.jpg"
+      ]
     },
     {
       "id": "santa-caterina",
@@ -304,14 +546,27 @@ const LOCATIONS_DATA = {
       "lng": 18.0333,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["E", "NE", "SE"],
-      "exposed": ["W", "NW", "SW"],
+      "protectedFrom": [
+        "E",
+        "NE",
+        "SE"
+      ],
+      "exposed": [
+        "W",
+        "NW",
+        "SW"
+      ],
       "description": "Spectacular caves and rocky cliffs",
       "translationKey": "beach_santa_caterina",
       "bookingLink": null,
       "distance": "52 km",
-      "facilities": ["parking", "diving"],
-      "images": []
+      "facilities": [
+        "parking",
+        "diving"
+      ],
+      "images": [
+        "santa-caterina.jpg"
+      ]
     },
     {
       "id": "torre-san-giovanni",
@@ -320,14 +575,29 @@ const LOCATIONS_DATA = {
       "lng": 18.0833,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["E", "NE", "N"],
-      "exposed": ["W", "SW", "S"],
+      "protectedFrom": [
+        "E",
+        "NE",
+        "N"
+      ],
+      "exposed": [
+        "W",
+        "SW",
+        "S"
+      ],
       "description": "Family-friendly sandy beach with shallow water",
       "translationKey": "beach_torre_san_giovanni",
-      "bookingLink": null,
+      "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=09fe02aa-8356-48d8-95f7-c8d7073416bc&&query=torre+san+giovanni",
       "distance": "65 km",
-      "facilities": ["parking", "restaurants", "umbrellas", "playgrounds"],
-      "images": []
+      "facilities": [
+        "parking",
+        "restaurants",
+        "umbrellas",
+        "playgrounds"
+      ],
+      "images": [
+        "torre-san-giovanni.jpg"
+      ]
     }
   ],
   "attractions": [
@@ -343,7 +613,8 @@ const LOCATIONS_DATA = {
       "address": "Lecce, LE",
       "distance": "30 km",
       "visitDuration": "half_day",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Lecce/@40.3515,18.175,17z"
     },
     {
       "id": "gallipoli",
@@ -357,7 +628,8 @@ const LOCATIONS_DATA = {
       "address": "Gallipoli, LE",
       "distance": "55 km",
       "visitDuration": "full_day",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Gallipoli/@40.0556,17.9922,17z"
     },
     {
       "id": "otranto",
@@ -371,7 +643,8 @@ const LOCATIONS_DATA = {
       "address": "Otranto, LE",
       "distance": "6 km",
       "visitDuration": "half_day",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Otranto/@40.1436,18.4908,17z"
     },
     {
       "id": "santa-maria-leuca",
@@ -385,12 +658,13 @@ const LOCATIONS_DATA = {
       "address": "Santa Maria di Leuca, LE",
       "distance": "35 km",
       "visitDuration": "half_day",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Santa%20Maria%20di%20Leuca/@39.7972,18.3611,17z"
     },
     {
       "id": "cava-bauxite",
       "name": "Cava di Bauxite",
-      "lat": 40.131925, 
+      "lat": 40.131925,
       "lng": 18.500634,
       "type": "attraction",
       "category": "natural",
@@ -399,7 +673,8 @@ const LOCATIONS_DATA = {
       "address": "Otranto, LE",
       "distance": "4 km",
       "visitDuration": "1_hour",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Cava%20di%20Bauxite/@40.131925,18.500634,17z"
     },
     {
       "id": "grotta-zinzulusa",
@@ -413,7 +688,8 @@ const LOCATIONS_DATA = {
       "address": "Castro, LE",
       "distance": "12 km",
       "visitDuration": "2_hours",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Grotta%20Zinzulusa/@40.0083,18.425,17z"
     },
     {
       "id": "punta-palascia",
@@ -427,7 +703,8 @@ const LOCATIONS_DATA = {
       "address": "Otranto, LE",
       "distance": "7 km",
       "visitDuration": "1_hour",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Punta%20Palascia/@40.1083,18.5194,17z"
     },
     {
       "id": "cattedrale-otranto",
@@ -441,7 +718,8 @@ const LOCATIONS_DATA = {
       "address": "Piazza Basilica, Otranto",
       "distance": "6 km",
       "visitDuration": "1_hour",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Cattedrale%20di%20Otranto/@40.1436,18.4916,17z"
     }
   ],
   "nightlife": [
@@ -456,7 +734,8 @@ const LOCATIONS_DATA = {
       "translationKey": "nightlife_skafe",
       "address": "Porto Badisco, LE",
       "distance": "6 km",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Skafe%20al%20Casotto/@40.1436,18.4916,17z"
     },
     {
       "id": "spinnaker",
@@ -469,7 +748,8 @@ const LOCATIONS_DATA = {
       "translationKey": "nightlife_spinnaker",
       "address": "Otranto, LE",
       "distance": "19 km",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Spinnaker/@40.2667,18.4167,17z"
     },
     {
       "id": "la-casaccia",
@@ -482,7 +762,8 @@ const LOCATIONS_DATA = {
       "translationKey": "nightlife_casaccia",
       "address": "Torre dell'Orso, LE",
       "distance": "6 km",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/La%20Casaccia/@40.143,18.49,17z"
     },
     {
       "id": "blu-bay",
@@ -495,7 +776,8 @@ const LOCATIONS_DATA = {
       "translationKey": "nightlife_blubay",
       "address": "Santa Cesarea Terme, LE",
       "distance": "11 km",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Blu%20Bay/@40.0167,18.43,17z"
     },
     {
       "id": "guendalina",
@@ -508,7 +790,8 @@ const LOCATIONS_DATA = {
       "translationKey": "nightlife_guendalina",
       "address": "Santa Cesarea Terme, LE",
       "distance": "11 km",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Guendalina/@40.0333,18.45,17z"
     },
     {
       "id": "male",
@@ -521,7 +804,8 @@ const LOCATIONS_DATA = {
       "translationKey": "nightlife_male",
       "address": "Santa Cesarea Terme, LE",
       "distance": "11 km",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Mal%C3%A9/@40.034,18.451,17z"
     }
   ],
   "services": [
@@ -537,12 +821,13 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "800 m",
       "hours": "Mon-Sat 8:00-13:00, 17:00-20:30",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Supermercato%20Conad/@40.102983,18.456386,17z"
     },
     {
       "id": "Supermercato-3M",
       "name": "Supermercato 3M",
-      "lat": 40.100415, 
+      "lat": 40.100415,
       "lng": 18.444608,
       "type": "service",
       "category": "supermarket",
@@ -551,13 +836,14 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "400 m",
       "hours": "Mon-Sat 8:30-20:00",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Supermercato%203M/@40.100415,18.444608,17z"
     },
     {
       "id": "farmacia-comunale",
       "name": "Farmacia Camboa",
-      "lat": 40.100935,
-      "lng": 18.446268,
+      "lat": 40.100886,
+      "lng": 18.446254,
       "type": "service",
       "category": "pharmacy",
       "description": "Local pharmacy",
@@ -565,7 +851,8 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "200 m",
       "hours": "Mon-Sat 9:00-13:00, 16:30-20:00",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Farmacia%20Camboa/@40.100886,18.446254,17z"
     },
     {
       "id": "lavanderia",
@@ -579,12 +866,13 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "600 m",
       "hours": "24/7",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Lavanderia%20Self-Service/@40.099987,18.443185,17z"
     },
     {
       "id": "macelleria",
       "name": "Macelleria",
-      "lat": 40.101084, 
+      "lat": 40.101084,
       "lng": 18.443858,
       "type": "service",
       "category": "butcher",
@@ -593,13 +881,14 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "300 m",
       "hours": "24/7",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Macelleria/@40.101084,18.443858,17z"
     },
     {
       "id": "fruttivendolo",
       "name": "Fruttivendolo",
-      "lat": 40.101401, 
-      "lng": 18.447798, 
+      "lat": 40.101401,
+      "lng": 18.447798,
       "type": "service",
       "category": "fruit_vendor",
       "description": "Local fruit vendor",
@@ -607,13 +896,14 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "250 m",
       "hours": "24/7",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Fruttivendolo/@40.101401,18.447798,17z"
     },
     {
       "id": "forno",
       "name": "Forno",
-      "lat": 40.1013344,
-      "lng": 18.4544464, 
+      "lat": 40.101336,
+      "lng": 18.454711,
       "type": "service",
       "category": "bakery",
       "description": "Local bakery",
@@ -621,13 +911,14 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "850 m",
       "hours": "24/7",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Forno/@40.101336,18.454711,17z"
     },
     {
       "id": "poste-italiane",
       "name": "Poste Italiane",
-      "lat": 40.100315,   
-      "lng": 18.451252, 
+      "lat": 40.100315,
+      "lng": 18.451252,
       "type": "service",
       "category": "post_office",
       "description": "Local post office",
@@ -635,13 +926,14 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "650 m",
       "hours": "Mon-Fri 8:30-13:30",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Poste%20Italiane/@40.100315,18.451252,17z"
     },
     {
       "id": "Pescheria",
       "name": "Pescheria",
-      "lat": 40.101214,    
-      "lng": 18.451527, 
+      "lat": 40.101214,
+      "lng": 18.451527,
       "type": "service",
       "category": "fish_market",
       "description": "Local fish market",
@@ -649,13 +941,14 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "600 m",
       "hours": "Mon-Fri 8:30-13:30",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Pescheria/@40.101214,18.451527,17z"
     },
     {
       "id": "Tabacchi",
       "name": "Tabacchi",
-      "lat": 40.1014692,    
-      "lng": 18.4479412, 
+      "lat": 40.101485,
+      "lng": 18.448144,
       "type": "service",
       "category": "tabacchi",
       "description": "Local tobacco shop",
@@ -663,14 +956,15 @@ const LOCATIONS_DATA = {
       "address": "Uggiano la Chiesa, LE",
       "distance": "300 m",
       "hours": "Mon-Fri 8:30-13:30 16:30-20:00",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Tabacchi/@40.101485,18.448144,17z"
     }
   ],
   "restaurants": [
     {
       "id": "Matisse",
       "name": "Matisse",
-      "lat": 40.099769, 
+      "lat": 40.099769,
       "lng": 18.444948,
       "type": "restaurant",
       "category": "fish",
@@ -680,12 +974,13 @@ const LOCATIONS_DATA = {
       "distance": "500 m",
       "cuisine": "pugliese",
       "priceRange": "medium_high",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Matisse/@40.099769,18.444948,17z"
     },
     {
       "id": "Agrodolce",
       "name": "Agrodolce",
-      "lat": 40.098111, 
+      "lat": 40.098111,
       "lng": 18.463771,
       "type": "restaurant",
       "category": "restaurant",
@@ -695,12 +990,13 @@ const LOCATIONS_DATA = {
       "distance": "900 m",
       "cuisine": "pugliese",
       "priceRange": "medium",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Agrodolce/@40.098111,18.463771,17z"
     },
     {
       "id": "mozzica-e-fusci",
       "name": "Mozzica e Fusci",
-      "lat": 40.101128, 
+      "lat": 40.101128,
       "lng": 18.451997,
       "type": "restaurant",
       "category": "pizzeria",
@@ -710,13 +1006,14 @@ const LOCATIONS_DATA = {
       "distance": "700 m",
       "cuisine": "pizza",
       "priceRange": "low",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Mozzica%20e%20Fusci/@40.101128,18.451997,17z"
     },
     {
       "id": "isola-del-sole",
       "name": "Isola del Sole",
       "lat": 40.002448,
-      "lng": 18.423140,
+      "lng": 18.42314,
       "type": "restaurant",
       "category": "ristorante di pesce",
       "description": "Frigitoria e ristorante di pesce",
@@ -725,12 +1022,13 @@ const LOCATIONS_DATA = {
       "distance": "15 km",
       "cuisine": "contemporary",
       "priceRange": "low_medium",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Isola%20del%20Sole/@40.002448,18.42314,17z"
     },
     {
       "id": "la-gramola",
       "name": "La Gramola",
-      "lat": 40.124919, 
+      "lat": 40.124919,
       "lng": 18.450382,
       "type": "restaurant",
       "category": "ristorante di pesce",
@@ -740,12 +1038,13 @@ const LOCATIONS_DATA = {
       "distance": "3 km",
       "cuisine": "contemporary",
       "priceRange": "low_medium",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/La%20Gramola/@40.124919,18.450382,17z"
     },
     {
       "id": "le-tagliate",
       "name": "Le Tagliate",
-      "lat": 40.098005, 
+      "lat": 40.098005,
       "lng": 18.464483,
       "type": "restaurant",
       "category": "agriturismo",
@@ -755,7 +1054,8 @@ const LOCATIONS_DATA = {
       "distance": "2 km",
       "cuisine": "contemporary",
       "priceRange": "low_medium",
-      "images": []
+      "images": [],
+      "mapsUrl": "https://www.google.com/maps/search/Le%20Tagliate/@40.098005,18.464483,17z"
     }
   ]
 };
