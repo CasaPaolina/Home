@@ -159,29 +159,19 @@ const beaches = [
     }
 ];
 
-// Points of Interest used on the main POI map (kept in sync with guest page)
-const pointsOfInterest = [
-   
-    { name: "Skafe al Casotto", address: "Porto Badisco", lat: 40.078924, lng: 18.484168, category: "nightlife" },
-    { name: "Spinnaker", address: "Via dei Bastioni, Otranto", lat: 40.145284, lng: 18.493389, category: "nightlife" },
-    { name: "La Casaccia", address: "Torre dell'Orso", lat: 40.274210,  lng: 18.429274, category: "nightlife" },
-    { name: "Blu Bay", address: "Via Sant'Antonio, Castro", lat: 40.019186, lng: 18.429158, category: "nightlife" },
-
-    { name: "Lecce", address: "Città barocca", lat: 40.3515, lng: 18.1750, category: "attractions", description: "Città barocca con architettura storica" },
-    { name: "Gallipoli", address: "Città costiera", lat: 40.0556, lng: 17.9922, category: "attractions", description: "Città costiera sul Mar Ionio" },
-    { name: "Santa Maria di Leuca", address: "Punta estrema", lat: 39.7972, lng: 18.3611, category: "attractions", description: "Punta estrema del Salento" },
-    { name: "Otranto", address: "Città storica", lat: 40.1436, lng: 18.4908, category: "attractions", description: "Città storica sul mare Adriatico" },
-    { name: "Cava di Bauxite", address: "Otranto", lat: 40.131955, lng: 18.500661, category: "attractions", description: "Lago verde smeraldo - 15km" },
-    { name: "Grotta Zinzulusa", address: "Castro", lat: 40.012632,  lng: 18.433055, category: "attractions", description: "Grotta marina spettacolare" },
-    { name: "Punta Palascia", address: "Otranto", lat: 40.107317,  lng: 18.520341, category: "attractions", description: "Punto più a est d'Italia" },
-
-
-
-    // Services
-    { name: "Supermercato Conad", address: "Uggiano la Chiesa", lat: 40.102983, lng: 18.456386, category: "services" },
-    { name: "Farmacia", address: "Uggiano la Chiesa", lat: 40.100935, lng: 18.446268, category: "services" },
-    { name: "Lavanderia Self-Service", address: "Via Roma, Uggiano la Chiesa", lat: 40.099987, lng: 18.443185, category: "services" }
-];
+// Points of Interest — built from LOCATIONS_DATA embed
+function buildPointsOfInterest() {
+    if (typeof LOCATIONS_DATA === 'undefined') return [];
+    const categoryMap = { attraction: 'attractions', nightlife: 'nightlife', service: 'services', restaurant: 'restaurants' };
+    const result = [];
+    ['attractions','nightlife','services','restaurants'].forEach(section => {
+        (LOCATIONS_DATA[section] || []).forEach(poi => {
+            result.push({ ...poi, category: categoryMap[poi.type] || section });
+        });
+    });
+    return result;
+}
+const pointsOfInterest = buildPointsOfInterest();
 
 // Custom icons for map markers
 const createCustomIcon = (color) => {
@@ -1034,154 +1024,125 @@ function initMainPOIMap() {
     const mapElement = document.getElementById('main-poi-map');
     if (!mapElement) return;
 
-    // Create map centered on Casa Paolina with fullscreen control
     const map = L.map('main-poi-map', {
         fullscreenControl: true,
-        fullscreenControlOptions: {
-            position: 'topleft'
-        }
+        fullscreenControlOptions: { position: 'topleft' }
     }).setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors © CARTO',
+        maxZoom: 19,
+        subdomains: 'abcd'
     }).addTo(map);
 
-    // Add Center on Casa Paolina button
-    L.Control.CenterHome = L.Control.extend({
+    // Center home button
+    L.Control.CenterHomePOI = L.Control.extend({
         onAdd: function(map) {
             const btn = L.DomUtil.create('button', 'leaflet-center-home');
             btn.innerHTML = '🏠';
             btn.title = 'Center on Casa Paolina';
-            btn.onclick = function(e) {
-                e.stopPropagation();
-                map.setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
-            };
+            btn.onclick = function(e) { e.stopPropagation(); map.setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11); };
             return btn;
         }
     });
-    map.addControl(new L.Control.CenterHome({ position: 'topleft' }));
+    map.addControl(new L.Control.CenterHomePOI({ position: 'topleft' }));
 
-    // Add Casa Paolina marker
+    // Casa Paolina marker
     const homeIcon = L.divIcon({
-        html: '🏠',
-        className: 'custom-marker',
-        iconSize: [30, 30]
+        className: 'custom-home-marker',
+        html: `<div class="map-badge map-badge--home"><span class="map-badge-emoji">🏠</span></div>`,
+        iconSize: [42, 46], iconAnchor: [21, 46]
     });
-
     L.marker([CASA_PAOLINA.lat, CASA_PAOLINA.lng], { icon: homeIcon })
         .bindPopup('<b>Casa Paolina</b><br>Via Dante De Blasi, 15')
         .addTo(map);
 
-    // Category icons (include those used on guest page)
-    const categoryIcons = {
-        nightlife: '🍹',
-        attractions: '🏛️',
-        beaches: '🏖️',
-        excursions: '🥾',
-        services: '🛒',
-        restaurants: '🍴',
-        supermarkets: '🛒',
-        pharmacy: '💊'
-    };
+    const categoryEmoji = { attractions: '🏛️', nightlife: '🍹', services: '🛒', restaurants: '🍴' };
+    const categoryBadge = { attractions: 'map-badge--attraction', nightlife: 'map-badge--nightlife', services: 'map-badge--service', restaurants: 'map-badge--restaurant' };
 
-    // Add all POI markers to category layer groups
-    const markers = {};
-    const markerRefs = {}; // Store marker references for click events
+    const markerLayers = {};
+    const markerRefs = {};
+
     pointsOfInterest.forEach((poi, index) => {
+        const emoji = categoryEmoji[poi.category] || '📍';
+        const badgeClass = categoryBadge[poi.category] || 'map-badge--service';
         const icon = L.divIcon({
-            html: categoryIcons[poi.category] || '📍',
-            className: 'custom-marker',
-            iconSize: [25, 25]
+            className: 'custom-beach-marker',
+            html: `<div class="map-badge ${badgeClass}"><span class="map-badge-emoji">${emoji}</span></div>`,
+            iconSize: [38, 42], iconAnchor: [19, 42]
         });
 
-        const popupContent = `
-            <div style="min-width: 180px;">
-                <h4 style="margin: 0 0 8px 0;">${poi.name}</h4>
-                <p style="margin: 4px 0; font-size: 0.9rem;">${poi.address || poi.description || ''}</p>
-            </div>
-        `;
-
         const marker = L.marker([poi.lat, poi.lng], { icon })
-            .bindPopup(popupContent);
+            .bindPopup(`<div style="min-width:180px"><b>${poi.name}</b><br><span style="font-size:0.88rem;color:#64748b">${poi.description || poi.address || ''}</span></div>`);
 
-        if (!markers[poi.category]) {
-            markers[poi.category] = L.layerGroup().addTo(map);
-        }
-        marker.addTo(markers[poi.category]);
+        if (!markerLayers[poi.category]) markerLayers[poi.category] = L.layerGroup().addTo(map);
+        marker.addTo(markerLayers[poi.category]);
         markerRefs[`poi-${index}`] = { marker, poi };
     });
 
-    // Render interactive POI list
+    // Render cards matching guest page style
     function renderPOIList(filter = 'all') {
         const listContainer = document.getElementById('poi-interactive-list');
         if (!listContainer) return;
 
-        const filteredPOIs = filter === 'all'
-            ? pointsOfInterest
-            : pointsOfInterest.filter(poi => poi.category === filter);
+        const filtered = filter === 'all' ? pointsOfInterest : pointsOfInterest.filter(p => p.category === filter);
 
-        listContainer.innerHTML = filteredPOIs.map((poi, index) => {
+        const thumbColors = {
+            attractions: { bg: '#ede9fe', color: '#7c3aed', border: '#c4b5fd' },
+            nightlife:   { bg: '#fef3c7', color: '#d97706', border: '#fcd34d' },
+            services:    { bg: '#dcfce7', color: '#16a34a', border: '#86efac' },
+            restaurants: { bg: '#fee2e2', color: '#dc2626', border: '#fca5a5' }
+        };
+
+        listContainer.innerHTML = filtered.map(poi => {
             const globalIndex = pointsOfInterest.indexOf(poi);
-            const emoji = categoryIcons[poi.category] || '📍';
+            const emoji = categoryEmoji[poi.category] || '📍';
+            const desc = poi.description || poi.address || '';
+            const dist = poi.distance || '';
+            const mapsUrl = poi.mapsUrl || '#';
+            const tc = thumbColors[poi.category] || { bg: '#e0f2f1', color: '#2c7873', border: '#a8d5d1' };
             return `
-                <div class="poi-list-item" data-poi-id="poi-${globalIndex}">
-                    <div class="poi-list-header">
-                        <span class="poi-list-name">${emoji} ${poi.name}</span>
+                <a href="${mapsUrl}" target="_blank" rel="noopener"
+                   class="poi-list-card" data-poi-id="poi-${globalIndex}">
+                    <div class="poi-list-thumb" style="background:${tc.bg};color:${tc.color};border-color:${tc.border}">${emoji}</div>
+                    <div class="poi-list-body">
+                        <div class="poi-list-name">${poi.name}</div>
+                        ${desc ? `<div class="poi-list-desc">${desc}</div>` : ''}
+                        ${dist ? `<div class="poi-list-dist">📍 ${dist}</div>` : ''}
                     </div>
-                    <div class="poi-list-info">
-                        <span class="poi-list-desc">${poi.description || poi.address || ''}</span>
-                    </div>
-                </div>
+                </a>
             `;
         }).join('');
 
-        // Add click handlers to list items
-        listContainer.querySelectorAll('.poi-list-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const poiId = item.dataset.poiId;
-                const ref = markerRefs[poiId];
+        // Click on card → pan map to marker
+        listContainer.querySelectorAll('.poi-list-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const ref = markerRefs[card.dataset.poiId];
                 if (ref) {
-                    // Remove previous selection
-                    document.querySelectorAll('.poi-list-item').forEach(el => el.classList.remove('selected'));
-                    item.classList.add('selected');
-
-                    // Pan to marker and open popup
-                    map.setView([ref.poi.lat, ref.poi.lng], 13);
+                    listContainer.querySelectorAll('.poi-list-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    map.setView([ref.poi.lat, ref.poi.lng], 14);
                     ref.marker.openPopup();
                 }
             });
         });
     }
 
-    // Initial render
     renderPOIList();
 
-    // Wire up the filter buttons to show/hide layer groups and update interactive list
-    const filterButtons = document.querySelectorAll('.poi-filter-btn');
-
-    filterButtons.forEach(btn => {
+    document.querySelectorAll('.poi-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const category = btn.getAttribute('data-category');
-
-            // Update active button
-            filterButtons.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.poi-filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // Show/hide marker layers
             if (category === 'all') {
-                Object.values(markers).forEach(layer => map.addLayer(layer));
+                Object.values(markerLayers).forEach(l => map.addLayer(l));
             } else {
-                Object.keys(markers).forEach(cat => {
-                    if (cat === category) {
-                        map.addLayer(markers[cat]);
-                    } else {
-                        map.removeLayer(markers[cat]);
-                    }
+                Object.keys(markerLayers).forEach(cat => {
+                    cat === category ? map.addLayer(markerLayers[cat]) : map.removeLayer(markerLayers[cat]);
                 });
             }
-
-            // Update interactive list
             renderPOIList(category);
         });
     });

@@ -542,6 +542,12 @@
 }
 .map-badge--home .map-badge-emoji { font-size: 18px; }
 
+/* POI category badges */
+.map-badge--attraction { background: linear-gradient(145deg, #c4b5fd, #7c3aed); color: #7c3aed; }
+.map-badge--nightlife  { background: linear-gradient(145deg, #fcd34d, #d97706); color: #d97706; }
+.map-badge--service    { background: linear-gradient(145deg, #86efac, #16a34a); color: #16a34a; }
+.map-badge--restaurant { background: linear-gradient(145deg, #fca5a5, #dc2626); color: #dc2626; }
+
 /* Leaflet controls styling */
 .map-container-modern .leaflet-control-zoom,
 .map-container-modern .leaflet-fullscreen-button {
