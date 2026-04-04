@@ -690,7 +690,7 @@ function initGuestArea() {
         guestBtn.addEventListener('click', (e) => {
             e.preventDefault();
             // Require password: show login modal if not authenticated
-            if (localStorage.getItem('guestLoggedIn') === 'true') {
+            if (sessionStorage.getItem('guestLoggedIn') === 'true') {
                 requestGeolocationThen('guest-info.html');
             } else {
                 showGuestLogin();
@@ -759,7 +759,7 @@ function showGuestLogin() {
 
         // Simple password check (in production, this should be server-side)
         if (password === 'chiara') {
-            localStorage.setItem('guestLoggedIn', 'true');
+            sessionStorage.setItem('guestLoggedIn', 'true');
             document.body.removeChild(modal);
             document.body.style.overflow = '';
             requestGeolocationThen('guest-info.html');
@@ -875,7 +875,7 @@ function showGuestInfo() {
     });
 
     modal.querySelector('#guest-logout').addEventListener('click', () => {
-        localStorage.removeItem('guestLoggedIn');
+        sessionStorage.removeItem('guestLoggedIn');
         document.body.removeChild(modal);
         document.body.style.overflow = '';
     });

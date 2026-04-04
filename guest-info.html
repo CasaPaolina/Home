@@ -20,7 +20,7 @@
 <body class="guest-page">
 
     <!-- Password gate -->
-    <div id="guest-gate" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0a4a3a 0%,#1a6b55 50%,#2c7873 100%);display:flex;align-items:center;justify-content:center;padding:20px;">
+    <div id="guest-gate" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0a4a3a 0%,#1a6b55 50%,#2c7873 100%);align-items:center;justify-content:center;padding:20px;">
         <div style="background:white;border-radius:20px;padding:40px 36px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
             <div style="font-size:2.8rem;margin-bottom:12px;">🏠</div>
             <h2 style="font-family:'Montserrat',sans-serif;font-size:1.4rem;color:#1e293b;margin:0 0 6px;">Casa Paolina</h2>
@@ -39,7 +39,7 @@
     <script>
         (function() {
             var gate = document.getElementById('guest-gate');
-            if (localStorage.getItem('guestLoggedIn') === 'true') {
+            if (sessionStorage.getItem('guestLoggedIn') === 'true') {
                 gate.style.display = 'none';
             } else {
                 gate.style.display = 'flex';
@@ -54,7 +54,7 @@
             var val = document.getElementById('gate-input').value;
             var err = document.getElementById('gate-error');
             if (val === 'chiara') {
-                localStorage.setItem('guestLoggedIn', 'true');
+                sessionStorage.setItem('guestLoggedIn', 'true');
                 document.getElementById('guest-gate').style.display = 'none';
                 document.body.style.overflow = '';
             } else {
