@@ -111,7 +111,7 @@ const translations = {
         outdoor_lighting: "Illuminazione Esterna",
 
         // Review
-        leave_review_cta: "Lascia una Recensione su Google",
+        leave_review_cta: "⭐⭐⭐⭐⭐ Lascia una Recensione su Google",
         leave_review: "Lascia una Recensione",
         review_subtext: "La tua recensione ci aiuta a migliorare!",
         excursions_guest_note: "Prenotazioni escursioni disponibili per gli ospiti. Accedi all'area riservata per maggiori dettagli.",
@@ -255,7 +255,7 @@ const translations = {
 
         // Review
         leave_review: "✍️ Leave a Review",
-        leave_review_cta: "⭐ Leave a Review on Google",
+        leave_review_cta: "⭐⭐⭐⭐⭐ Leave a Review on Google",
         review_subtext: "Your review helps us improve!",
 
         // Contact Section
@@ -536,7 +536,7 @@ const translations = {
 
         // Review
         leave_review: "Deja una Reseña",
-        leave_review_cta: "Deja una reseña en Google",
+        leave_review_cta: "⭐⭐⭐⭐⭐ Deja una reseña en Google",
         review_subtext: "¡Tu reseña nos ayuda a mejorar!",
 
         // Contact Section
@@ -649,7 +649,7 @@ const translations = {
 
         // Review
         leave_review: "Bewertung Hinterlassen",
-        leave_review_cta: "Hinterlasse eine Bewertung auf Google",
+        leave_review_cta: "⭐⭐⭐⭐⭐ Hinterlasse eine Bewertung auf Google",
         review_subtext: "Ihre Bewertung hilft uns, uns zu verbessern!",
 
         // Contact Section
