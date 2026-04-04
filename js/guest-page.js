@@ -602,20 +602,23 @@ window.getBeachImageSrc = function getBeachImageSrc(beach) {
     return c.length ? c[0] : '';
 };
 
-// Map WMO weather code to emoji + label
+// Map WMO weather code to emoji + translation key
 function getWeatherIcon(code) {
-    if (code === 0) return { icon: '☀️', label: 'Sereno' };
-    if (code === 1) return { icon: '🌤️', label: 'Quasi sereno' };
-    if (code === 2) return { icon: '⛅', label: 'Parz. nuvoloso' };
-    if (code === 3) return { icon: '☁️', label: 'Coperto' };
-    if (code === 45 || code === 48) return { icon: '🌫️', label: 'Nebbia' };
-    if (code >= 51 && code <= 55) return { icon: '🌦️', label: 'Pioggerella' };
-    if (code >= 61 && code <= 65) return { icon: '🌧️', label: 'Pioggia' };
-    if (code >= 71 && code <= 77) return { icon: '❄️', label: 'Neve' };
-    if (code >= 80 && code <= 82) return { icon: '🌦️', label: 'Rovesci' };
-    if (code === 95) return { icon: '⛈️', label: 'Temporale' };
-    if (code >= 96) return { icon: '⛈️', label: 'Temporale con grandine' };
-    return { icon: '🌡️', label: 'Variabile' };
+    const t = (typeof guestTranslations !== 'undefined' && typeof currentGuestLang !== 'undefined')
+        ? (guestTranslations[currentGuestLang] || guestTranslations.it)
+        : guestTranslations.it;
+    if (code === 0)  return { icon: '☀️',  label: t.weather_clear || 'Sereno' };
+    if (code === 1)  return { icon: '🌤️', label: t.weather_mostly_clear || 'Quasi sereno' };
+    if (code === 2)  return { icon: '⛅',  label: t.weather_partly_cloudy || 'Parz. nuvoloso' };
+    if (code === 3)  return { icon: '☁️',  label: t.weather_overcast || 'Coperto' };
+    if (code === 45 || code === 48) return { icon: '🌫️', label: t.weather_fog || 'Nebbia' };
+    if (code >= 51 && code <= 55)   return { icon: '🌦️', label: t.weather_drizzle || 'Pioggerella' };
+    if (code >= 61 && code <= 65)   return { icon: '🌧️', label: t.weather_rain || 'Pioggia' };
+    if (code >= 71 && code <= 77)   return { icon: '❄️',  label: t.weather_snow || 'Neve' };
+    if (code >= 80 && code <= 82)   return { icon: '🌦️', label: t.weather_showers || 'Rovesci' };
+    if (code === 95)  return { icon: '⛈️', label: t.weather_thunderstorm || 'Temporale' };
+    if (code >= 96)   return { icon: '⛈️', label: t.weather_thunderstorm_hail || 'Temporale con grandine' };
+    return { icon: '🌡️', label: t.weather_variable || 'Variabile' };
 }
 
 // Render 3-day daily forecast cards in #daily-forecast
@@ -635,7 +638,11 @@ function renderDailyForecast(daily) {
 
     const localeMap = { it: 'it-IT', en: 'en-GB', fr: 'fr-FR', es: 'es-ES', de: 'de-DE' };
     const locale = localeMap[currentGuestLang] || 'it-IT';
-    const windDirLabels = { N: 'N', NE: 'NE', E: 'E', SE: 'SE', S: 'S', SW: 'SO', W: 'O', NW: 'NO' };
+    const windDirLabels = {
+        N:  tr.wind_N  || 'N',  NE: tr.wind_NE || 'NE', E:  tr.wind_E  || 'E',
+        SE: tr.wind_SE || 'SE', S:  tr.wind_S  || 'S',  SW: tr.wind_SW || 'SO',
+        W:  tr.wind_W  || 'O',  NW: tr.wind_NW || 'NO'
+    };
 
     container.innerHTML = daily.time.slice(0, 3).map((dateStr, i) => {
         const { icon, label } = getWeatherIcon(daily.weathercode[i]);
@@ -700,7 +707,11 @@ window.getBeachPopupHTML = function getBeachPopupHTML(beach, options = {}) {
     const firstImg = candidates[0] || '';
     const dataFallbacks = candidates.join('|');
 
-    const bookingBtn = bookingUrl ? `<a href="${bookingUrl}" target="_blank" class="popup-btn popup-btn-primary">Prenota ora</a>` : '';
+    const tl = guestTranslations[currentGuestLang] || guestTranslations['it'];
+    const bookingBtn = bookingUrl ? `<a href="${bookingUrl}" target="_blank" class="popup-btn popup-btn-primary">${tl.book_beach || 'Prenota'}</a>` : '';
+    const typeLabel = isSand ? `🏖️ ${tl.filter_sand || 'Sabbia'}` : `🪨 ${tl.filter_rocks || 'Scogliera'}`;
+    const fromLabel = tl.from_casa || tl.from_casa_paolina || 'da Casa Paolina';
+    const beachDesc = (beach.translationKey && tl[beach.translationKey]) || beach.description || '';
 
     // Image block: try first candidate and let onerror walk fallbacks
     const imageBlock = firstImg ? `
@@ -719,9 +730,9 @@ window.getBeachPopupHTML = function getBeachPopupHTML(beach, options = {}) {
             ${imageBlock}
             <div class="popup-body">
                 <h3>${beach.name}</h3>
-                <p class="popup-type">${isSand ? '🏖️ Sabbia' : '🪨 Scogliera'}</p>
-                <p class="popup-distance">📍 ${beach.distance} da Casa Paolina</p>
-                <p class="popup-description">${beach.description}</p>
+                <p class="popup-type">${typeLabel}</p>
+                <p class="popup-distance">📍 ${beach.distance} ${fromLabel}</p>
+                <p class="popup-description">${beachDesc}</p>
                 ${beach.facilities && beach.facilities.length > 0 ? `<div class="popup-facilities"><strong>Servizi:</strong> ${beach.facilities.map(f => getFacilityLabel(f)).join(', ')}</div>` : ''}
                 <div class="popup-actions">
                     <a href="${directionsUrl}" target="_blank" class="popup-btn popup-btn-secondary">Portami qui</a>
@@ -1201,12 +1212,16 @@ function initPOIQuickGrid() {
         allPOIs = pointsOfInterest.filter(p => p.category !== 'beaches').map(p => ({ ...p, cat: p.category }));
     }
 
+    let currentPOIFilter = 'all';
+
     function render(filter) {
+        currentPOIFilter = filter;
         const list = filter === 'all' ? allPOIs : allPOIs.filter(p => p.cat === filter || p.category === filter);
+        const t = guestTranslations[currentGuestLang] || guestTranslations['it'];
         grid.innerHTML = list.map(poi => {
             const icon = categoryIcon[poi.cat] || categoryIcon[poi.category] || '📍';
             const name = poi.name || '';
-            const desc = poi.description || poi.address || '';
+            const desc = (poi.translationKey && t[poi.translationKey]) || poi.description || poi.address || '';
             const dist = poi.distance || '';
             const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${CASA_PAOLINA.lat},${CASA_PAOLINA.lng}&destination=${poi.lat},${poi.lng}`;
             return `
@@ -1221,6 +1236,9 @@ function initPOIQuickGrid() {
             `;
         }).join('');
     }
+
+    // Expose so language switcher can re-render with new language
+    window.renderPOIGrid = () => render(currentPOIFilter);
 
     // Wait for locationsData to be ready
     const tryRender = async () => {

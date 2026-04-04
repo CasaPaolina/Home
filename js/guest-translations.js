@@ -83,9 +83,34 @@ const guestTranslations = {
         filter_recommended_today: "Consigliato oggi",
         today: "Oggi",
         tomorrow: "Domani",
+        day_after_tomorrow: "Dopodomani",
         morning_short: "Mattina",
         noon_short: "Mezzogiorno",
         afternoon_short: "Pomeriggio",
+
+        // Weather conditions
+        weather_clear: "Sereno",
+        weather_mostly_clear: "Quasi sereno",
+        weather_partly_cloudy: "Parz. nuvoloso",
+        weather_overcast: "Coperto",
+        weather_fog: "Nebbia",
+        weather_drizzle: "Pioggerella",
+        weather_rain: "Pioggia",
+        weather_snow: "Neve",
+        weather_showers: "Rovesci",
+        weather_thunderstorm: "Temporale",
+        weather_thunderstorm_hail: "Temporale con grandine",
+        weather_variable: "Variabile",
+
+        // Wind directions
+                wind_N: "N",
+        wind_NE: "NE",
+        wind_E: "E",
+        wind_SE: "SE",
+                wind_S: "S",
+        wind_SW: "SO",
+        wind_W: "O",
+        wind_NW: "NO",
         top_beaches_today: "Spiagge Consigliate",
         top_beaches_tomorrow: "Spiagge Consigliate",
         all_beaches: "Tutte le Spiagge",
@@ -169,6 +194,79 @@ const guestTranslations = {
         section_tag_meteo: "🌤️ Meteo",
         section_tag_excursions: "🚤 Escursioni",
         footer_copy: "© 2026 Casa Paolina. Tutti i diritti riservati.",
+
+        // Mobile tab toggle
+        tab_map: "Mappa",
+        tab_list: "Lista",
+
+        // Beach recommendation labels
+        beach_reason_protected: "Protetta dal vento attuale",
+        beach_reason_conditions: "Condizioni ideali oggi",
+        book_beach: "Prenota",
+        from_casa: "da Casa Paolina",
+        get_directions: "Portami qui",
+
+        // Beach descriptions (from locations.json translationKeys)
+        beach_torre_orso: "Spiaggia sabbiosa con acque cristalline e due famose formazioni rocciose",
+        beach_faraglioni: "Costa rocciosa spettacolare con imponenti formazioni di scogliera",
+        beach_baia_turchi: "Spiaggia di sabbia bianca incontaminata circondata da pineta",
+        beach_alimini: "Lunga distesa di sabbia dorata tra il mare e le lagune naturali",
+        beach_porto_badisco: "Piccola baia riparata con acqua limpida e storia millenaria",
+        beach_castro: "Affascinante cittadina costiera con grotte marine e acque cristalline",
+        beach_porto_miggiano: "Insenatura naturale con acqua turchese, ideale per lo snorkeling",
+        beach_marina_serra: "Piscina naturale rocciosa con acqua cristallina",
+        beach_acquaviva: "Insenatura naturale nascosta con acque color smeraldo",
+        beach_grotta_poesia: "Famosa piscina in grotta naturale con acqua cristallina",
+        beach_grotta_verde: "Grotta marina con spettacolare fenomeno di luminescenza verde",
+        beach_santa_cesarea: "Cittadina termale con acque terapeutiche sul mare adriatico",
+        beach_gradoni: "Spiaggia urbana con accesso comodo e servizi completi",
+        beach_porto_selvaggio: "Riserva naturale selvaggia con costa rocciosa incontaminata",
+        beach_baia_verde: "Spiaggia vivace con vita notturna e stabilimenti balneari",
+        beach_punta_suina: "Bella spiaggia di sabbia dorata sulla costa ionica",
+        beach_porto_cesareo: "Area marina protetta con acque cristalline e fondali ricchi",
+        beach_santa_maria_bagno: "Scogliere rocciose con suggestive piscine naturali",
+        beach_santa_caterina: "Grotte spettacolari e scogliere rocciose sul mare",
+        beach_torre_san_giovanni: "Spiaggia sabbiosa a misura di famiglia con acqua bassa",
+
+        // Attraction descriptions
+        attraction_lecce: "Capitale barocca della Puglia con architettura straordinaria",
+        attraction_gallipoli: "Bella città costiera con storico centro su isola",
+        attraction_otranto: "Città storica con splendida cattedrale e castello medievale",
+        attraction_leuca: "Punto più meridionale della Puglia dove si incontrano Adriatico e Ionio",
+        attraction_bauxite: "Ex cava di bauxite con lago smeraldo e caratteristica terra rossa",
+        attraction_zinzulusa: "Spettacolare grotta marina con stalattiti e stalagmiti",
+        attraction_palascia: "Punto più orientale d'Italia con faro e panorama mozzafiato",
+        attraction_cattedrale: "Cattedrale medievale con straordinario pavimento a mosaico",
+
+        // Nightlife descriptions
+        nightlife_skafe: "Bar alla moda affacciato sul mare",
+        nightlife_spinnaker: "Beach club con ristorante e intrattenimento serale",
+        nightlife_casaccia: "Ristorante e cocktail bar a Otranto",
+        nightlife_blubay: "Beach club con ristorante e musica dal vivo",
+        nightlife_guendalina: "Beach club esclusivo con ristorante panoramico",
+        nightlife_male: "Beach club elegante con DJ set",
+
+        // Service descriptions
+        service_conad: "Supermercato principale a Uggiano la Chiesa",
+        service_3m: "Supermercato discount",
+        service_farmacia: "Farmacia locale",
+        service_lavanderia: "Lavanderia self-service",
+        service_macelleria: "Macelleria locale",
+        service_fruttivendolo: "Fruttivendolo e verduriere locale",
+        service_forno: "Forno e panetteria locale",
+        service_poste_italiane: "Ufficio postale locale",
+        service_pescheria: "Pescheria locale",
+        service_tabacchi: "Tabaccheria locale",
+
+        // Restaurant descriptions
+        restaurant_matisse: "Ristorante di pesce e carne",
+        restaurant_agrodolce: "Ristorante locale di carne e pesce",
+        restaurant_mozzica_fusci: "Pizzeria tradizionale",
+        restaurant_isola_del_sole: "Frigitoria e ristorante di pesce",
+        restaurant_la_gramola: "Ristorante tipico di pesce e carne",
+        restaurant_le_tagliate: "Agriturismo con cucina tradizionale e prodotti locali",
+        restaurant_da_mimmo: "Pizzeria con forno a legna",
+        restaurant_locanda_gusto: "Cucina contemporanea ispirata ai piatti tradizionali",
 
     },
     
@@ -254,9 +352,34 @@ const guestTranslations = {
         filter_recommended_today: "Recommended today",
         today: "Today",
         tomorrow: "Tomorrow",
+        day_after_tomorrow: "Day after tomorrow",
         morning_short: "Morning",
         noon_short: "Noon",
         afternoon_short: "Afternoon",
+
+        // Weather conditions
+        weather_clear: "Clear",
+        weather_mostly_clear: "Mostly clear",
+        weather_partly_cloudy: "Partly cloudy",
+        weather_overcast: "Overcast",
+        weather_fog: "Fog",
+        weather_drizzle: "Drizzle",
+        weather_rain: "Rain",
+        weather_snow: "Snow",
+        weather_showers: "Showers",
+        weather_thunderstorm: "Thunderstorm",
+        weather_thunderstorm_hail: "Thunderstorm with hail",
+        weather_variable: "Variable",
+
+        // Wind directions
+                wind_N: "N",
+        wind_NE: "NE",
+        wind_E: "E",
+        wind_SE: "SE",
+                wind_S: "S",
+        wind_SW: "SW",
+        wind_W: "W",
+        wind_NW: "NW",
         top_beaches_today: "🏖️ Recommended Beaches",
         top_beaches_tomorrow: "🏖️ Recommended Beaches",
         all_beaches: "All Beaches",
@@ -339,6 +462,79 @@ const guestTranslations = {
         section_tag_meteo: "🌤️ Weather",
         section_tag_excursions: "🚤 Excursions",
         footer_copy: "© 2026 Casa Paolina. All rights reserved.",
+
+        // Mobile tab toggle
+        tab_map: "Map",
+        tab_list: "List",
+
+        // Beach recommendation labels
+        beach_reason_protected: "Protected from current wind",
+        beach_reason_conditions: "Ideal conditions today",
+        book_beach: "Book",
+        from_casa: "from Casa Paolina",
+        get_directions: "Get directions",
+
+        // Beach descriptions (from locations.json translationKeys)
+        beach_torre_orso: "Sandy beach with crystal clear water and two famous rock formations",
+        beach_faraglioni: "Spectacular rocky coastline with dramatic cliff formations",
+        beach_baia_turchi: "Pristine white sand beach surrounded by pine forest",
+        beach_alimini: "Long stretch of golden sand backed by natural lagoons",
+        beach_porto_badisco: "Small sheltered bay with clear water and ancient history",
+        beach_castro: "Charming coastal town with sea caves and crystal clear waters",
+        beach_porto_miggiano: "Natural inlet with turquoise water, perfect for snorkeling",
+        beach_marina_serra: "Natural rocky pool with crystal clear water",
+        beach_acquaviva: "Hidden natural inlet with emerald-green waters",
+        beach_grotta_poesia: "Famous natural cave pool with crystal clear water",
+        beach_grotta_verde: "Natural sea cave with spectacular green luminescence",
+        beach_santa_cesarea: "Thermal spa town with therapeutic waters on the Adriatic",
+        beach_gradoni: "City beach with easy access and full amenities",
+        beach_porto_selvaggio: "Wild natural reserve with pristine rocky coastline",
+        beach_baia_verde: "Lively beach with nightlife and beach clubs",
+        beach_punta_suina: "Beautiful golden sand beach on the Ionian coast",
+        beach_porto_cesareo: "Marine protected area with crystal clear water",
+        beach_santa_maria_bagno: "Rocky cliffs with picturesque natural pools",
+        beach_santa_caterina: "Spectacular caves and rocky cliffs by the sea",
+        beach_torre_san_giovanni: "Family-friendly sandy beach with shallow water",
+
+        // Attraction descriptions
+        attraction_lecce: "Baroque capital of Puglia with stunning historic architecture",
+        attraction_gallipoli: "Beautiful coastal city with historic old town on an island",
+        attraction_otranto: "Historic coastal town with stunning cathedral and medieval castle",
+        attraction_leuca: "Southernmost point of Puglia where Adriatic and Ionian seas meet",
+        attraction_bauxite: "Former bauxite quarry with emerald lake and red earth landscape",
+        attraction_zinzulusa: "Spectacular marine cave with stalactites and stalagmites",
+        attraction_palascia: "Easternmost point of Italy with lighthouse and breathtaking views",
+        attraction_cattedrale: "Medieval cathedral with a stunning mosaic floor",
+
+        // Nightlife descriptions
+        nightlife_skafe: "Trendy bar facing the sea",
+        nightlife_spinnaker: "Beach club with restaurant and evening entertainment",
+        nightlife_casaccia: "Restaurant and cocktail bar in Otranto",
+        nightlife_blubay: "Beach club with restaurant and live music",
+        nightlife_guendalina: "Exclusive beach club with panoramic restaurant",
+        nightlife_male: "Stylish beach club with DJ sets",
+
+        // Service descriptions
+        service_conad: "Main supermarket in Uggiano la Chiesa",
+        service_3m: "Discount supermarket",
+        service_farmacia: "Local pharmacy",
+        service_lavanderia: "Self-service laundromat",
+        service_macelleria: "Local butcher shop",
+        service_fruttivendolo: "Local fruit and vegetable vendor",
+        service_forno: "Local bakery",
+        service_poste_italiane: "Local post office",
+        service_pescheria: "Local fish market",
+        service_tabacchi: "Local tobacco shop",
+
+        // Restaurant descriptions
+        restaurant_matisse: "Fish and meat restaurant",
+        restaurant_agrodolce: "Local meat and fish restaurant",
+        restaurant_mozzica_fusci: "Traditional pizzeria",
+        restaurant_isola_del_sole: "Fried fish and seafood restaurant",
+        restaurant_la_gramola: "Traditional fish and meat restaurant",
+        restaurant_le_tagliate: "Farmhouse restaurant with traditional cuisine and local produce",
+        restaurant_da_mimmo: "Wood-fired pizza",
+        restaurant_locanda_gusto: "Contemporary take on traditional dishes",
     },
     fr: {
         back_to_site: "Retour au site",
@@ -474,9 +670,34 @@ const guestTranslations = {
         filter_ionian: "Ionien",
         today: "Aujourd'hui",
         tomorrow: "Demain",
+        day_after_tomorrow: "Après-demain",
         morning_short: "Matin",
         noon_short: "Midi",
         afternoon_short: "Après-midi",
+
+        // Weather conditions
+        weather_clear: "Ensoleillé",
+        weather_mostly_clear: "Peu nuageux",
+        weather_partly_cloudy: "Partiellement nuageux",
+        weather_overcast: "Couvert",
+        weather_fog: "Brouillard",
+        weather_drizzle: "Bruine",
+        weather_rain: "Pluie",
+        weather_snow: "Neige",
+        weather_showers: "Averses",
+        weather_thunderstorm: "Orage",
+        weather_thunderstorm_hail: "Orage avec grêle",
+        weather_variable: "Variable",
+
+        // Wind directions
+                wind_N: "N",
+        wind_NE: "NE",
+        wind_E: "E",
+        wind_SE: "SE",
+                wind_S: "S",
+        wind_SW: "SO",
+        wind_W: "O",
+        wind_NW: "NO",
         all_beaches: "Toutes les plages",
         adriatic: "Adriatique",
         ionian: "Ionien",
@@ -520,6 +741,79 @@ const guestTranslations = {
         section_tag_meteo: "🌤️ Météo",
         section_tag_excursions: "🚤 Excursions",
         footer_copy: "© 2026 Casa Paolina. Tous droits réservés.",
+
+        // Mobile tab toggle
+        tab_map: "Carte",
+        tab_list: "Liste",
+
+        // Beach recommendation labels
+        beach_reason_protected: "Protégée du vent actuel",
+        beach_reason_conditions: "Conditions idéales aujourd'hui",
+        book_beach: "Réserver",
+        from_casa: "de Casa Paolina",
+        get_directions: "Y aller",
+
+        // Beach descriptions
+        beach_torre_orso: "Plage de sable aux eaux cristallines et deux formations rocheuses célèbres",
+        beach_faraglioni: "Côte rocheuse spectaculaire avec des formations de falaises dramatiques",
+        beach_baia_turchi: "Plage de sable blanc préservée entourée d'une forêt de pins",
+        beach_alimini: "Longue étendue de sable doré bordée de lagunes naturelles",
+        beach_porto_badisco: "Petite baie abritée aux eaux claires et à l'histoire millénaire",
+        beach_castro: "Charmante ville côtière avec grottes marines et eaux cristallines",
+        beach_porto_miggiano: "Anse naturelle aux eaux turquoise, idéale pour le snorkeling",
+        beach_marina_serra: "Piscine naturelle rocheuse aux eaux cristallines",
+        beach_acquaviva: "Anse naturelle cachée aux eaux couleur émeraude",
+        beach_grotta_poesia: "Célèbre piscine naturelle en grotte aux eaux cristallines",
+        beach_grotta_verde: "Grotte marine naturelle avec un spectaculaire phénomène de luminescence verte",
+        beach_santa_cesarea: "Station thermale aux eaux thérapeutiques sur l'Adriatique",
+        beach_gradoni: "Plage urbaine à accès facile avec toutes les commodités",
+        beach_porto_selvaggio: "Réserve naturelle sauvage avec côte rocheuse préservée",
+        beach_baia_verde: "Plage animée avec vie nocturne et clubs de plage",
+        beach_punta_suina: "Belle plage de sable doré sur la côte ionienne",
+        beach_porto_cesareo: "Zone marine protégée aux eaux cristallines",
+        beach_santa_maria_bagno: "Falaises rocheuses avec de pittoresques piscines naturelles",
+        beach_santa_caterina: "Grottes spectaculaires et falaises rocheuses au bord de la mer",
+        beach_torre_san_giovanni: "Plage de sable familiale aux eaux peu profondes",
+
+        // Attraction descriptions
+        attraction_lecce: "Capitale baroque des Pouilles à l'architecture historique époustouflante",
+        attraction_gallipoli: "Belle ville côtière avec vieux quartier historique sur une île",
+        attraction_otranto: "Ville côtière historique avec splendide cathédrale et château médiéval",
+        attraction_leuca: "Point le plus méridional des Pouilles où se rencontrent Adriatique et Ionienne",
+        attraction_bauxite: "Ancienne carrière de bauxite avec lac émeraude et terre rouge",
+        attraction_zinzulusa: "Grotte marine spectaculaire avec stalactites et stalagmites",
+        attraction_palascia: "Point le plus oriental d'Italie avec phare et vues à couper le souffle",
+        attraction_cattedrale: "Cathédrale médiévale avec un splendide sol en mosaïque",
+
+        // Nightlife descriptions
+        nightlife_skafe: "Bar tendance face à la mer",
+        nightlife_spinnaker: "Club de plage avec restaurant et animations en soirée",
+        nightlife_casaccia: "Restaurant et bar à cocktails à Otrante",
+        nightlife_blubay: "Club de plage avec restaurant et musique live",
+        nightlife_guendalina: "Club de plage exclusif avec restaurant panoramique",
+        nightlife_male: "Club de plage tendance avec sets de DJ",
+
+        // Service descriptions
+        service_conad: "Supermarché principal à Uggiano la Chiesa",
+        service_3m: "Supermarché discount",
+        service_farmacia: "Pharmacie locale",
+        service_lavanderia: "Laverie libre-service",
+        service_macelleria: "Boucherie locale",
+        service_fruttivendolo: "Marchand de fruits et légumes local",
+        service_forno: "Boulangerie locale",
+        service_poste_italiane: "Bureau de poste local",
+        service_pescheria: "Poissonnerie locale",
+        service_tabacchi: "Bureau de tabac local",
+
+        // Restaurant descriptions
+        restaurant_matisse: "Restaurant de poisson et de viande",
+        restaurant_agrodolce: "Restaurant local de viande et de poisson",
+        restaurant_mozzica_fusci: "Pizzeria traditionnelle",
+        restaurant_isola_del_sole: "Friterie et restaurant de fruits de mer",
+        restaurant_la_gramola: "Restaurant traditionnel de poisson et de viande",
+        restaurant_le_tagliate: "Ferme-restaurant avec cuisine traditionnelle et produits locaux",
+        restaurant_da_mimmo: "Pizza au feu de bois",
+        restaurant_locanda_gusto: "Cuisine contemporaine inspirée des plats traditionnels",
     },
     
     es: {
@@ -634,9 +928,34 @@ const guestTranslations = {
         filter_recommended_today: "Recomendado hoy",
         today: "Hoy",
         tomorrow: "Mañana",
+        day_after_tomorrow: "Pasado mañana",
         morning_short: "Mañana",
         noon_short: "Mediodía",
         afternoon_short: "Tarde",
+
+        // Weather conditions
+        weather_clear: "Despejado",
+        weather_mostly_clear: "Casi despejado",
+        weather_partly_cloudy: "Parcialmente nublado",
+        weather_overcast: "Nublado",
+        weather_fog: "Niebla",
+        weather_drizzle: "Llovizna",
+        weather_rain: "Lluvia",
+        weather_snow: "Nieve",
+        weather_showers: "Chubascos",
+        weather_thunderstorm: "Tormenta",
+        weather_thunderstorm_hail: "Tormenta con granizo",
+        weather_variable: "Variable",
+
+        // Wind directions
+                wind_N: "N",
+        wind_NE: "NE",
+        wind_E: "E",
+        wind_SE: "SE",
+                wind_S: "S",
+        wind_SW: "SO",
+        wind_W: "O",
+        wind_NW: "NO",
         top_beaches_today: "🏖️ Playas Recomendadas",
         top_beaches_tomorrow: "🏖️ Playas Recomendadas",
         all_beaches: "Todas las Playas",
@@ -698,6 +1017,79 @@ const guestTranslations = {
         section_tag_meteo: "🌤️ Tiempo",
         section_tag_excursions: "🚤 Excursiones",
         footer_copy: "© 2026 Casa Paolina. Todos los derechos reservados.",
+
+        // Mobile tab toggle
+        tab_map: "Mapa",
+        tab_list: "Lista",
+
+        // Beach recommendation labels
+        beach_reason_protected: "Protegida del viento actual",
+        beach_reason_conditions: "Condiciones ideales hoy",
+        book_beach: "Reservar",
+        from_casa: "desde Casa Paolina",
+        get_directions: "Llévame allí",
+
+        // Beach descriptions
+        beach_torre_orso: "Playa de arena con aguas cristalinas y dos famosas formaciones rocosas",
+        beach_faraglioni: "Costa rocosa espectacular con dramáticas formaciones de acantilados",
+        beach_baia_turchi: "Playa de arena blanca virgen rodeada de pinar",
+        beach_alimini: "Larga franja de arena dorada junto a lagunas naturales",
+        beach_porto_badisco: "Pequeña bahía protegida con agua clara e historia milenaria",
+        beach_castro: "Encantadora localidad costera con cuevas marinas y aguas cristalinas",
+        beach_porto_miggiano: "Ensenada natural con agua turquesa, ideal para el snorkel",
+        beach_marina_serra: "Piscina natural rocosa con agua cristalina",
+        beach_acquaviva: "Ensenada natural escondida con aguas color esmeralda",
+        beach_grotta_poesia: "Famosa piscina natural en cueva con agua cristalina",
+        beach_grotta_verde: "Cueva marina natural con espectacular luminiscencia verde",
+        beach_santa_cesarea: "Ciudad termal con aguas terapéuticas en el Adriático",
+        beach_gradoni: "Playa urbana de fácil acceso con todos los servicios",
+        beach_porto_selvaggio: "Reserva natural salvaje con costa rocosa virgen",
+        beach_baia_verde: "Playa animada con vida nocturna y clubs de playa",
+        beach_punta_suina: "Hermosa playa de arena dorada en la costa jónica",
+        beach_porto_cesareo: "Área marina protegida con aguas cristalinas",
+        beach_santa_maria_bagno: "Acantilados rocosos con pintorescas piscinas naturales",
+        beach_santa_caterina: "Cuevas espectaculares y acantilados rocosos junto al mar",
+        beach_torre_san_giovanni: "Playa de arena familiar con aguas poco profundas",
+
+        // Attraction descriptions
+        attraction_lecce: "Capital barroca de Puglia con impresionante arquitectura histórica",
+        attraction_gallipoli: "Bella ciudad costera con casco histórico en una isla",
+        attraction_otranto: "Ciudad costera histórica con espléndida catedral y castillo medieval",
+        attraction_leuca: "Punto más meridional de Puglia donde se encuentran el Adriático y el Jónico",
+        attraction_bauxite: "Antigua cantera de bauxita con lago esmeralda y tierra roja",
+        attraction_zinzulusa: "Espectacular cueva marina con estalactitas y estalagmitas",
+        attraction_palascia: "Punto más oriental de Italia con faro y vistas impresionantes",
+        attraction_cattedrale: "Catedral medieval con impresionante suelo de mosaico",
+
+        // Nightlife descriptions
+        nightlife_skafe: "Bar de moda frente al mar",
+        nightlife_spinnaker: "Club de playa con restaurante y entretenimiento nocturno",
+        nightlife_casaccia: "Restaurante y bar de cócteles en Otranto",
+        nightlife_blubay: "Club de playa con restaurante y música en vivo",
+        nightlife_guendalina: "Club de playa exclusivo con restaurante panorámico",
+        nightlife_male: "Elegante club de playa con sesiones de DJ",
+
+        // Service descriptions
+        service_conad: "Supermercado principal en Uggiano la Chiesa",
+        service_3m: "Supermercado de descuento",
+        service_farmacia: "Farmacia local",
+        service_lavanderia: "Lavandería de autoservicio",
+        service_macelleria: "Carnicería local",
+        service_fruttivendolo: "Frutería y verdulería local",
+        service_forno: "Panadería local",
+        service_poste_italiane: "Oficina de correos local",
+        service_pescheria: "Pescadería local",
+        service_tabacchi: "Estanco local",
+
+        // Restaurant descriptions
+        restaurant_matisse: "Restaurante de pescado y carne",
+        restaurant_agrodolce: "Restaurante local de carne y pescado",
+        restaurant_mozzica_fusci: "Pizzería tradicional",
+        restaurant_isola_del_sole: "Freiduría y restaurante de pescado",
+        restaurant_la_gramola: "Restaurante típico de pescado y carne",
+        restaurant_le_tagliate: "Restaurante rural con cocina tradicional y productos locales",
+        restaurant_da_mimmo: "Pizza al horno de leña",
+        restaurant_locanda_gusto: "Cocina contemporánea inspirada en platos tradicionales",
     },
     
     de: {
@@ -803,9 +1195,34 @@ const guestTranslations = {
         filter_recommended_today: "Heute empfohlen",
         today: "Heute",
         tomorrow: "Morgen",
+        day_after_tomorrow: "Übermorgen",
         morning_short: "Morgen",
         noon_short: "Mittag",
         afternoon_short: "Nachmittag",
+
+        // Weather conditions
+        weather_clear: "Klar",
+        weather_mostly_clear: "Überwiegend klar",
+        weather_partly_cloudy: "Teils bewölkt",
+        weather_overcast: "Bedeckt",
+        weather_fog: "Nebel",
+        weather_drizzle: "Nieselregen",
+        weather_rain: "Regen",
+        weather_snow: "Schnee",
+        weather_showers: "Schauer",
+        weather_thunderstorm: "Gewitter",
+        weather_thunderstorm_hail: "Gewitter mit Hagel",
+        weather_variable: "Wechselhaft",
+
+        // Wind directions
+                wind_N: "N",
+        wind_NE: "NO",
+        wind_E: "O",
+        wind_SE: "SO",
+                wind_S: "S",
+        wind_SW: "SW",
+        wind_W: "W",
+        wind_NW: "NW",
         top_beaches_today: "🏖️ Empfohlene Strände",
         top_beaches_tomorrow: "🏖️ Empfohlene Strände",
         all_beaches: "Alle Strände",
@@ -867,6 +1284,79 @@ const guestTranslations = {
         section_tag_meteo: "🌤️ Wetter",
         section_tag_excursions: "🚤 Ausflüge",
         footer_copy: "© 2026 Casa Paolina. Alle Rechte vorbehalten.",
+
+        // Mobile tab toggle
+        tab_map: "Karte",
+        tab_list: "Liste",
+
+        // Beach recommendation labels
+        beach_reason_protected: "Vor aktuellem Wind geschützt",
+        beach_reason_conditions: "Ideale Bedingungen heute",
+        book_beach: "Buchen",
+        from_casa: "von Casa Paolina",
+        get_directions: "Wegbeschreibung",
+
+        // Beach descriptions
+        beach_torre_orso: "Sandstrand mit kristallklarem Wasser und zwei berühmten Felsformationen",
+        beach_faraglioni: "Spektakuläre Felsenküste mit dramatischen Kliffformationen",
+        beach_baia_turchi: "Unberührter Weißsandstrand, umgeben von Pinienwald",
+        beach_alimini: "Langer Goldstrand entlang natürlicher Lagunen",
+        beach_porto_badisco: "Kleine geschützte Bucht mit klarem Wasser und jahrtausendealter Geschichte",
+        beach_castro: "Bezaubernde Küstenstadt mit Meereshöhlen und kristallklarem Wasser",
+        beach_porto_miggiano: "Natürliche Bucht mit türkisfarbenem Wasser, ideal zum Schnorcheln",
+        beach_marina_serra: "Natürlicher Felsenpool mit kristallklarem Wasser",
+        beach_acquaviva: "Versteckte natürliche Bucht mit smaragdgrünem Wasser",
+        beach_grotta_poesia: "Berühmter natürlicher Höhlenpool mit kristallklarem Wasser",
+        beach_grotta_verde: "Natürliche Meereshöhle mit spektakulärer grüner Lumineszenz",
+        beach_santa_cesarea: "Thermalbad-Ortschaft mit heilendem Wasser an der Adria",
+        beach_gradoni: "Stadtstrand mit einfachem Zugang und vollständiger Ausstattung",
+        beach_porto_selvaggio: "Wildes Naturschutzgebiet mit unberührter Felsküste",
+        beach_baia_verde: "Lebhafter Strand mit Nachtleben und Strandclubs",
+        beach_punta_suina: "Schöner Goldstrand an der ionischen Küste",
+        beach_porto_cesareo: "Meeresschutzgebiet mit kristallklarem Wasser",
+        beach_santa_maria_bagno: "Felsige Klippen mit malerischen natürlichen Pools",
+        beach_santa_caterina: "Spektakuläre Höhlen und Felsklippen am Meer",
+        beach_torre_san_giovanni: "Familienfreundlicher Sandstrand mit flachem Wasser",
+
+        // Attraction descriptions
+        attraction_lecce: "Barockhauptstadt Apuliens mit atemberaubender historischer Architektur",
+        attraction_gallipoli: "Schöne Küstenstadt mit historischer Altstadt auf einer Insel",
+        attraction_otranto: "Historische Küstenstadt mit prächtiger Kathedrale und mittelalterlicher Burg",
+        attraction_leuca: "Südlichster Punkt Apuliens, wo Adria und Ionisches Meer zusammentreffen",
+        attraction_bauxite: "Ehemalige Bauxitmine mit smaragdgrünem See und roter Erde",
+        attraction_zinzulusa: "Spektakuläre Meereshöhle mit Stalaktiten und Stalagmiten",
+        attraction_palascia: "Östlichster Punkt Italiens mit Leuchtturm und atemberaubender Aussicht",
+        attraction_cattedrale: "Mittelalterliche Kathedrale mit einem atemberaubenden Mosaikboden",
+
+        // Nightlife descriptions
+        nightlife_skafe: "Trendige Bar direkt am Meer",
+        nightlife_spinnaker: "Strandclub mit Restaurant und Abendunterhaltung",
+        nightlife_casaccia: "Restaurant und Cocktailbar in Otranto",
+        nightlife_blubay: "Strandclub mit Restaurant und Live-Musik",
+        nightlife_guendalina: "Exklusiver Strandclub mit Panoramarestaurant",
+        nightlife_male: "Stilvoller Strandclub mit DJ-Sets",
+
+        // Service descriptions
+        service_conad: "Hauptsupermarkt in Uggiano la Chiesa",
+        service_3m: "Discountsupermarkt",
+        service_farmacia: "Lokale Apotheke",
+        service_lavanderia: "SB-Waschsalon",
+        service_macelleria: "Lokale Metzgerei",
+        service_fruttivendolo: "Lokaler Obst- und Gemüsehändler",
+        service_forno: "Lokale Bäckerei",
+        service_poste_italiane: "Lokales Postamt",
+        service_pescheria: "Lokaler Fischmarkt",
+        service_tabacchi: "Lokaler Tabakladen",
+
+        // Restaurant descriptions
+        restaurant_matisse: "Fisch- und Fleischrestaurant",
+        restaurant_agrodolce: "Lokales Fleisch- und Fischrestaurant",
+        restaurant_mozzica_fusci: "Traditionelle Pizzeria",
+        restaurant_isola_del_sole: "Frittiertes und Meeresfrüchterestaurant",
+        restaurant_la_gramola: "Traditionelles Fisch- und Fleischrestaurant",
+        restaurant_le_tagliate: "Landrestaurant mit traditioneller Küche und lokalen Produkten",
+        restaurant_da_mimmo: "Pizza aus dem Holzofen",
+        restaurant_locanda_gusto: "Zeitgenössische Küche inspiriert von traditionellen Gerichten",
     }
 };
 
@@ -899,9 +1389,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             const lang = btn.getAttribute('data-lang');
             translateGuestPage(lang);
-            // Re-fetch weather data with new language
+            // Re-fetch weather (re-renders day labels + condition labels)
             if (typeof fetchWeatherForecast === 'function') {
                 fetchWeatherForecast();
+            }
+            // Re-render POI grid with new language descriptions
+            if (typeof window.renderPOIGrid === 'function') {
+                window.renderPOIGrid();
             }
         });
     });

@@ -107,7 +107,7 @@ class LeafletBeachMap {
 
             const marker = L.marker([beach.lat, beach.lng], { icon: beachIcon })
                 .addTo(this.map)
-                .bindPopup(this.createPopupContent(beach));
+                .bindPopup(this.createPopupContent(beach), { maxWidth: 320, className: 'beach-leaflet-popup' });
 
             marker.on('click', () => {
                 this.selectBeach(beach.id);
