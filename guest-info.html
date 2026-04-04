@@ -18,9 +18,50 @@
     <link rel="apple-touch-icon" href="images/favicon-180.png" sizes="180x180">
 </head>
 <body class="guest-page">
+
+    <!-- Password gate -->
+    <div id="guest-gate" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0a4a3a 0%,#1a6b55 50%,#2c7873 100%);display:flex;align-items:center;justify-content:center;padding:20px;">
+        <div style="background:white;border-radius:20px;padding:40px 36px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <div style="font-size:2.8rem;margin-bottom:12px;">🏠</div>
+            <h2 style="font-family:'Montserrat',sans-serif;font-size:1.4rem;color:#1e293b;margin:0 0 6px;">Casa Paolina</h2>
+            <p style="color:#64748b;font-size:0.9rem;margin:0 0 28px;">Area riservata agli ospiti</p>
+            <input id="gate-input" type="password" placeholder="Password" autocomplete="current-password"
+                style="width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:1rem;outline:none;margin-bottom:12px;transition:border-color .2s;"
+                onfocus="this.style.borderColor='#2c7873'" onblur="this.style.borderColor='#e2e8f0'">
+            <div id="gate-error" style="display:none;color:#dc2626;font-size:0.82rem;margin-bottom:10px;">Password errata. Riprova.</div>
+            <button onclick="gateSubmit()"
+                style="width:100%;padding:13px;background:linear-gradient(135deg,#2c7873,#1a6b55);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.3px;">
+                Entra
+            </button>
+        </div>
+    </div>
+
     <script>
-        if (localStorage.getItem('guestLoggedIn') !== 'true') {
-            window.location.href = 'index.html';
+        (function() {
+            var gate = document.getElementById('guest-gate');
+            if (localStorage.getItem('guestLoggedIn') === 'true') {
+                gate.style.display = 'none';
+            } else {
+                gate.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+            document.getElementById('gate-input').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') gateSubmit();
+            });
+        })();
+
+        function gateSubmit() {
+            var val = document.getElementById('gate-input').value;
+            var err = document.getElementById('gate-error');
+            if (val === 'chiara') {
+                localStorage.setItem('guestLoggedIn', 'true');
+                document.getElementById('guest-gate').style.display = 'none';
+                document.body.style.overflow = '';
+            } else {
+                err.style.display = 'block';
+                document.getElementById('gate-input').value = '';
+                document.getElementById('gate-input').focus();
+            }
         }
     </script>
 
