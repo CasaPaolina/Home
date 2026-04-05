@@ -7,8 +7,6 @@ const CASA_PAOLINA = {
     name: "Casa Paolina"
 };
 
-// Cached guest geolocation for faster directions
-let guestLastPosition = null;
 
 // Markers for beach map (used for filtering)
 let beachMarkers = [];
@@ -969,41 +967,10 @@ function displayCurrentDate() {
 
 // Removed - highlighting handled in calendar view
 
-// Open Google Maps directions from current device location to destination
+// Open Google Maps directions from Casa Paolina to destination
 function navigateTo(destLat, destLng, destName) {
-    // Open a blank window synchronously to avoid popup blocking in browsers like Safari
-    const win = window.open('', '_blank');
-    if (!win) {
-        alert(guestTranslations[currentGuestLang] && guestTranslations[currentGuestLang].get_directions ? guestTranslations[currentGuestLang].get_directions + ' — consenti popup' : 'Consenti popup per aprire le indicazioni');
-        return;
-    }
-
-    // If we already have the guest position, use it immediately
-    if (guestLastPosition && guestLastPosition.lat && guestLastPosition.lng) {
-        const url = `https://www.google.com/maps/dir/?api=1&origin=${guestLastPosition.lat},${guestLastPosition.lng}&destination=${destLat},${destLng}&travelmode=driving`;
-        try { win.location.href = url; } catch (e) { window.location.href = url; }
-        return;
-    }
-
-    const openWithOrigin = (originLat, originLng) => {
-        const url = `https://www.google.com/maps/dir/?api=1&origin=${originLat},${originLng}&destination=${destLat},${destLng}&travelmode=driving`;
-        try { win.location.href = url; } catch (e) { window.location.href = url; }
-    };
-
-    const fallback = () => {
-        const url = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=driving`;
-        try { win.location.href = url; } catch (e) { window.location.href = url; }
-    };
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            openWithOrigin(pos.coords.latitude, pos.coords.longitude);
-        }, (err) => {
-            fallback();
-        }, { timeout: 10000 });
-    } else {
-        fallback();
-    }
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${CASA_PAOLINA.lat},${CASA_PAOLINA.lng}&destination=${destLat},${destLng}&travelmode=driving`;
+    window.open(url, '_blank');
 }
 
 // Delegated handler for 'Portami qui' buttons inside popups
@@ -1313,15 +1280,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch (e) {}
 
-    // Prompt user for geolocation on entering guest area to avoid later popup blocking
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            guestLastPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-            try { sessionStorage.setItem('guestPosition', JSON.stringify(guestLastPosition)); } catch (e) {}
-        }, (err) => {
-            // user denied or error - ignore silently
-        }, { timeout: 10000 });
-    }
 
     // SVG Icons for waste materials
     const wasteSVGs = {

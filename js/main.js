@@ -704,6 +704,28 @@ function initGuestArea() {
         });
     }
 
+    // Mobile bottom CTA guest button
+    const mobileCTAGuest = document.getElementById('mobile-cta-guest');
+    if (mobileCTAGuest) {
+        mobileCTAGuest.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (sessionStorage.getItem('guestLoggedIn') === 'true') {
+                window.location.href = 'guest-info.html';
+            } else {
+                showGuestLogin();
+            }
+        });
+    }
+
+    // Scroll-to-top button
+    const scrollTopBtn = document.getElementById('scroll-top');
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
 }  
 
 function showGuestLogin() {
@@ -878,21 +900,8 @@ function showGuestInfo() {
     });
 }
 
-// Request geolocation and then navigate to the provided URL.
-// If geolocation is available, store the coords in sessionStorage for use on guest pages.
 function requestGeolocationThen(url) {
-    if (navigator.geolocation) {
-        // Try to get position, but don't block too long - timeout 5s
-        navigator.geolocation.getCurrentPosition((pos) => {
-            try { sessionStorage.setItem('guestPosition', JSON.stringify({ lat: pos.coords.latitude, lng: pos.coords.longitude })); } catch (e) {}
-            window.location.href = url;
-        }, (err) => {
-            // On error or denial, just navigate and guest pages will fallback to Casa Paolina
-            window.location.href = url;
-        }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
-    } else {
-        window.location.href = url;
-    }
+    window.location.href = url;
 }
 
 // Availability request form

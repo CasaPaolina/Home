@@ -1154,11 +1154,114 @@ section {
 
 .btn-whatsapp {
     background: #25D366;
-    color: white;
+    color: white !important;
 }
 
 .btn-whatsapp:hover {
     background: #1fb855;
+    color: white !important;
+}
+
+/* ── Stats Strip ── */
+.stats-strip {
+    background: var(--dark-color);
+    padding: 18px 0;
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+}
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 12px;
+    border-right: 1px solid rgba(255,255,255,0.12);
+}
+.stat-item:last-child { border-right: none; }
+.stat-number {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--secondary-color);
+    line-height: 1.2;
+}
+.stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+}
+
+/* ── Floating WhatsApp ── */
+.float-whatsapp {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 54px;
+    height: 54px;
+    background: #25D366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.45);
+    z-index: 9000;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.float-whatsapp:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 22px rgba(37,211,102,0.55);
+}
+
+/* ── Scroll to top ── */
+.scroll-top {
+    position: fixed;
+    bottom: 88px;
+    right: 24px;
+    width: 42px;
+    height: 42px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s;
+    z-index: 9000;
+}
+.scroll-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.scroll-top:hover { transform: translateY(-3px); }
+
+/* ── Mobile bottom CTA bar ── */
+.mobile-cta-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    padding: 10px 16px;
+    gap: 10px;
+    z-index: 8000;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+}
+.mobile-cta-btn {
+    flex: 1;
+    text-align: center;
+    padding: 11px 12px;
+    font-size: 0.9rem;
+    border-radius: 10px;
 }
 
 .social-links-compact {
@@ -1372,56 +1475,78 @@ section {
 
 /* Sections breathe less on mobile */
 @media (max-width: 640px) {
-    section { padding: 52px 0; }
-    .section-header { margin-bottom: 36px; }
-    .section-header h2 { font-size: 1.55rem; }
-    .section-header p { font-size: 0.95rem; }
-    .divider { margin: 14px auto; }
+    /* Extra body padding for bottom CTA bar */
+    body { padding-bottom: 70px; }
+
+    section { padding: 48px 0; }
+    .section-header { margin-bottom: 28px; }
+    .section-header h2 { font-size: 1.45rem; }
+    .section-header p { font-size: 0.92rem; }
+    .divider { margin: 12px auto; }
 
     /* Hero */
-    .hero { height: auto; min-height: 60vh; padding: 80px 0 50px; }
-    .hero h1 { font-size: 1.8rem; }
-    .hero .hero-title { font-size: 1.1rem; }
-    .hero p { font-size: 0.95rem; }
+    .hero { height: auto; min-height: 55vh; padding: 80px 16px 44px; }
+    .hero h1 { font-size: 2rem; }
+    .hero .hero-title { font-size: 1.05rem; }
+    .hero p { font-size: 0.92rem; padding: 0 4px; }
+    .hero-buttons { flex-direction: column; align-items: center; gap: 12px; }
+    .hero-buttons .btn { width: 100%; max-width: 300px; text-align: center; }
+
+    /* Stats strip */
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0; }
+    .stat-item { border-right: 1px solid rgba(255,255,255,0.12); border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .stat-item:nth-child(2n) { border-right: none; }
+    .stat-item:nth-child(3), .stat-item:nth-child(4) { border-bottom: none; }
+    .stat-number { font-size: 1.1rem; }
 
     /* Rooms — single column, smaller gallery */
-    .rooms-grid { grid-template-columns: 1fr; gap: 24px; }
+    .rooms-grid { grid-template-columns: 1fr; gap: 20px; }
     .room-gallery { height: 220px; }
-    .room-details { padding: 20px; }
-    .room-details h3 { font-size: 1.4rem; }
+    .room-details { padding: 18px; }
+    .room-details h3 { font-size: 1.3rem; }
+    .room-amenities { font-size: 0.88rem; }
+    .availability-btn { width: 100%; text-align: center; }
 
-    /* Features — single column on mobile */
-    .features-grid { grid-template-columns: 1fr; gap: 12px; }
-    .feature-card { padding: 14px 16px; column-gap: 12px; }
-    .feature-card h3 { font-size: 0.9rem; }
-    .feature-card p { font-size: 0.8rem; }
-    .feature-icon { width: 42px; height: 42px; border-radius: 10px; }
+    /* Features — 2 columns on mobile */
+    .features-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .feature-card { padding: 12px 12px; column-gap: 10px; }
+    .feature-card h3 { font-size: 0.82rem; }
+    .feature-card p { font-size: 0.76rem; }
+    .feature-icon { width: 36px; height: 36px; border-radius: 8px; }
 
     /* POI map section */
-    .poi-map-section { padding: 48px 0; }
-    .poi-map-section h2 { font-size: 1.5rem; margin-bottom: 28px; }
-    .poi-filters { gap: 6px; padding: 0 8px; }
-    .poi-filter-btn { padding: 9px 14px; font-size: 0.82rem; }
-    .map-list-container { grid-template-columns: 1fr; gap: 16px; }
-    .map-container { height: 340px; }
-    .poi-interactive-list { max-height: 300px; order: 2; }
+    .poi-map-section { padding: 40px 0; }
+    .poi-map-section h2 { font-size: 1.35rem; margin-bottom: 20px; }
+    .poi-filters { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 4px 6px; gap: 6px; scrollbar-width: none; }
+    .poi-filters::-webkit-scrollbar { display: none; }
+    .poi-filter-btn { flex-shrink: 0; padding: 8px 14px; font-size: 0.8rem; white-space: nowrap; }
+    .map-list-container { grid-template-columns: 1fr; gap: 14px; }
+    .map-container { height: 300px; min-height: 300px; }
+    .poi-interactive-list { height: 380px; order: 2; }
 
     /* Contact */
     .contact-compact { grid-template-columns: 1fr; }
-    .contact-map { height: 280px; }
-    .contact-actions { flex-direction: column; }
-    .contact-actions .btn { width: 100%; text-align: center; }
+    .contact-map { height: 240px; }
+    .contact-actions { flex-direction: row; }
+    .contact-actions .btn { flex: 1; text-align: center; padding: 11px 8px; font-size: 0.9rem; }
 
     /* Reviews */
-    .review-section { padding: 28px 18px; }
-    .review-section h3 { font-size: 1.3rem; }
-    .review-btn { padding: 11px 22px; font-size: 0.9rem; width: 100%; text-align: center; box-sizing: border-box; }
+    .review-section { padding: 24px 16px; }
+    .review-section h3 { font-size: 1.2rem; }
+    .review-btn { width: 100%; text-align: center; box-sizing: border-box; font-size: 0.88rem; padding: 12px; }
 
-    /* Lang buttons smaller */
-    .lang-btn { padding: 5px 8px !important; font-size: 1rem !important; }
+    /* Lang buttons */
+    .lang-btn { padding: 4px 6px !important; font-size: 0.95rem !important; }
 
     /* Nav brand */
-    .nav-brand img { width: 38px; height: 38px; }
+    .nav-brand img { width: 36px; height: 36px; }
+
+    /* Floating buttons shift to avoid bottom CTA */
+    .float-whatsapp { bottom: 82px; right: 16px; width: 48px; height: 48px; }
+    .scroll-top { bottom: 140px; right: 16px; }
+
+    /* Show mobile bottom CTA */
+    .mobile-cta-bar { display: flex; }
 }
 
 /* Responsive Design */

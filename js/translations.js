@@ -90,6 +90,10 @@ const translations = {
         // Footer
         footer_text: "Il tuo rifugio nel cuore del Salento",
         footer_quick_links: "Link Rapidi",
+        stat_apartments: "Appartamenti",
+        stat_sea: "Dal mare",
+        stat_rating: "Su Google",
+        stat_location: "Puglia, Italia",
         footer_rights: "Tutti i diritti riservati.",
 
         // Waste & Security
@@ -268,6 +272,10 @@ const translations = {
         // Footer
         footer_text: "Your refuge in the heart of Salento",
         footer_quick_links: "Quick Links",
+        stat_apartments: "Apartments",
+        stat_sea: "From the sea",
+        stat_rating: "On Google",
+        stat_location: "Puglia, Italy",
         footer_rights: "All rights reserved.",
 
         // Beach names (keep Italian names)
@@ -420,6 +428,10 @@ const translations = {
         // Footer
         footer_text: "Votre refuge au cœur du Salento",
         footer_quick_links: "Liens Rapides",
+        stat_apartments: "Appartements",
+        stat_sea: "De la mer",
+        stat_rating: "Sur Google",
+        stat_location: "Puglia, Italie",
         footer_rights: "Tous droits réservés.",
 
         // Beach names (keep Italian names)
@@ -549,6 +561,10 @@ const translations = {
         // Footer
         footer_text: "Tu refugio en el corazón de Salento",
         footer_quick_links: "Enlaces Rápidos",
+        stat_apartments: "Apartamentos",
+        stat_sea: "Del mar",
+        stat_rating: "En Google",
+        stat_location: "Puglia, Italia",
         footer_rights: "Todos los derechos reservados.",
 
         // Area Map Section
@@ -662,6 +678,10 @@ const translations = {
         // Footer
         footer_text: "Ihr Rückzugsort im Herzen des Salento",
         footer_quick_links: "Schnellzugriff",
+        stat_apartments: "Apartments",
+        stat_sea: "Vom Meer",
+        stat_rating: "Auf Google",
+        stat_location: "Puglia, Italien",
         footer_rights: "Alle Rechte vorbehalten.",
 
         // Area Map Section
