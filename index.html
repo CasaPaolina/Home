@@ -10,11 +10,16 @@
     <meta property="og:image" content="images/homepage.jpg">
     <meta property="og:type" content="website">
     <meta name="robots" content="index, follow">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.3.8/dist/photoswipe.css" />
+    <!-- Preload hero background for fast LCP -->
+    <link rel="preload" href="images/homepage.jpg" as="image">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/guest-page.css">
+    <!-- Leaflet CSS loaded only when needed (non-blocking) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    </noscript>
 
     <!-- Favicon & Touch Icon (generated variants) -->
     <link rel="icon" href="images/favicon.ico" sizes="32x32 64x64" type="image/x-icon">
@@ -106,10 +111,10 @@
                 <!-- Appartamento Celeste -->
                 <div class="room-card">
                     <div class="room-gallery">
-                        <img src="images/celeste1.jpg" alt="Appartamento Celeste" class="room-img active">
-                        <img src="images/celeste2.jpg" alt="Appartamento Celeste" class="room-img">
-                        <img src="images/celeste3.jpg" alt="Appartamento Celeste" class="room-img">
-                        <img src="images/celeste4.jpg" alt="Appartamento Celeste" class="room-img">
+                        <img src="images/celeste1.jpg" alt="Appartamento Celeste" class="room-img active" fetchpriority="high">
+                        <img src="images/celeste2.jpg" alt="Appartamento Celeste" class="room-img" loading="lazy">
+                        <img src="images/celeste3.jpg" alt="Appartamento Celeste" class="room-img" loading="lazy">
+                        <img src="images/celeste4.jpg" alt="Appartamento Celeste" class="room-img" loading="lazy">
                         <div class="gallery-dots">
                             <span class="dot active" data-index="0"></span>
                             <span class="dot" data-index="1"></span>
@@ -142,10 +147,10 @@
                 <!-- Appartamento Verde -->
                 <div class="room-card">
                     <div class="room-gallery">
-                        <img src="images/verde1.jpg" alt="Appartamento Verde" class="room-img active">
-                        <img src="images/verde2.jpg" alt="Appartamento Verde" class="room-img">
-                        <img src="images/verde3.jpg" alt="Appartamento Verde" class="room-img">
-                        <img src="images/verde4.jpg" alt="Appartamento Verde" class="room-img">
+                        <img src="images/verde1.jpg" alt="Appartamento Verde" class="room-img active" loading="lazy">
+                        <img src="images/verde2.jpg" alt="Appartamento Verde" class="room-img" loading="lazy">
+                        <img src="images/verde3.jpg" alt="Appartamento Verde" class="room-img" loading="lazy">
+                        <img src="images/verde4.jpg" alt="Appartamento Verde" class="room-img" loading="lazy">
                         <div class="gallery-dots">
                             <span class="dot active" data-index="0"></span>
                             <span class="dot" data-index="1"></span>
@@ -178,10 +183,10 @@
                 <!-- Suite 17 -->
                 <div class="room-card">
                     <div class="room-gallery">
-                        <img src="images/suite1.jpg" alt="Suite 17" class="room-img active">
-                        <img src="images/suite2.jpg" alt="Suite 17" class="room-img">
-                        <img src="images/suite3.jpg" alt="Suite 17" class="room-img">
-                        <img src="images/suite4.jpg" alt="Suite 17" class="room-img">
+                        <img src="images/suite1.jpg" alt="Suite 17" class="room-img active" loading="lazy">
+                        <img src="images/suite2.jpg" alt="Suite 17" class="room-img" loading="lazy">
+                        <img src="images/suite3.jpg" alt="Suite 17" class="room-img" loading="lazy">
+                        <img src="images/suite4.jpg" alt="Suite 17" class="room-img" loading="lazy">
                         <div class="gallery-dots">
                             <span class="dot active" data-index="0"></span>
                             <span class="dot" data-index="1"></span>
@@ -521,10 +526,10 @@
         </div>
     </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
-    <script src="js/translations.js"></script>
-    <script src="js/locations-data-embed.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/translations.js" defer></script>
+    <script src="js/locations-data-embed.js" defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js" defer></script>
+    <script src="js/main.js" defer></script>
 </body>
 </html>

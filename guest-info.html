@@ -9,10 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /></noscript>
     <link rel="icon" href="images/favicon.ico" sizes="32x32 64x64" type="image/x-icon">
     <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="images/favicon-180.png" sizes="180x180">
@@ -277,10 +276,12 @@
         </div>
     </footer>
 
-    <script src="js/locations-data-embed.js"></script>
-    <script src="js/locations-data.js"></script>
-    <script src="js/guest-translations.js"></script>
-    <script src="js/leaflet-beach-map.js"></script>
-    <script src="js/guest-page.js"></script>
+    <script src="js/locations-data-embed.js" defer></script>
+    <script src="js/locations-data.js" defer></script>
+    <script src="js/guest-translations.js" defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js" defer></script>
+    <script src="js/leaflet-beach-map.js" defer></script>
+    <script src="js/guest-page.js" defer></script>
 </body>
 </html>
