@@ -904,6 +904,82 @@ function requestGeolocationThen(url) {
     window.location.href = url;
 }
 
+// Gallery lightbox
+function initGallery() {
+    const items = Array.from(document.querySelectorAll('.gallery-item'));
+    if (!items.length) return;
+
+    // Build flat media list
+    const media = items.map(el => ({
+        type: el.dataset.type,
+        src: el.dataset.src,
+        caption: el.dataset.caption || ''
+    }));
+
+    let currentIndex = 0;
+    let lightbox = null;
+
+    function closeLightbox() {
+        if (!lightbox) return;
+        const vid = lightbox.querySelector('video');
+        if (vid) vid.pause();
+        document.body.removeChild(lightbox);
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKey);
+        lightbox = null;
+    }
+
+    function renderMedia(index) {
+        const m = media[index];
+        if (m.type === 'video') {
+            return `<video src="${m.src}" controls autoplay playsinline style="max-width:88vw;max-height:85vh;border-radius:8px;outline:none;"></video>`;
+        }
+        return `<img src="${m.src}" alt="${m.caption}">`;
+    }
+
+    function openLightbox(index) {
+        currentIndex = index;
+        if (lightbox) closeLightbox();
+
+        lightbox = document.createElement('div');
+        lightbox.className = 'gallery-lightbox';
+        lightbox.innerHTML = `
+            <button class="gallery-lightbox-close">&times;</button>
+            <button class="gallery-lightbox-nav gallery-lightbox-prev">&#8249;</button>
+            <div class="gallery-lightbox-inner">${renderMedia(currentIndex)}</div>
+            <button class="gallery-lightbox-nav gallery-lightbox-next">&#8250;</button>
+            <div class="gallery-lightbox-counter">${currentIndex + 1} / ${media.length}</div>
+            <div class="gallery-lightbox-caption">${media[currentIndex].caption}</div>
+        `;
+        document.body.appendChild(lightbox);
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', onKey);
+
+        lightbox.querySelector('.gallery-lightbox-close').addEventListener('click', closeLightbox);
+        lightbox.querySelector('.gallery-lightbox-prev').addEventListener('click', () => navigate(-1));
+        lightbox.querySelector('.gallery-lightbox-next').addEventListener('click', () => navigate(1));
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    }
+
+    function navigate(dir) {
+        const vid = lightbox && lightbox.querySelector('video');
+        if (vid) vid.pause();
+        currentIndex = (currentIndex + dir + media.length) % media.length;
+        const inner = lightbox.querySelector('.gallery-lightbox-inner');
+        inner.innerHTML = renderMedia(currentIndex);
+        lightbox.querySelector('.gallery-lightbox-counter').textContent = `${currentIndex + 1} / ${media.length}`;
+        lightbox.querySelector('.gallery-lightbox-caption').textContent = media[currentIndex].caption;
+    }
+
+    function onKey(e) {
+        if (e.key === 'Escape') closeLightbox();
+        else if (e.key === 'ArrowLeft') navigate(-1);
+        else if (e.key === 'ArrowRight') navigate(1);
+    }
+
+    items.forEach((el, i) => el.addEventListener('click', () => openLightbox(i)));
+}
+
 // Availability request form
 function initAvailabilityForms() {
     document.querySelectorAll('.availability-btn').forEach(btn => {
@@ -1167,6 +1243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initImageLightbox();
     initGuestArea();
     initAvailabilityForms();
+    initGallery();
 
     // Initialize POI map with a slight delay to ensure container is ready
     setTimeout(() => {

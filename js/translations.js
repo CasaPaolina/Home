@@ -1,6 +1,9 @@
 const translations = {
     it: {
         // Navigation
+        nav_gallery: "Galleria",
+        gallery_title: "La Nostra Galleria",
+        gallery_subtitle: "Scorri foto e video di Casa Paolina",
         nav_home: "Home",
         nav_rooms: "Camere",
         nav_services: "Servizi",
@@ -176,6 +179,9 @@ const translations = {
     },
     en: {
         // Navigation
+        nav_gallery: "Gallery",
+        gallery_title: "Our Gallery",
+        gallery_subtitle: "Browse photos and videos of Casa Paolina",
         nav_home: "Home",
         nav_rooms: "Rooms",
         nav_services: "Services",
@@ -337,6 +343,9 @@ const translations = {
     },
     fr: {
         // Navigation
+        nav_gallery: "Galerie",
+        gallery_title: "Notre Galerie",
+        gallery_subtitle: "Photos et vidéos de Casa Paolina",
         nav_home: "Accueil",
         nav_rooms: "Chambres",
         nav_services: "Services",
@@ -490,6 +499,9 @@ const translations = {
     },
     es: {
         // Navigation
+        nav_gallery: "Galería",
+        gallery_title: "Nuestra Galería",
+        gallery_subtitle: "Fotos y videos de Casa Paolina",
         nav_home: "Inicio",
         nav_rooms: "Habitaciones",
         nav_services: "Servicios",
@@ -607,6 +619,9 @@ const translations = {
     },
     de: {
         // Navigation
+        nav_gallery: "Galerie",
+        gallery_title: "Unsere Galerie",
+        gallery_subtitle: "Fotos und Videos von Casa Paolina",
         nav_home: "Startseite",
         nav_rooms: "Zimmer",
         nav_services: "Dienstleistungen",
