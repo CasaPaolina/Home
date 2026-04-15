@@ -916,6 +916,32 @@ function initGallery() {
         caption: el.dataset.caption || ''
     }));
 
+    // Generate video poster thumbnails via canvas for mobile preview
+    items.forEach(el => {
+        if (el.dataset.type !== 'video') return;
+        const vid = el.querySelector('video');
+        if (!vid) return;
+        const canvas = document.createElement('canvas');
+        const tryCapture = () => {
+            try {
+                canvas.width = vid.videoWidth || 320;
+                canvas.height = vid.videoHeight || 180;
+                canvas.getContext('2d').drawImage(vid, 0, 0, canvas.width, canvas.height);
+                const url = canvas.toDataURL('image/jpeg', 0.7);
+                if (url && url.length > 100) {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.className = 'gallery-thumb-poster';
+                    img.alt = '';
+                    el.insertBefore(img, vid);
+                    vid.style.display = 'none';
+                }
+            } catch (e) { /* cross-origin or codec issue — fallback to video element */ }
+        };
+        if (vid.readyState >= 2) { tryCapture(); }
+        else { vid.addEventListener('loadeddata', tryCapture, { once: true }); }
+    });
+
     let currentIndex = 0;
     let lightbox = null;
 
@@ -958,7 +984,29 @@ function initGallery() {
         lightbox.querySelector('.gallery-lightbox-close').addEventListener('click', closeLightbox);
         lightbox.querySelector('.gallery-lightbox-prev').addEventListener('click', () => navigate(-1));
         lightbox.querySelector('.gallery-lightbox-next').addEventListener('click', () => navigate(1));
-        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+        // Close only on backdrop click (not on content)
+        lightbox.addEventListener('click', e => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchStartY = 0;
+        lightbox.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        lightbox.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            // Only swipe if horizontal motion dominates and exceeds threshold
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                const vid = lightbox.querySelector('video');
+                if (vid && !vid.paused) return; // don't swipe while video plays
+                navigate(dx < 0 ? 1 : -1);
+            }
+        }, { passive: true });
     }
 
     function navigate(dir) {

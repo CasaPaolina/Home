@@ -1202,6 +1202,16 @@ section {
     transform: scale(1.08);
 }
 
+/* Video poster thumbnail (canvas-generated) */
+.gallery-thumb-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .gallery-item--video::after {
     content: '';
     position: absolute;
@@ -1324,7 +1334,12 @@ section {
     .gallery-section { padding: 48px 0; }
     .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
     .gallery-play-btn { width: 40px; height: 40px; font-size: 1rem; }
-    .gallery-lightbox-nav { display: none; }
+    /* Keep nav visible on mobile but smaller — swipe also works */
+    .gallery-lightbox-nav { width: 36px; height: 52px; font-size: 1.4rem; }
+    .gallery-lightbox-prev { left: 4px; }
+    .gallery-lightbox-next { right: 4px; }
+    .gallery-lightbox img,
+    .gallery-lightbox video { max-width: 96vw; max-height: 80vh; }
 }
 
 /* ── Stats Strip ── */
