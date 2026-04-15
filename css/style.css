@@ -1202,7 +1202,7 @@ section {
     transform: scale(1.08);
 }
 
-/* Video poster thumbnail (canvas-generated) */
+/* Static video poster image — covers the video element */
 .gallery-thumb-poster {
     position: absolute;
     inset: 0;
@@ -1210,6 +1210,11 @@ section {
     height: 100%;
     object-fit: cover;
     display: block;
+    z-index: 0;
+}
+/* Hide the video element in the thumbnail (poster img is used instead) */
+.gallery-item--video .gallery-thumb-video {
+    display: none;
 }
 
 .gallery-item--video::after {
@@ -1218,6 +1223,7 @@ section {
     inset: 0;
     background: rgba(0,0,0,0.25);
     transition: background 0.2s;
+    z-index: 1;
 }
 .gallery-item--video:hover::after { background: rgba(0,0,0,0.15); }
 
@@ -1233,6 +1239,7 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
     font-size: 1.3rem;
     color: var(--primary-color);
     z-index: 2;

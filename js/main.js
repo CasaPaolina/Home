@@ -916,32 +916,6 @@ function initGallery() {
         caption: el.dataset.caption || ''
     }));
 
-    // Generate video poster thumbnails via canvas for mobile preview
-    items.forEach(el => {
-        if (el.dataset.type !== 'video') return;
-        const vid = el.querySelector('video');
-        if (!vid) return;
-        const canvas = document.createElement('canvas');
-        const tryCapture = () => {
-            try {
-                canvas.width = vid.videoWidth || 320;
-                canvas.height = vid.videoHeight || 180;
-                canvas.getContext('2d').drawImage(vid, 0, 0, canvas.width, canvas.height);
-                const url = canvas.toDataURL('image/jpeg', 0.7);
-                if (url && url.length > 100) {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.className = 'gallery-thumb-poster';
-                    img.alt = '';
-                    el.insertBefore(img, vid);
-                    vid.style.display = 'none';
-                }
-            } catch (e) { /* cross-origin or codec issue — fallback to video element */ }
-        };
-        if (vid.readyState >= 2) { tryCapture(); }
-        else { vid.addEventListener('loadeddata', tryCapture, { once: true }); }
-    });
-
     let currentIndex = 0;
     let lightbox = null;
 
