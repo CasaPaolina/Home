@@ -1250,6 +1250,10 @@ function initMainPOIMap() {
             `;
         }).join('');
 
+        // Update count badge
+        const countEl = document.getElementById('poi-list-count');
+        if (countEl) countEl.textContent = filtered.length + (filtered.length === 1 ? ' luogo' : ' luoghi');
+
         // Click on card → pan map to marker
         listContainer.querySelectorAll('.poi-list-card').forEach(card => {
             card.addEventListener('click', function() {

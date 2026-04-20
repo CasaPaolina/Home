@@ -339,18 +339,25 @@
     <section class="poi-map-section">
         <div class="container">
             <h2 data-translate="poi_title">Punti di interesse vicino a te</h2>
+            <p class="poi-map-subtitle" data-translate="poi_subtitle">Esplora i migliori luoghi nelle vicinanze di Casa Paolina</p>
 
             <div class="poi-filters">
                 <button class="poi-filter-btn active" data-category="all" data-translate="filter_all">Tutti</button>
-                <button class="poi-filter-btn" data-category="attractions" data-translate="filter_attractions">Luoghi da Visitare</button>
-                <button class="poi-filter-btn" data-category="restaurants" data-translate="filter_restaurants">Ristoranti</button>
-                <button class="poi-filter-btn" data-category="nightlife" data-translate="filter_nightlife">Movida</button>
-                <button class="poi-filter-btn" data-category="services" data-translate="filter_services">Servizi</button>
+                <button class="poi-filter-btn" data-category="attractions" data-translate="filter_attractions">🏛️ Attrazioni</button>
+                <button class="poi-filter-btn" data-category="restaurants" data-translate="filter_restaurants">🍴 Ristoranti</button>
+                <button class="poi-filter-btn" data-category="nightlife" data-translate="filter_nightlife">🍹 Movida</button>
+                <button class="poi-filter-btn" data-category="services" data-translate="filter_services">🛒 Servizi</button>
             </div>
 
             <div class="map-list-container">
                 <div id="main-poi-map" class="map-container"></div>
-                <div id="poi-interactive-list" class="poi-interactive-list"></div>
+                <div class="poi-list-panel">
+                    <div class="poi-list-panel-header">
+                        <span class="poi-list-panel-title">📍 <span data-translate="poi_list_title">Luoghi nelle vicinanze</span></span>
+                        <span class="poi-list-count" id="poi-list-count"></span>
+                    </div>
+                    <div id="poi-interactive-list" class="poi-interactive-list"></div>
+                </div>
             </div>
 
             <!-- Gallery Section -->
@@ -396,6 +403,10 @@
                     <div class="gallery-item gallery-item--featured" data-type="image" data-src="images/barbecue.jpg" data-caption="Area BBQ" data-category="outdoor">
                         <img src="images/barbecue.jpg" alt="Area BBQ" loading="lazy">
                         <div class="gallery-caption-overlay"><span>🌿 Area BBQ</span></div>
+                    </div>
+                    <div class="gallery-item gallery-item--tall" data-type="image" data-src="images/outside.jpeg" data-caption="Esterno" data-category="outdoor">
+                        <img src="images/outside.jpeg" alt="Esterno" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🌿 Esterno</span></div>
                     </div>
                     <div class="gallery-item" data-type="image" data-src="images/ap1.jpeg" data-caption="Casa Paolina" data-category="outdoor">
                         <img src="images/ap1.jpeg" alt="Casa Paolina" loading="lazy">
