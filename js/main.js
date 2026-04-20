@@ -909,11 +909,40 @@ function initGallery() {
     const items = Array.from(document.querySelectorAll('.gallery-item'));
     if (!items.length) return;
 
-    // Build flat media list
+    // ── Scroll-reveal via IntersectionObserver ──
+    const revealObs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                // Stagger delay based on position in row
+                const el = entry.target;
+                const idx = items.indexOf(el);
+                setTimeout(() => el.classList.add('gallery-item--visible'), (idx % 6) * 60);
+                revealObs.unobserve(el);
+            }
+        });
+    }, { threshold: 0.08 });
+    items.forEach(el => revealObs.observe(el));
+
+    // ── Filter tabs ──
+    document.querySelectorAll('.gf-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.gf-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.dataset.filter;
+            items.forEach(el => {
+                const cat = el.dataset.category || '';
+                const show = filter === 'all' || cat === filter;
+                el.classList.toggle('gallery-item--hidden', !show);
+            });
+        });
+    });
+
+    // Build flat media list (only visible items for lightbox index)
     const media = items.map(el => ({
         type: el.dataset.type,
         src: el.dataset.src,
-        caption: el.dataset.caption || ''
+        caption: el.dataset.caption || '',
+        el
     }));
 
     let currentIndex = 0;

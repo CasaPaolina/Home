@@ -359,82 +359,114 @@
                     <h2 data-translate="gallery_title">La Nostra Galleria</h2>
                     <p data-translate="gallery_subtitle">Scorri foto e video di Casa Paolina</p>
                 </div>
+                <!-- Filter tabs -->
+                <div class="gallery-filters">
+                    <button class="gf-btn active" data-filter="all" data-translate="gallery_filter_all">Tutto</button>
+                    <button class="gf-btn" data-filter="video" data-translate="gallery_filter_video">🎬 Video</button>
+                    <button class="gf-btn" data-filter="apt" data-translate="gallery_filter_apt">🏠 Appartamenti</button>
+                    <button class="gf-btn" data-filter="outdoor" data-translate="gallery_filter_outdoor">🌿 Esterni</button>
+                </div>
                 <div class="gallery-grid" id="gallery-grid">
                     <!-- Videos -->
-                    <div class="gallery-item gallery-item--video" data-type="video" data-src="videos/1.mp4">
+                    <div class="gallery-item gallery-item--video gallery-item--featured" data-type="video" data-src="videos/1.mp4" data-caption="Casa Paolina" data-category="video">
                         <video src="videos/1.mp4" muted playsinline preload="none" poster="images/video-posters/poster1.jpg" class="gallery-thumb-video"></video>
                         <img src="images/video-posters/poster1.jpg" alt="Video 1" class="gallery-thumb-poster" loading="lazy">
                         <div class="gallery-play-btn">▶</div>
+                        <div class="gallery-caption-overlay"><span>🎬 Video</span></div>
                     </div>
-                    <div class="gallery-item gallery-item--video" data-type="video" data-src="videos/2.mp4">
+                    <div class="gallery-item gallery-item--video" data-type="video" data-src="videos/2.mp4" data-caption="Casa Paolina" data-category="video">
                         <video src="videos/2.mp4" muted playsinline preload="none" poster="images/video-posters/poster2.jpg" class="gallery-thumb-video"></video>
                         <img src="images/video-posters/poster2.jpg" alt="Video 2" class="gallery-thumb-poster" loading="lazy">
                         <div class="gallery-play-btn">▶</div>
+                        <div class="gallery-caption-overlay"><span>🎬 Video</span></div>
                     </div>
-                    <div class="gallery-item gallery-item--video" data-type="video" data-src="videos/3.mp4">
+                    <div class="gallery-item gallery-item--video" data-type="video" data-src="videos/3.mp4" data-caption="Casa Paolina" data-category="video">
                         <video src="videos/3.mp4" muted playsinline preload="none" poster="images/video-posters/poster3.jpg" class="gallery-thumb-video"></video>
                         <img src="images/video-posters/poster3.jpg" alt="Video 3" class="gallery-thumb-poster" loading="lazy">
                         <div class="gallery-play-btn">▶</div>
+                        <div class="gallery-caption-overlay"><span>🎬 Video</span></div>
                     </div>
-                    <div class="gallery-item gallery-item--video" data-type="video" data-src="videos/4.mp4">
+                    <div class="gallery-item gallery-item--video gallery-item--wide" data-type="video" data-src="videos/4.mp4" data-caption="Casa Paolina" data-category="video">
                         <video src="videos/4.mp4" muted playsinline preload="none" poster="images/video-posters/poster4.jpg" class="gallery-thumb-video"></video>
                         <img src="images/video-posters/poster4.jpg" alt="Video 4" class="gallery-thumb-poster" loading="lazy">
                         <div class="gallery-play-btn">▶</div>
+                        <div class="gallery-caption-overlay"><span>🎬 Video</span></div>
                     </div>
-                    <!-- General apartment -->
-                    <div class="gallery-item" data-type="image" data-src="images/ap1.jpeg" data-caption="Casa Paolina">
+                    <!-- Outdoor / BBQ -->
+                    <div class="gallery-item gallery-item--featured" data-type="image" data-src="images/barbecue.jpg" data-caption="Area BBQ" data-category="outdoor">
+                        <img src="images/barbecue.jpg" alt="Area BBQ" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🌿 Area BBQ</span></div>
+                    </div>
+                    <div class="gallery-item" data-type="image" data-src="images/ap1.jpeg" data-caption="Casa Paolina" data-category="outdoor">
                         <img src="images/ap1.jpeg" alt="Casa Paolina" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🌿 Esterni</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/apt2.jpeg" data-caption="Casa Paolina">
+                    <div class="gallery-item gallery-item--wide" data-type="image" data-src="images/apt2.jpeg" data-caption="Casa Paolina" data-category="apt">
                         <img src="images/apt2.jpeg" alt="Casa Paolina" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Appartamento</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/apt3.jpeg" data-caption="Casa Paolina">
+                    <div class="gallery-item" data-type="image" data-src="images/apt3.jpeg" data-caption="Casa Paolina" data-category="apt">
                         <img src="images/apt3.jpeg" alt="Casa Paolina" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Appartamento</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/apt4.jpeg" data-caption="Casa Paolina">
+                    <div class="gallery-item" data-type="image" data-src="images/apt4.jpeg" data-caption="Casa Paolina" data-category="apt">
                         <img src="images/apt4.jpeg" alt="Casa Paolina" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Appartamento</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/apt5.jpeg" data-caption="Casa Paolina">
+                    <div class="gallery-item" data-type="image" data-src="images/apt5.jpeg" data-caption="Casa Paolina" data-category="apt">
                         <img src="images/apt5.jpeg" alt="Casa Paolina" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Appartamento</span></div>
                     </div>
                     <!-- Celeste -->
-                    <div class="gallery-item" data-type="image" data-src="images/celeste1.jpg" data-caption="Appartamento Celeste">
+                    <div class="gallery-item gallery-item--tall" data-type="image" data-src="images/celeste1.jpg" data-caption="Appartamento Celeste" data-category="apt">
                         <img src="images/celeste1.jpg" alt="Appartamento Celeste" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Celeste</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/celeste2.jpg" data-caption="Appartamento Celeste">
+                    <div class="gallery-item" data-type="image" data-src="images/celeste2.jpg" data-caption="Appartamento Celeste" data-category="apt">
                         <img src="images/celeste2.jpg" alt="Appartamento Celeste" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Celeste</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/celeste3.jpg" data-caption="Appartamento Celeste">
+                    <div class="gallery-item" data-type="image" data-src="images/celeste3.jpg" data-caption="Appartamento Celeste" data-category="apt">
                         <img src="images/celeste3.jpg" alt="Appartamento Celeste" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Celeste</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/celeste4.jpg" data-caption="Appartamento Celeste">
+                    <div class="gallery-item" data-type="image" data-src="images/celeste4.jpg" data-caption="Appartamento Celeste" data-category="apt">
                         <img src="images/celeste4.jpg" alt="Appartamento Celeste" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Celeste</span></div>
                     </div>
                     <!-- Verde -->
-                    <div class="gallery-item" data-type="image" data-src="images/verde1.jpg" data-caption="Appartamento Verde">
+                    <div class="gallery-item gallery-item--wide" data-type="image" data-src="images/verde1.jpg" data-caption="Appartamento Verde" data-category="apt">
                         <img src="images/verde1.jpg" alt="Appartamento Verde" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Verde</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/verde2.jpg" data-caption="Appartamento Verde">
+                    <div class="gallery-item gallery-item--tall" data-type="image" data-src="images/verde2.jpg" data-caption="Appartamento Verde" data-category="apt">
                         <img src="images/verde2.jpg" alt="Appartamento Verde" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Verde</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/verde3.jpg" data-caption="Appartamento Verde">
+                    <div class="gallery-item" data-type="image" data-src="images/verde3.jpg" data-caption="Appartamento Verde" data-category="apt">
                         <img src="images/verde3.jpg" alt="Appartamento Verde" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Verde</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/verde4.jpg" data-caption="Appartamento Verde">
+                    <div class="gallery-item" data-type="image" data-src="images/verde4.jpg" data-caption="Appartamento Verde" data-category="apt">
                         <img src="images/verde4.jpg" alt="Appartamento Verde" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Verde</span></div>
                     </div>
                     <!-- Suite -->
-                    <div class="gallery-item" data-type="image" data-src="images/suite1.jpg" data-caption="Suite 17">
+                    <div class="gallery-item gallery-item--featured" data-type="image" data-src="images/suite1.jpg" data-caption="Suite 17" data-category="apt">
                         <img src="images/suite1.jpg" alt="Suite 17" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Suite 17</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/suite2.jpg" data-caption="Suite 17">
+                    <div class="gallery-item" data-type="image" data-src="images/suite2.jpg" data-caption="Suite 17" data-category="apt">
                         <img src="images/suite2.jpg" alt="Suite 17" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Suite 17</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/suite3.jpg" data-caption="Suite 17">
+                    <div class="gallery-item" data-type="image" data-src="images/suite3.jpg" data-caption="Suite 17" data-category="apt">
                         <img src="images/suite3.jpg" alt="Suite 17" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Suite 17</span></div>
                     </div>
-                    <div class="gallery-item" data-type="image" data-src="images/suite4.jpg" data-caption="Suite 17">
+                    <div class="gallery-item" data-type="image" data-src="images/suite4.jpg" data-caption="Suite 17" data-category="apt">
                         <img src="images/suite4.jpg" alt="Suite 17" loading="lazy">
+                        <div class="gallery-caption-overlay"><span>🏠 Suite 17</span></div>
                     </div>
                 </div>
             </section>
