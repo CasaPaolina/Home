@@ -233,9 +233,11 @@ a {
 
 /* Site name */
 .hero h1 {
-    font-size: clamp(2.2rem, 5vw, 3.2rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(2.8rem, 6vw, 4.2rem);
+    font-weight: 600;
+    letter-spacing: 0.01em;
     margin-bottom: 10px;
     text-shadow: 0 2px 20px rgba(0,0,0,0.4);
     animation: fadeInUp 1s ease;
@@ -1913,7 +1915,7 @@ section {
 
     /* Hero */
     .hero { height: auto; min-height: 55vh; padding: 80px 16px 44px; }
-    .hero h1 { font-size: 2rem; }
+    .hero h1 { font-size: 2.4rem; }
     .hero .hero-title { font-size: 1.05rem; }
     .hero p { font-size: 0.92rem; padding: 0 4px; }
     .hero-buttons { flex-direction: column; align-items: center; gap: 12px; }
@@ -2062,7 +2064,7 @@ section {
         position: relative; /* keep it on top */
     }
     .hero h1 {
-        font-size: 2rem;
+        font-size: 2.6rem;
     }
 
     .hero p {
@@ -2314,7 +2316,7 @@ section {
     }
 
     .hero h1 {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
 
     .section-header h2 {
@@ -2349,7 +2351,7 @@ section {
     }
 
     .hero h1 {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
     }
 
     .hero p {

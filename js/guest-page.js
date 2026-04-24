@@ -12,6 +12,8 @@ const CASA_PAOLINA = {
 let beachMarkers = [];
 // Names of beaches recommended for today (popolato da recommendTop3Beaches)
 let recommendedTodayNames = [];
+// Current wind cardinal direction (set when weather loads, used for filter)
+let currentWindCardinal = null;
 // expose globally for other modules (leaflet map) to read
 window.recommendedTodayNames = recommendedTodayNames;
 
@@ -378,6 +380,14 @@ async function fetchWeatherForecast() {
         const slotWindDirDegrees = slotWind.direction;
         const slotWindSpeed = slotWind.speed;
         const slotWindCardinal = getWindDirection(slotWindDirDegrees);
+        currentWindCardinal = slotWindCardinal;
+        window.currentWindCardinal = slotWindCardinal;
+
+        // Re-apply filter if map is showing "recommended-today"
+        if (typeof leafletBeachMap !== 'undefined' && leafletBeachMap && leafletBeachMap.currentFilter === 'recommended-today') {
+            leafletBeachMap.addBeachMarkers('recommended-today');
+            leafletBeachMap.renderBeachList('recommended-today');
+        }
 
         // Update wind info bar above beach filters
         const windInfoEl = document.getElementById('current-wind-info');
@@ -486,45 +496,48 @@ function getWindDirection(degrees) {
 
 // Recommend top 3 beaches based on wind conditions
 function recommendTop3Beaches(windDirection, windSpeed, day) {
-    // Score each beach based on wind protection
-    const scoredBeaches = beaches.map(beach => {
-        let score = 50; // Base score
-
-        // Higher score if sheltered from current wind
-        if (beach.sheltered.includes(windDirection)) {
-            score += 30;
+    // Prefer live data from locationsData (uses protectedFrom), fall back to local array
+    let allBeaches = beaches;
+    try {
+        if (typeof locationsData !== 'undefined' && locationsData.loaded) {
+            const remote = locationsData.getBeaches();
+            if (Array.isArray(remote) && remote.length) allBeaches = remote;
         }
+    } catch (e) {}
 
-        // Lower score if exposed to current wind
-        if (beach.exposed.includes(windDirection)) {
-            score -= 20;
-        }
+    const scoredBeaches = allBeaches.map(beach => {
+        let score = 50;
+
+        // Support both data formats:
+        // locationsData uses `protectedFrom`; local fallback uses `sheltered`/`exposed`
+        const sheltered = Array.isArray(beach.protectedFrom)
+            ? beach.protectedFrom
+            : (Array.isArray(beach.sheltered) ? beach.sheltered : []);
+        const exposed = Array.isArray(beach.exposed) ? beach.exposed : [];
+
+        if (sheltered.includes(windDirection)) score += 30;
+        if (exposed.includes(windDirection))   score -= 20;
 
         // Bonus for closer beaches
         const distance = parseFloat(beach.distance);
-        if (distance < 15) score += 15;
-        else if (distance < 30) score += 10;
-        else if (distance < 50) score += 5;
-
-        // Consider wind speed
-        if (windSpeed > 20) {
-            // Strong wind - prefer sheltered beaches
-            if (beach.sheltered.includes(windDirection)) score += 20;
-            // Penalize exposed beaches more
-            if (beach.exposed.includes(windDirection)) score -= 30;
+        if (!isNaN(distance)) {
+            if (distance < 15)      score += 15;
+            else if (distance < 30) score += 10;
+            else if (distance < 50) score += 5;
         }
 
-        // Bonus for beaches with facilities
-        if (beach.booking) score += 5;
+        // Strong wind: amplify shelter bonus / exposure penalty
+        if (windSpeed > 20) {
+            if (sheltered.includes(windDirection)) score += 20;
+            if (exposed.includes(windDirection))   score -= 30;
+        }
+
+        if (beach.bookingLink || beach.booking) score += 5;
 
         return { ...beach, score };
     });
 
-    // Sort by score and get top 3
     const top3 = scoredBeaches.sort((a, b) => b.score - a.score).slice(0, 3);
-
-    // (do not populate recommendedTodayNames here - it's driven by current wind direction)
-
     displayTop3BeachesCompact(top3, day);
 }
 
@@ -990,6 +1003,15 @@ function initBeachesMap() {
     const mapElement = document.getElementById('beaches-map');
     if (!mapElement) return;
 
+    // Use locationsData beaches if available (has protectedFrom), fall back to local array
+    let mapBeaches = beaches;
+    try {
+        if (typeof locationsData !== 'undefined' && locationsData.loaded) {
+            const remote = locationsData.getBeaches();
+            if (Array.isArray(remote) && remote.length) mapBeaches = remote;
+        }
+    } catch (e) {}
+
     // Create map centered on Salento
     const map = L.map('beaches-map').setView([40.15, 18.25], 10);
 
@@ -1016,7 +1038,7 @@ function initBeachesMap() {
         iconSize: [25, 25]
     });
 
-    beaches.forEach(beach => {
+    mapBeaches.forEach(beach => {
         const popupContent = `
             <div style="min-width: 200px;">
                 ${beach.name === 'Porto Badisco' ? `<img src="images/spiaggia-porto-badisco.jpg" alt="${beach.name}" style="width:100%; height:auto; border-radius:8px; margin-bottom:8px;">` : ''}
@@ -1074,7 +1096,10 @@ function initBeachesMap() {
         if (filter === 'adriatic' && isAdriatic) return true;
         if (filter === 'ionian' && isIonian) return true;
         if (filter === 'recommended-today') {
-            return Array.isArray(recommendedTodayNames) && recommendedTodayNames.includes(beach.name);
+            if (!currentWindCardinal) return false;
+            const prot = Array.isArray(beach.protectedFrom) ? beach.protectedFrom
+                : (Array.isArray(beach.sheltered) ? beach.sheltered : []);
+            return prot.includes(currentWindCardinal);
         }
 
         return false;
@@ -1101,7 +1126,7 @@ function initBeachesMap() {
         if (!listContainer) return;
 
         // Get all beaches that match the current filter
-        const filteredBeaches = beaches.filter(beach => beachMatchesFilter(beach, filter));
+        const filteredBeaches = mapBeaches.filter(beach => beachMatchesFilter(beach, filter));
 
         if (filteredBeaches.length === 0) {
             listContainer.innerHTML = '<p style="text-align: center; color: #64748b; padding: 20px;">Nessuna spiaggia corrisponde al filtro selezionato.</p>';

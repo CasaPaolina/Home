@@ -180,12 +180,12 @@ class LeafletBeachMap {
                     return beach.lng > 18.2;
                 case 'ionian':
                     return beach.lng <= 18.2;
-                case 'recommended-today':
-                    if (typeof locationsData !== 'undefined' && locationsData.getRecommendedBeach) {
-                        const recommended = locationsData.getRecommendedBeach(window.currentWindDirection || 'W');
-                        return recommended && recommended.id === beach.id;
-                    }
-                    return true;
+                case 'recommended-today': {
+                    const wind = window.currentWindCardinal;
+                    if (!wind) return false;
+                    const prot = Array.isArray(beach.protectedFrom) ? beach.protectedFrom : [];
+                    return prot.includes(wind);
+                }
                 default:
                     return true;
             }
