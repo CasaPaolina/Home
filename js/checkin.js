@@ -5,7 +5,7 @@
 //  SETUP: Replace the URL below with your Google Apps Script
 //  Web App URL after deploying it (see setup instructions).
 //
-const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhcF1Z1OpuMbrPCVI_FYD_2NrTvRppYvy1tsp-axgA9S4auSxM49cvNDp1W81nsjvJfQ/exec';
+const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfmbms2JSz0uE_M4L-wtt5xTxVuV2uQTl-fZeE2HE4FdNOx37srtEqzH5wq6Y5ZXlBuA/exec';
 // ─────────────────────────────────────────────────────────────
 
 // ─── TRANSLATIONS ────────────────────────────────────────────
