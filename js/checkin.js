@@ -295,16 +295,14 @@ document.getElementById('checkin-form').addEventListener('submit', async (e) => 
     }
 
     try {
-        const res = await fetch(SHEETS_SCRIPT_URL, {
+        // Google Apps Script doesn't support CORS preflight, so we use no-cors.
+        // The data is still saved to the sheet; we just can't read the response.
+        await fetch(SHEETS_SCRIPT_URL, {
             method: 'POST',
+            mode: 'no-cors',
             body: JSON.stringify(payload)
         });
-        const json = await res.json();
-        if (json.status === 'ok') {
-            ciShowSuccess(payload);
-        } else {
-            throw new Error(json.error || 'Errore sconosciuto');
-        }
+        ciShowSuccess(payload);
     } catch (err) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<span class="submit-icon">✉️</span> Invia Check-in';
