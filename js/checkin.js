@@ -5,7 +5,7 @@
 //  SETUP: Replace the URL below with your Google Apps Script
 //  Web App URL after deploying it (see setup instructions).
 //
-const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKY0SAHhMQFoQxKifZKfOTcl6NfaD11h08fAoAQJvsKhXD8hIvrGGmaPAK_1ZkqKz6cg/exec';
+const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhcF1Z1OpuMbrPCVI_FYD_2NrTvRppYvy1tsp-axgA9S4auSxM49cvNDp1W81nsjvJfQ/exec';
 // ─────────────────────────────────────────────────────────────
 
 let currentStep = 1;
