@@ -73,19 +73,19 @@
         <div class="ci-card">
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
-                    <label for="checkin-date">Data di arrivo <span class="req">*</span></label>
-                    <input type="date" id="checkin-date" name="checkin_date" required>
+                    <label for="checkin-date">Data di arrivo</label>
+                    <input type="date" id="checkin-date" name="checkin_date">
                 </div>
                 <div class="ci-field">
-                    <label for="checkout-date">Data di partenza <span class="req">*</span></label>
-                    <input type="date" id="checkout-date" name="checkout_date" required>
+                    <label for="checkout-date">Data di partenza</label>
+                    <input type="date" id="checkout-date" name="checkout_date">
                 </div>
             </div>
 
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
-                    <label for="adults-count">Adulti <span class="req">*</span></label>
-                    <input type="number" id="adults-count" name="adults_count" min="1" max="12" value="2" required>
+                    <label for="adults-count">Adulti</label>
+                    <input type="number" id="adults-count" name="adults_count" min="1" max="12" value="2">
                 </div>
                 <div class="ci-field">
                     <label for="children-count">Bambini</label>
@@ -103,7 +103,7 @@
             </div>
 
             <div class="ci-field">
-                <label>Tipo di soggiorno <span class="req">*</span></label>
+                <label>Tipo di soggiorno</label>
                 <div class="ci-chips" id="trip-type-chips">
                     <button type="button" class="ci-chip active" data-value="coppia">💑 Coppia</button>
                     <button type="button" class="ci-chip" data-value="famiglia">👨‍👩‍👧 Famiglia</button>
@@ -111,7 +111,7 @@
                     <button type="button" class="ci-chip" data-value="singolo">🧍 Singolo</button>
                     <button type="button" class="ci-chip" data-value="altro">✨ Altro</button>
                 </div>
-                <input type="hidden" id="trip-type" name="trip_type" value="coppia" required>
+                <input type="hidden" id="trip-type" name="trip_type" value="coppia">
             </div>
 
             <div class="ci-field">
@@ -153,42 +153,42 @@
 
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
-                    <label for="r-nome">Nome <span class="req">*</span></label>
-                    <input type="text" id="r-nome" name="r_nome" placeholder="Mario" required autocomplete="given-name">
+                    <label for="r-nome">Nome</label>
+                    <input type="text" id="r-nome" name="r_nome" placeholder="Mario" autocomplete="given-name">
                 </div>
                 <div class="ci-field">
-                    <label for="r-cognome">Cognome <span class="req">*</span></label>
-                    <input type="text" id="r-cognome" name="r_cognome" placeholder="Rossi" required autocomplete="family-name">
+                    <label for="r-cognome">Cognome</label>
+                    <input type="text" id="r-cognome" name="r_cognome" placeholder="Rossi" autocomplete="family-name">
                 </div>
             </div>
 
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
-                    <label for="r-sesso">Sesso <span class="req">*</span></label>
-                    <select id="r-sesso" name="r_sesso" required>
+                    <label for="r-sesso">Sesso</label>
+                    <select id="r-sesso" name="r_sesso">
                         <option value="">—</option>
                         <option value="M">Maschio</option>
                         <option value="F">Femmina</option>
                     </select>
                 </div>
                 <div class="ci-field">
-                    <label for="r-nascita-data">Data di nascita <span class="req">*</span></label>
-                    <input type="date" id="r-nascita-data" name="r_nascita_data" required autocomplete="bday">
+                    <label for="r-nascita-data">Data di nascita</label>
+                    <input type="date" id="r-nascita-data" name="r_nascita_data" autocomplete="bday">
                 </div>
                 <div class="ci-field">
-                    <label for="r-cittadinanza">Cittadinanza <span class="req">*</span></label>
-                    <input type="text" id="r-cittadinanza" name="r_cittadinanza" placeholder="Italiana" required>
+                    <label for="r-cittadinanza">Cittadinanza</label>
+                    <input type="text" id="r-cittadinanza" name="r_cittadinanza" placeholder="Italiana">
                 </div>
             </div>
 
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
-                    <label for="r-nascita-comune">Comune di nascita <span class="req">*</span></label>
-                    <input type="text" id="r-nascita-comune" name="r_nascita_comune" placeholder="Roma" required>
+                    <label for="r-nascita-comune">Comune di nascita</label>
+                    <input type="text" id="r-nascita-comune" name="r_nascita_comune" placeholder="Roma">
                 </div>
                 <div class="ci-field">
-                    <label for="r-nascita-stato">Stato di nascita <span class="req">*</span></label>
-                    <input type="text" id="r-nascita-stato" name="r_nascita_stato" placeholder="Italia" required value="Italia">
+                    <label for="r-nascita-stato">Stato di nascita</label>
+                    <input type="text" id="r-nascita-stato" name="r_nascita_stato" placeholder="Italia" value="Italia">
                 </div>
             </div>
         </div>
@@ -198,22 +198,22 @@
             <h3 class="ci-card-title">Residenza</h3>
 
             <div class="ci-field">
-                <label for="r-indirizzo">Indirizzo <span class="req">*</span></label>
-                <input type="text" id="r-indirizzo" name="r_indirizzo" placeholder="Via Roma, 12" required autocomplete="street-address">
+                <label for="r-indirizzo">Indirizzo</label>
+                <input type="text" id="r-indirizzo" name="r_indirizzo" placeholder="Via Roma, 12" autocomplete="street-address">
             </div>
 
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
-                    <label for="r-comune">Comune <span class="req">*</span></label>
-                    <input type="text" id="r-comune" name="r_comune" placeholder="Milano" required autocomplete="address-level2">
+                    <label for="r-comune">Comune</label>
+                    <input type="text" id="r-comune" name="r_comune" placeholder="Milano" autocomplete="address-level2">
                 </div>
                 <div class="ci-field">
-                    <label for="r-cap">CAP <span class="req">*</span></label>
-                    <input type="text" id="r-cap" name="r_cap" placeholder="20100" maxlength="10" required autocomplete="postal-code">
+                    <label for="r-cap">CAP</label>
+                    <input type="text" id="r-cap" name="r_cap" placeholder="20100" maxlength="10" autocomplete="postal-code">
                 </div>
                 <div class="ci-field">
-                    <label for="r-paese">Paese <span class="req">*</span></label>
-                    <input type="text" id="r-paese" name="r_paese" placeholder="Italia" required value="Italia" autocomplete="country-name">
+                    <label for="r-paese">Paese</label>
+                    <input type="text" id="r-paese" name="r_paese" placeholder="Italia" value="Italia" autocomplete="country-name">
                 </div>
             </div>
         </div>
@@ -224,8 +224,8 @@
 
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
-                    <label for="r-doc-tipo">Tipo documento <span class="req">*</span></label>
-                    <select id="r-doc-tipo" name="r_doc_tipo" required>
+                    <label for="r-doc-tipo">Tipo documento</label>
+                    <select id="r-doc-tipo" name="r_doc_tipo">
                         <option value="">— Scegli —</option>
                         <option value="Carta d'identità">Carta d'identità</option>
                         <option value="Passaporto">Passaporto</option>
@@ -234,8 +234,8 @@
                     </select>
                 </div>
                 <div class="ci-field">
-                    <label for="r-doc-numero">Numero documento <span class="req">*</span></label>
-                    <input type="text" id="r-doc-numero" name="r_doc_numero" placeholder="AB1234567" required style="text-transform:uppercase">
+                    <label for="r-doc-numero">Numero documento</label>
+                    <input type="text" id="r-doc-numero" name="r_doc_numero" placeholder="AB1234567" style="text-transform:uppercase">
                 </div>
             </div>
 
@@ -245,12 +245,12 @@
                     <input type="date" id="r-doc-emissione" name="r_doc_emissione">
                 </div>
                 <div class="ci-field">
-                    <label for="r-doc-scadenza">Data scadenza <span class="req">*</span></label>
-                    <input type="date" id="r-doc-scadenza" name="r_doc_scadenza" required>
+                    <label for="r-doc-scadenza">Data scadenza</label>
+                    <input type="date" id="r-doc-scadenza" name="r_doc_scadenza">
                 </div>
                 <div class="ci-field">
-                    <label for="r-doc-rilascio">Luogo di rilascio <span class="req">*</span></label>
-                    <input type="text" id="r-doc-rilascio" name="r_doc_rilascio" placeholder="Comune di Roma" required>
+                    <label for="r-doc-rilascio">Luogo di rilascio</label>
+                    <input type="text" id="r-doc-rilascio" name="r_doc_rilascio" placeholder="Comune di Roma">
                 </div>
             </div>
         </div>
@@ -260,12 +260,12 @@
             <h3 class="ci-card-title">Contatti</h3>
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
-                    <label for="r-email">Email <span class="req">*</span></label>
-                    <input type="email" id="r-email" name="r_email" placeholder="mario.rossi@email.it" required autocomplete="email">
+                    <label for="r-email">Email</label>
+                    <input type="email" id="r-email" name="r_email" placeholder="mario.rossi@email.it" autocomplete="email">
                 </div>
                 <div class="ci-field">
-                    <label for="r-telefono">Telefono <span class="req">*</span></label>
-                    <input type="tel" id="r-telefono" name="r_telefono" placeholder="+39 333 1234567" required autocomplete="tel">
+                    <label for="r-telefono">Telefono</label>
+                    <input type="tel" id="r-telefono" name="r_telefono" placeholder="+39 333 1234567" autocomplete="tel">
                 </div>
             </div>
         </div>
@@ -332,14 +332,14 @@
                 I dati non saranno ceduti a terzi né utilizzati per finalità commerciali.
             </p>
             <label class="ci-checkbox-label">
-                <input type="checkbox" id="privacy-consent" name="privacy_consent" required>
+                <input type="checkbox" id="privacy-consent" name="privacy_consent">
                 <span class="ci-checkbox-custom"></span>
-                <span>Dichiaro di aver letto l'informativa sulla privacy e acconsento al trattamento dei dati personali per la registrazione del soggiorno. <span class="req">*</span></span>
+                <span>Dichiaro di aver letto l'informativa sulla privacy e acconsento al trattamento dei dati personali per la registrazione del soggiorno.</span>
             </label>
             <label class="ci-checkbox-label" style="margin-top:12px">
-                <input type="checkbox" id="verita-consent" name="verita_consent" required>
+                <input type="checkbox" id="verita-consent" name="verita_consent">
                 <span class="ci-checkbox-custom"></span>
-                <span>Dichiaro che i dati forniti sono veritieri e corrispondono alle generalità degli ospiti presenti. <span class="req">*</span></span>
+                <span>Dichiaro che i dati forniti sono veritieri e corrispondono alle generalità degli ospiti presenti.</span>
             </label>
         </div>
 

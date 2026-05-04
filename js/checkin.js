@@ -5,7 +5,7 @@
 //  SETUP: Replace the URL below with your Google Apps Script
 //  Web App URL after deploying it (see setup instructions).
 //
-const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKY0SAHhMQFoQxKifZKfOTcl6NfaD11h08fAoAQJvsKhXD8hIvrGGmaPAK_1ZkqKz6cg/exec';
+const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/library/d/1tXLk3AUkHExEaabQDC5mNmSO9VElu1Eo08YmLvRBeoaB8aTSoECaIIE1/1';
 // ─────────────────────────────────────────────────────────────
 
 let currentStep = 1;
@@ -15,7 +15,6 @@ const MAX_GUESTS = 10;
 // ─── STEP NAVIGATION ────────────────────────────────────────
 
 function ciNextStep(from) {
-    if (!ciValidateStep(from)) return;
     ciGoToStep(from + 1);
     if (from + 1 === 3) ciSyncGuestsFromAdults();
     if (from + 1 === 4) ciBuildSummary();
@@ -126,17 +125,17 @@ function ciAddGuest() {
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
                     <label for="g${idx}-nome">Nome <span class="req">*</span></label>
-                    <input type="text" id="g${idx}-nome" name="g${idx}_nome" placeholder="Mario" required autocomplete="off">
+                    <input type="text" id="g${idx}-nome" name="g${idx}_nome" placeholder="Mario" autocomplete="off">
                 </div>
                 <div class="ci-field">
                     <label for="g${idx}-cognome">Cognome <span class="req">*</span></label>
-                    <input type="text" id="g${idx}-cognome" name="g${idx}_cognome" placeholder="Rossi" required autocomplete="off">
+                    <input type="text" id="g${idx}-cognome" name="g${idx}_cognome" placeholder="Rossi" autocomplete="off">
                 </div>
             </div>
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
                     <label for="g${idx}-sesso">Sesso <span class="req">*</span></label>
-                    <select id="g${idx}-sesso" name="g${idx}_sesso" required>
+                    <select id="g${idx}-sesso" name="g${idx}_sesso">
                         <option value="">—</option>
                         <option value="M">Maschio</option>
                         <option value="F">Femmina</option>
@@ -144,17 +143,17 @@ function ciAddGuest() {
                 </div>
                 <div class="ci-field">
                     <label for="g${idx}-nascita">Data di nascita <span class="req">*</span></label>
-                    <input type="date" id="g${idx}-nascita" name="g${idx}_nascita" required autocomplete="off">
+                    <input type="date" id="g${idx}-nascita" name="g${idx}_nascita" autocomplete="off">
                 </div>
                 <div class="ci-field">
                     <label for="g${idx}-cittadinanza">Cittadinanza <span class="req">*</span></label>
-                    <input type="text" id="g${idx}-cittadinanza" name="g${idx}_cittadinanza" placeholder="Italiana" required autocomplete="off">
+                    <input type="text" id="g${idx}-cittadinanza" name="g${idx}_cittadinanza" placeholder="Italiana" autocomplete="off">
                 </div>
             </div>
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
                     <label for="g${idx}-nascita-comune">Comune di nascita <span class="req">*</span></label>
-                    <input type="text" id="g${idx}-nascita-comune" name="g${idx}_nascita_comune" placeholder="Roma" required autocomplete="off">
+                    <input type="text" id="g${idx}-nascita-comune" name="g${idx}_nascita_comune" placeholder="Roma" autocomplete="off">
                 </div>
                 <div class="ci-field">
                     <label for="g${idx}-nascita-stato">Stato di nascita <span class="req">*</span></label>
@@ -271,15 +270,6 @@ function ciFormatDate(dateStr) {
 
 document.getElementById('checkin-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    if (!ciValidateStep(4)) return;
-
-    const privacyOk = document.getElementById('privacy-consent').checked;
-    const veritaOk = document.getElementById('verita-consent').checked;
-    if (!privacyOk || !veritaOk) {
-        ciShowFormError('Devi accettare entrambe le dichiarazioni per procedere.');
-        return;
-    }
 
     const submitBtn = document.getElementById('submit-btn');
     submitBtn.disabled = true;
