@@ -5,7 +5,7 @@
 //  SETUP: Replace the URL below with your Google Apps Script
 //  Web App URL after deploying it (see setup instructions).
 //
-const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/library/d/1tXLk3AUkHExEaabQDC5mNmSO9VElu1Eo08YmLvRBeoaB8aTSoECaIIE1/1';
+const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKY0SAHhMQFoQxKifZKfOTcl6NfaD11h08fAoAQJvsKhXD8hIvrGGmaPAK_1ZkqKz6cg/exec';
 // ─────────────────────────────────────────────────────────────
 
 let currentStep = 1;
@@ -284,22 +284,48 @@ document.getElementById('checkin-form').addEventListener('submit', async (e) => 
         return;
     }
 
-    try {
-        // Google Apps Script doesn't support CORS preflight, so we use no-cors.
-        // The data is still saved to the sheet; we just can't read the response.
-        await fetch(SHEETS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(payload)
-        });
-        ciShowSuccess(payload);
-    } catch (err) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span class="submit-icon">✉️</span> Invia Check-in';
-        ciShowFormError('Si è verificato un errore durante l\'invio. Riprova o contattaci via WhatsApp.');
-        console.error('Checkin submit error:', err);
-    }
+    // Google Apps Script redirects POST requests internally, which causes browsers
+    // to drop the request body (fetch loses data on redirect). The reliable fix is
+    // a hidden form submitted to a hidden iframe — form submissions follow redirects
+    // correctly and are not subject to CORS restrictions.
+    ciSubmitViaIframe(payload);
+    // Give the iframe submit a moment, then show success
+    setTimeout(() => ciShowSuccess(payload), 800);
 });
+
+function ciSubmitViaIframe(payload) {
+    // Create a hidden iframe so the form submission doesn't navigate the page
+    let iframe = document.getElementById('ci-hidden-iframe');
+    if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'ci-hidden-iframe';
+        iframe.name = 'ci-hidden-iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+    }
+
+    // Create a hidden form targeting the iframe
+    let form = document.getElementById('ci-hidden-form');
+    if (!form) {
+        form = document.createElement('form');
+        form.id = 'ci-hidden-form';
+        form.method = 'POST';
+        form.target = 'ci-hidden-iframe';
+        form.style.display = 'none';
+        document.body.appendChild(form);
+    }
+
+    form.action = SHEETS_SCRIPT_URL;
+    form.innerHTML = '';
+
+    // Send payload as a single JSON field named "data"
+    const input = document.createElement('textarea');
+    input.name = 'data';
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+
+    form.submit();
+}
 
 function ciCollectFormData() {
     const v = id => document.getElementById(id)?.value.trim() || '';

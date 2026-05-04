@@ -31,7 +31,10 @@
 
 function doPost(e) {
   try {
-    var data = JSON.parse(e.postData.contents);
+    // Data arrives via a hidden HTML form field named "data" (JSON string).
+    // This approach avoids CORS/redirect issues that break fetch() with Apps Script.
+    var raw = (e.parameter && e.parameter.data) ? e.parameter.data : e.postData.contents;
+    var data = JSON.parse(raw);
     var ss = SpreadsheetApp.getActiveSpreadsheet();
 
     // ── Foglio PRENOTAZIONI (una riga per prenotazione) ──────────
