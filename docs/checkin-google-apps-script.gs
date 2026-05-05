@@ -1,79 +1,98 @@
 // ═══════════════════════════════════════════════════════════════
 //  CASA PAOLINA — Google Apps Script per Check-in Online
 //
-//  COME DEPLOYARE (una volta sola):
+//  DEPLOY (una volta sola):
 //
-//  1. Vai su https://drive.google.com → Crea un nuovo Google Sheet
-//     (dai un nome, es. "Check-in Casa Paolina 2026")
+//  1. Apri il Google Sheet → Estensioni → Apps Script
+//  2. Sostituisci tutto con questo file → Salva (Ctrl+S)
+//  3. Imposta NOTIFICATION_EMAIL qui sotto
+//  4. Menu a tendina → scegli "setup" → clicca ▶ Esegui
+//     → accetta TUTTI i permessi (Gmail incluso)
+//     Riceverai una mail di conferma se tutto e' ok.
+//  5. Deploy → Nuova distribuzione → Web App
+//     - Esegui come: Me  |  Chi puo' accedere: Chiunque
+//  6. Copia l'URL e incollalo in js/checkin.js → riga 8
 //
-//  2. Apri il menu Estensioni → Apps Script
-//
-//  3. Sostituisci tutto il contenuto con questo file
-//
-//  4. Clicca su Salva (Ctrl+S)
-//
-//  5. Clicca su Deploy → Nuova distribuzione
-//     • Tipo: Web App
-//     • Descrizione: "Check-in Form"
-//     • Esegui come: Me (il tuo account Google)
-//     • Chi può accedere: Chiunque
-//
-//  6. Clicca "Deploy" → copia l'URL che appare (Web App URL)
-//
-//  7. Incolla quell'URL in:
-//     js/checkin.js → riga 8 → const SHEETS_SCRIPT_URL = '...'
-//
-//  NOTA: ogni volta che modifichi lo script devi fare una NUOVA
-//  distribuzione (Deploy → Gestisci distribuzioni → Modifica →
-//  Versione: Nuova) per rendere effettive le modifiche.
+//  ⚠️  Dopo ogni modifica fai una NUOVA distribuzione:
+//      Deploy → Gestisci distribuzioni → Modifica → Versione: Nuova
 // ═══════════════════════════════════════════════════════════════
+
+
+// ── CONFIGURAZIONE ───────────────────────────────────────────────
+var NOTIFICATION_EMAIL = 'casapaolina23@gmail.com';   
+// ────────────────────────────────────────────────────────────────
+
+
+// ════════════════════════════════════════════════════════════════
+//  SETUP — esegui una volta sola per autorizzare Gmail
+//
+//  PERCHE': il web app gira come "Me" con scope Gmail, ma Google
+//  richiede che l'utente accetti esplicitamente i permessi almeno
+//  una volta eseguendo manualmente una funzione che usa GmailApp.
+//  Dopo l'accettazione, doPost() puo' chiamare GmailApp liberamente.
+// ════════════════════════════════════════════════════════════════
+
+function setup() {
+  GmailApp.sendEmail(
+    NOTIFICATION_EMAIL,
+    'Casa Paolina - Sistema notifiche attivo',
+    'Autorizzazione Gmail completata.\n\n' +
+    'Il sistema di notifica check-in e\' pronto.\n' +
+    'Ora fai il Deploy della Web App.'
+  );
+  SpreadsheetApp.getUi().alert(
+    'Autorizzazione completata!\n\n' +
+    'Hai ricevuto una mail di conferma a:\n' + NOTIFICATION_EMAIL + '\n\n' +
+    'Ora esegui il Deploy della Web App.'
+  );
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  WEB APP
+//  La mail viene inviata direttamente qui, senza trigger.
+//
+//  PERCHE' NON USO UN TRIGGER onChange:
+//  I trigger onChange/onEdit non scattano per modifiche fatte
+//  programmaticamente da uno script (come appendRow in doPost).
+//  Scattano solo per azioni umane nell'interfaccia del foglio.
+//  Quindi l'unico modo affidabile e' chiamare GmailApp da doPost.
+// ════════════════════════════════════════════════════════════════
 
 function doPost(e) {
   try {
-    // Data arrives via a hidden HTML form field named "data" (JSON string).
-    // This approach avoids CORS/redirect issues that break fetch() with Apps Script.
-    var raw = (e.parameter && e.parameter.data) ? e.parameter.data : e.postData.contents;
+    var raw  = (e.parameter && e.parameter.data) ? e.parameter.data : e.postData.contents;
     var data = JSON.parse(raw);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ss   = SpreadsheetApp.getActiveSpreadsheet();
 
-    // ── Foglio PRENOTAZIONI (una riga per prenotazione) ──────────
+    // ── Foglio PRENOTAZIONI ──────────────────────────────────────
     var sheet = ss.getSheetByName('Prenotazioni') || ss.insertSheet('Prenotazioni');
+    if (sheet.getLastRow() === 0) creaIntestazioni(sheet);
+    sheet.appendRow(buildMainRow(data));
 
-    // Crea intestazioni se il foglio è vuoto
-    if (sheet.getLastRow() === 0) {
-      creaIntestazioni(sheet);
-    }
-
-    // Costruisci la riga principale
-    var row = buildMainRow(data);
-    sheet.appendRow(row);
-
-    // ── Foglio OSPITI (una riga per ogni ospite accompagnatore) ──
+    // ── Foglio OSPITI ────────────────────────────────────────────
     if (data.guests && data.guests.length > 0) {
       var guestSheet = ss.getSheetByName('Ospiti') || ss.insertSheet('Ospiti');
-      if (guestSheet.getLastRow() === 0) {
-        creaIntestazioniOspiti(guestSheet);
-      }
-      var refId = data.timestamp;
+      if (guestSheet.getLastRow() === 0) creaIntestazioniOspiti(guestSheet);
+
       var refName = (data.r_nome || '') + ' ' + (data.r_cognome || '');
       data.guests.forEach(function(g) {
         guestSheet.appendRow([
-          refId,
-          refName,
-          data.checkin_date,
-          data.checkout_date,
-          data.appartamento,
-          g.nome,
-          g.cognome,
-          g.sesso,
-          g.data_nascita,
-          g.comune_nascita,
-          g.stato_nascita,
-          g.cittadinanza,
-          g.comune_res,
-          g.stato_res
+          data.timestamp, refName,
+          data.checkin_date, data.checkout_date, data.appartamento,
+          g.nome, g.cognome, g.sesso, g.data_nascita,
+          g.comune_nascita, g.stato_nascita, g.cittadinanza,
+          g.comune_res, g.stato_res
         ]);
       });
+    }
+
+    // ── Notifica email ───────────────────────────────────────────
+    try {
+      inviaEmail_(data, ss.getUrl());
+    } catch (mailErr) {
+      // L'errore mail non blocca il salvataggio dei dati
+      Logger.log('Errore invio email: ' + mailErr.toString());
     }
 
     return ContentService
@@ -87,58 +106,224 @@ function doPost(e) {
   }
 }
 
-// Risponde alle richieste GET (health check)
-function doGet(e) {
+function doGet() {
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'ok', message: 'Casa Paolina Check-in API' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ── RIGA PRINCIPALE ─────────────────────────────────────────────
+
+// ════════════════════════════════════════════════════════════════
+//  EMAIL
+//  Riceve l'oggetto "data" grezzo dal form (stesse chiavi del JSON).
+//  Solo ASCII puro: niente emoji, niente Unicode speciale.
+//  I trattini usano entita' HTML (&ndash; &mdash;) nell'HTML,
+//  e trattini semplici (-) nel plain text.
+// ════════════════════════════════════════════════════════════════
+
+function inviaEmail_(data, sheetUrl) {
+
+  var nome      = (data.r_nome     || '') + ' ' + (data.r_cognome || '');
+  var appart    = data.appartamento        || '-';
+  var arrivo    = data.checkin_date        || '-';
+  var partenza  = data.checkout_date       || '-';
+  var notti     = data.permanenza_notti    || '-';
+  var oraArr    = data.ora_arrivo          || 'n.d.';
+  var adulti    = data.adults_count        || 0;
+  var bambini   = data.children_count      || 0;
+  var totOspiti = (parseInt(adulti) || 0) + (parseInt(bambini) || 0);
+  var tipo      = data.trip_type           || '-';
+  var sesso     = data.r_sesso             || '-';
+  var nascData  = data.r_nascita_data      || '-';
+  var nascCom   = data.r_nascita_comune    || '-';
+  var nascSt    = data.r_nascita_stato     || '-';
+  var citt      = data.r_cittadinanza      || '-';
+  var comune    = data.r_comune            || '-';
+  var paese     = data.r_paese             || '-';
+  var docTipo   = data.r_doc_tipo          || '-';
+  var docNum    = data.r_doc_numero        || '-';
+  var docRilSt  = data.r_doc_rilascio_stato  || '-';
+  var docRilCom = data.r_doc_rilascio_comune || '-';
+  var email     = data.r_email             || '-';
+  var telefono  = data.r_telefono          || '-';
+  var note      = data.note               || '';
+  var ricevuto  = data.timestamp
+                    ? new Date(data.timestamp).toLocaleString('it-IT')
+                    : new Date().toLocaleString('it-IT');
+  var ospiti    = data.guests || [];
+
+  // Oggetto: solo ASCII
+  var subject = 'Casa Paolina - Nuovo Check-in: ' + nome +
+                ' > ' + appart + ' (' + arrivo + ' / ' + partenza + ')';
+
+  // ── PLAIN TEXT ───────────────────────────────────────────────
+  var txt =
+    '================================\n' +
+    ' NUOVO CHECK-IN - CASA PAOLINA \n' +
+    '================================\n\n' +
+    'Ricevuto il  : ' + ricevuto  + '\n\n' +
+    '-- SOGGIORNO -------------------\n' +
+    'Appartamento : ' + appart    + '\n' +
+    'Arrivo       : ' + arrivo    + '  ore ' + oraArr + '\n' +
+    'Partenza     : ' + partenza  + '\n' +
+    'Notti        : ' + notti     + '\n' +
+    'Ospiti       : ' + totOspiti + ' (' + adulti + ' adulti, ' + bambini + ' bambini)\n' +
+    'Tipo         : ' + tipo      + '\n\n' +
+    '-- REFERENTE -------------------\n' +
+    'Nome         : ' + nome      + '\n' +
+    'Sesso        : ' + sesso     + '\n' +
+    'Nato/a il    : ' + nascData  + ' a ' + nascCom + ' (' + nascSt + ')\n' +
+    'Cittadinanza : ' + citt      + '\n' +
+    'Residenza    : ' + comune    + ' - ' + paese   + '\n' +
+    'Documento    : ' + docTipo   + ' n. ' + docNum + '\n' +
+    '               Rilasciato da: ' + docRilCom + ' (' + docRilSt + ')\n' +
+    'Email        : ' + email     + '\n' +
+    'Telefono     : ' + telefono  + '\n';
+
+  if (ospiti.length > 0) {
+    txt += '\n-- ACCOMPAGNATORI (' + ospiti.length + ') ------------\n';
+    ospiti.forEach(function(g, i) {
+      txt += (i + 1) + '. ' + (g.nome || '') + ' ' + (g.cognome || '') +
+             '  |  ' + (g.sesso || '') +
+             '  |  ' + (g.data_nascita || '-') + ' - ' + (g.comune_nascita || '-') + ' (' + (g.stato_nascita || '-') + ')' +
+             '  |  citt. ' + (g.cittadinanza || '-') +
+             '  |  res. ' + (g.comune_res || '-') + ' (' + (g.stato_res || '-') + ')\n';
+    });
+  }
+
+  if (note) txt += '\n-- NOTE ------------------------\n' + note + '\n';
+  txt += '\nFoglio Google: ' + sheetUrl + '\n';
+
+  // ── HTML ─────────────────────────────────────────────────────
+  function tr(label, val) {
+    return '<tr>' +
+      '<td style="padding:5px 14px;color:#666;font-size:13px;white-space:nowrap;vertical-align:top;">' + label + '</td>' +
+      '<td style="padding:5px 14px;font-size:13px;font-weight:500;">' + (val || '-') + '</td>' +
+      '</tr>';
+  }
+
+  var ospitiHtml = '';
+  if (ospiti.length > 0) {
+    ospitiHtml =
+      '<h3 style="color:#264653;margin-top:28px;margin-bottom:8px;">Accompagnatori (' + ospiti.length + ')</h3>' +
+      '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
+      '<tr style="background:#264653;color:#fff;">' +
+      '<th style="padding:7px 10px;text-align:left;">Nome</th>' +
+      '<th style="padding:7px 10px;text-align:left;">Sesso</th>' +
+      '<th style="padding:7px 10px;text-align:left;">Nascita</th>' +
+      '<th style="padding:7px 10px;text-align:left;">Cittadinanza</th>' +
+      '<th style="padding:7px 10px;text-align:left;">Residenza</th></tr>';
+    ospiti.forEach(function(g, i) {
+      ospitiHtml +=
+        '<tr style="background:' + (i % 2 === 0 ? '#f8f9fa' : '#fff') + ';">' +
+        '<td style="padding:6px 10px;">' + (g.nome || '') + ' ' + (g.cognome || '') + '</td>' +
+        '<td style="padding:6px 10px;">' + (g.sesso || '-') + '</td>' +
+        '<td style="padding:6px 10px;">' + (g.data_nascita || '-') + ' &ndash; ' + (g.comune_nascita || '-') + ' (' + (g.stato_nascita || '-') + ')</td>' +
+        '<td style="padding:6px 10px;">' + (g.cittadinanza || '-') + '</td>' +
+        '<td style="padding:6px 10px;">' + (g.comune_res || '-') + ' (' + (g.stato_res || '-') + ')</td>' +
+        '</tr>';
+    });
+    ospitiHtml += '</table>';
+  }
+
+  var noteHtml = note
+    ? '<h3 style="color:#264653;margin-top:28px;margin-bottom:8px;">Note</h3>' +
+      '<p style="background:#fff9e6;border-left:4px solid #f4a261;padding:10px 14px;border-radius:4px;margin:0;">' + note + '</p>'
+    : '';
+
+  var html =
+    '<div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;background:#f0f2f4;padding:24px;">' +
+
+      '<div style="background:#2c7873;border-radius:10px 10px 0 0;padding:22px 28px;">' +
+        '<h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">Casa Paolina &mdash; Nuovo Check-in</h1>' +
+        '<p style="color:#a8d8d2;margin:6px 0 0;font-size:13px;">Ricevuto il ' + ricevuto + '</p>' +
+      '</div>' +
+
+      '<div style="background:#fff;padding:28px;border-radius:0 0 10px 10px;box-shadow:0 3px 10px rgba(0,0,0,0.09);">' +
+
+        '<h3 style="color:#2c7873;margin-top:0;margin-bottom:8px;">Soggiorno</h3>' +
+        '<table style="width:100%;border-collapse:collapse;">' +
+          tr('Appartamento',   appart) +
+          tr('Arrivo',         arrivo + '&nbsp;&nbsp;ore ' + oraArr) +
+          tr('Partenza',       partenza) +
+          tr('Notti',          notti) +
+          tr('Ospiti',         totOspiti + ' totali (' + adulti + ' adulti, ' + bambini + ' bambini)') +
+          tr('Tipo soggiorno', tipo) +
+        '</table>' +
+
+        '<h3 style="color:#264653;margin-top:28px;margin-bottom:8px;">Referente</h3>' +
+        '<table style="width:100%;border-collapse:collapse;">' +
+          tr('Nome',          nome) +
+          tr('Sesso',         sesso) +
+          tr('Nato/a il',     nascData + ' a ' + nascCom + ' (' + nascSt + ')') +
+          tr('Cittadinanza',  citt) +
+          tr('Residenza',     comune + ' &ndash; ' + paese) +
+          tr('Documento',     docTipo + ' n. ' + docNum) +
+          tr('Rilasciato da', docRilCom + ' (' + docRilSt + ')') +
+          tr('Email',         '<a href="mailto:' + email + '" style="color:#2c7873;">' + email + '</a>') +
+          tr('Telefono',      '<a href="tel:' + telefono + '" style="color:#2c7873;">' + telefono + '</a>') +
+        '</table>' +
+
+        ospitiHtml +
+        noteHtml +
+
+        '<div style="margin-top:32px;text-align:center;">' +
+          '<a href="' + sheetUrl + '" style="display:inline-block;background:#2c7873;color:#fff;' +
+          'padding:13px 32px;border-radius:7px;text-decoration:none;font-size:14px;font-weight:bold;">' +
+          'Apri il Foglio Google' +
+          '</a>' +
+        '</div>' +
+
+      '</div>' +
+      '<p style="text-align:center;color:#bbb;font-size:11px;margin-top:14px;">Casa Paolina Check-in System &mdash; notifica automatica</p>' +
+    '</div>';
+
+  GmailApp.sendEmail(NOTIFICATION_EMAIL, subject, txt, { htmlBody: html });
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  RIGA PRINCIPALE
+// ════════════════════════════════════════════════════════════════
+
 function buildMainRow(d) {
   var totOspiti = (parseInt(d.adults_count) || 0) + (parseInt(d.children_count) || 0);
   return [
-    // Meta
-    new Date(d.timestamp),              // A: Data/ora ricezione
-    // Soggiorno
-    d.appartamento,                      // B: Appartamento
-    d.checkin_date,                      // C: Data arrivo
-    d.checkout_date,                     // D: Data partenza
-    d.permanenza_notti,                  // E: Notti
-    d.adults_count,                      // F: N. adulti
-    d.children_count,                    // G: N. bambini
-    totOspiti,                           // H: Totale ospiti
-    d.trip_type,                         // I: Tipo soggiorno
-    d.ora_arrivo,                        // J: Ora arrivo prevista
-    // Referente — anagrafica
-    d.r_nome,                            // K: Nome
-    d.r_cognome,                         // L: Cognome
-    d.r_sesso,                           // M: Sesso
-    d.r_nascita_data,                    // N: Data di nascita
-    d.r_nascita_comune,                  // O: Comune di nascita
-    d.r_nascita_stato,                   // P: Stato di nascita
-    d.r_cittadinanza,                    // Q: Cittadinanza
-    // Referente — residenza
-    d.r_comune,                          // R: Comune di residenza
-    d.r_paese,                           // S: Paese di residenza
-    // Referente — documento
-    d.r_doc_tipo,                        // T: Tipo documento
-    d.r_doc_numero,                      // U: Numero documento
-    d.r_doc_emissione,                   // V: Data emissione
-    d.r_doc_scadenza,                    // W: Data scadenza
-    d.r_doc_rilascio_stato,              // X: Stato rilascio
-    d.r_doc_rilascio_comune,             // Y: Comune rilascio
-    // Referente — contatti
-    d.r_email,                           // Z: Email
-    d.r_telefono,                        // AA: Telefono
-    // Accompagnatori (riepilogo nel foglio principale)
-    d.guests_count,                      // AB: N. accompagnatori
-    // Note
-    d.note                               // AC: Note
+    new Date(d.timestamp),       // A: Data/ora ricezione
+    d.appartamento,              // B: Appartamento
+    d.checkin_date,              // C: Data arrivo
+    d.checkout_date,             // D: Data partenza
+    d.permanenza_notti,          // E: Notti
+    d.adults_count,              // F: N. adulti
+    d.children_count,            // G: N. bambini
+    totOspiti,                   // H: Totale ospiti
+    d.trip_type,                 // I: Tipo soggiorno
+    d.ora_arrivo,                // J: Ora arrivo prevista
+    d.r_nome,                    // K: Nome
+    d.r_cognome,                 // L: Cognome
+    d.r_sesso,                   // M: Sesso
+    d.r_nascita_data,            // N: Data di nascita
+    d.r_nascita_comune,          // O: Comune di nascita
+    d.r_nascita_stato,           // P: Stato di nascita
+    d.r_cittadinanza,            // Q: Cittadinanza
+    d.r_comune,                  // R: Comune di residenza
+    d.r_paese,                   // S: Paese di residenza
+    d.r_doc_tipo,                // T: Tipo documento
+    d.r_doc_numero,              // U: Numero documento
+    d.r_doc_rilascio_stato,      // V: Stato rilascio
+    d.r_doc_rilascio_comune,     // W: Comune rilascio
+    d.r_email,                   // X: Email
+    d.r_telefono,                // Y: Telefono
+    d.guests_count,              // Z: N. accompagnatori
+    d.note                       // AA: Note
   ];
 }
 
-// ── INTESTAZIONI FOGLIO PRENOTAZIONI ────────────────────────────
+
+// ════════════════════════════════════════════════════════════════
+//  INTESTAZIONI
+// ════════════════════════════════════════════════════════════════
+
 function creaIntestazioni(sheet) {
   var headers = [
     'Data Ricezione',
@@ -149,29 +334,22 @@ function creaIntestazioni(sheet) {
     'Nome Referente', 'Cognome Referente',
     'Sesso', 'Data Nascita', 'Comune Nascita', 'Stato Nascita', 'Cittadinanza',
     'Comune Residenza', 'Paese Residenza',
-    'Tipo Documento', 'N. Documento', 'Data Emissione Doc.', 'Data Scadenza Doc.',
+    'Tipo Documento', 'N. Documento',
     'Stato Rilascio Doc.', 'Comune Rilascio Doc.',
     'Email', 'Telefono',
     'N. Accompagnatori',
     'Note'
   ];
-
   sheet.appendRow(headers);
 
-  // Stile intestazioni
-  var headerRange = sheet.getRange(1, 1, 1, headers.length);
-  headerRange.setFontWeight('bold');
-  headerRange.setBackground('#2c7873');
-  headerRange.setFontColor('#ffffff');
-  headerRange.setFontSize(10);
-
+  var r = sheet.getRange(1, 1, 1, headers.length);
+  r.setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
   sheet.setFrozenRows(1);
-  sheet.setColumnWidth(1, 150); // Data ricezione
-  sheet.setColumnWidth(3, 100); // Data arrivo
-  sheet.setColumnWidth(4, 100); // Data partenza
+  sheet.setColumnWidth(1, 150);
+  sheet.setColumnWidth(3, 100);
+  sheet.setColumnWidth(4, 100);
 }
 
-// ── INTESTAZIONI FOGLIO OSPITI ───────────────────────────────────
 function creaIntestazioniOspiti(sheet) {
   var headers = [
     'Ref. Prenotazione', 'Referente', 'Data Arrivo', 'Data Partenza', 'Appartamento',
@@ -181,10 +359,52 @@ function creaIntestazioniOspiti(sheet) {
   ];
   sheet.appendRow(headers);
 
-  var headerRange = sheet.getRange(1, 1, 1, headers.length);
-  headerRange.setFontWeight('bold');
-  headerRange.setBackground('#264653');
-  headerRange.setFontColor('#ffffff');
-  headerRange.setFontSize(10);
+  sheet.getRange(1, 1, 1, headers.length)
+    .setFontWeight('bold').setBackground('#264653').setFontColor('#ffffff').setFontSize(10);
   sheet.setFrozenRows(1);
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  TEST — seleziona "testEmail" e clicca ▶ Esegui
+// ════════════════════════════════════════════════════════════════
+
+function testEmail() {
+  var fakeData = {
+    timestamp:        new Date().toISOString(),
+    appartamento:     'App. 3 - Primo Piano',
+    checkin_date:     '2026-06-15',
+    checkout_date:    '2026-06-22',
+    permanenza_notti: 7,
+    ora_arrivo:       '16:00',
+    adults_count:     2,
+    children_count:   1,
+    trip_type:        'Vacanza',
+    r_nome:           'Mario',
+    r_cognome:        'Rossi',
+    r_sesso:          'M',
+    r_nascita_data:   '10/03/1980',
+    r_nascita_comune: 'Roma',
+    r_nascita_stato:  'Italia',
+    r_cittadinanza:   'Italiana',
+    r_comune:         'Milano',
+    r_paese:          'Italia',
+    r_doc_tipo:       "Carta d'Identita'",
+    r_doc_numero:     'AA1234567',
+    r_doc_rilascio_stato:  'Italia',
+    r_doc_rilascio_comune: 'Comune di Milano',
+    r_email:    'mario.rossi@email.com',
+    r_telefono: '+39 333 1234567',
+    guests_count: 1,
+    guests: [{
+      nome: 'Laura', cognome: 'Rossi', sesso: 'F',
+      data_nascita: '20/07/1982', comune_nascita: 'Napoli',
+      stato_nascita: 'Italia', cittadinanza: 'Italiana',
+      comune_res: 'Milano', stato_res: 'Italia'
+    }],
+    note: 'Arrivo in serata, possibile ritardo.'
+  };
+
+  inviaEmail_(fakeData, SpreadsheetApp.getActiveSpreadsheet().getUrl());
+  Logger.log('Email di test inviata a: ' + NOTIFICATION_EMAIL);
 }
