@@ -20,6 +20,8 @@ const CI_TRANS = {
         s1_title: 'Dettagli del soggiorno',
         s1_sub: 'Date di arrivo, partenza e composizione del gruppo',
         lbl_checkin: 'Data di arrivo', lbl_checkout: 'Data di partenza',
+        lbl_permanenza: 'Permanenza',
+        night_suffix: 'notte', nights_suffix: 'notti',
         lbl_adults: 'Adulti', lbl_children: 'Bambini', lbl_apt: 'Appartamento',
         lbl_trip_type: 'Tipo di soggiorno',
         chip_coppia: '💑 Coppia', chip_famiglia: '👨‍👩‍👧 Famiglia',
@@ -34,11 +36,12 @@ const CI_TRANS = {
         lbl_nascita_comune: 'Comune di nascita', lbl_nascita_stato: 'Stato di nascita',
         opt_sesso_m: 'Maschio', opt_sesso_f: 'Femmina',
         card_residenza: 'Residenza',
-        lbl_indirizzo: 'Indirizzo', lbl_comune: 'Comune', lbl_cap: 'CAP', lbl_paese: 'Paese',
+        lbl_comune: 'Comune', lbl_comune_res: 'Comune di residenza', lbl_paese: 'Stato di residenza',
         card_documento: "Documento d'identità",
         lbl_doc_tipo: 'Tipo documento', lbl_doc_numero: 'Numero documento',
         lbl_doc_emissione: 'Data emissione', lbl_doc_scadenza: 'Data scadenza',
-        lbl_doc_rilascio: 'Luogo di rilascio',
+        lbl_doc_rilascio_stato: 'Stato di rilascio',
+        lbl_doc_rilascio_comune: 'Comune di rilascio',
         opt_doc_ci: "Carta d'identità", opt_doc_pass: 'Passaporto',
         opt_doc_pat: 'Patente di guida', opt_doc_perm: 'Permesso di soggiorno',
         card_contatti: 'Contatti',
@@ -66,6 +69,7 @@ const CI_TRANS = {
         err_send: "Si è verificato un errore durante l'invio. Riprova o contattaci via WhatsApp.",
         // Summary labels
         sum_apt: 'Appartamento', sum_arrival: 'Arrivo', sum_departure: 'Partenza',
+        sum_permanenza: 'Permanenza',
         sum_guests: 'Ospiti', sum_type: 'Tipo', sum_time: 'Ora arrivo',
         sum_ref: 'Referente', sum_email: 'Email', sum_phone: 'Telefono', sum_doc: 'Documento',
         adults_suffix: 'adulti', children_suffix: 'bambini', doc_num: 'n°',
@@ -81,6 +85,8 @@ const CI_TRANS = {
         s1_title: 'Stay details',
         s1_sub: 'Arrival and departure dates and group composition',
         lbl_checkin: 'Arrival date', lbl_checkout: 'Departure date',
+        lbl_permanenza: 'Duration',
+        night_suffix: 'night', nights_suffix: 'nights',
         lbl_adults: 'Adults', lbl_children: 'Children', lbl_apt: 'Apartment',
         lbl_trip_type: 'Type of stay',
         chip_coppia: '💑 Couple', chip_famiglia: '👨‍👩‍👧 Family',
@@ -95,11 +101,12 @@ const CI_TRANS = {
         lbl_nascita_comune: 'City of birth', lbl_nascita_stato: 'Country of birth',
         opt_sesso_m: 'Male', opt_sesso_f: 'Female',
         card_residenza: 'Residence',
-        lbl_indirizzo: 'Address', lbl_comune: 'City', lbl_cap: 'Postal code', lbl_paese: 'Country',
+        lbl_comune: 'City', lbl_comune_res: 'City of residence', lbl_paese: 'Country of residence',
         card_documento: 'Identity document',
         lbl_doc_tipo: 'Document type', lbl_doc_numero: 'Document number',
         lbl_doc_emissione: 'Issue date', lbl_doc_scadenza: 'Expiry date',
-        lbl_doc_rilascio: 'Place of issue',
+        lbl_doc_rilascio_stato: 'Country of issue',
+        lbl_doc_rilascio_comune: 'City of issue',
         opt_doc_ci: 'Identity Card', opt_doc_pass: 'Passport',
         opt_doc_pat: 'Driving Licence', opt_doc_perm: 'Residence Permit',
         card_contatti: 'Contact details',
@@ -126,6 +133,7 @@ const CI_TRANS = {
         err_privacy: 'You must accept both declarations to proceed.',
         err_send: 'An error occurred while submitting. Please try again or contact us via WhatsApp.',
         sum_apt: 'Apartment', sum_arrival: 'Arrival', sum_departure: 'Departure',
+        sum_permanenza: 'Duration',
         sum_guests: 'Guests', sum_type: 'Type', sum_time: 'Arrival time',
         sum_ref: 'Main guest', sum_email: 'Email', sum_phone: 'Phone', sum_doc: 'Document',
         adults_suffix: 'adults', children_suffix: 'children', doc_num: 'no.',
@@ -172,6 +180,9 @@ function applyLang(lang) {
         if (t[el.dataset.i18n] !== undefined) el.textContent = t[el.dataset.i18n];
     });
 
+    // Re-render permanenza label
+    ciUpdatePermanenzaDisplay();
+
     // Re-render summary if visible
     if (currentStep === 4) ciBuildSummary();
 
@@ -217,11 +228,30 @@ function ciGoToStep(n) {
 // ─── VALIDATION ─────────────────────────────────────────────
 
 function ciValidateStep(step) {
-    // Step 3 (accompagnatori) has no static required fields — skip
-    if (step === 3) return true;
+    let section, required;
 
-    const section = document.querySelector(`#step-${step}`);
-    const required = section.querySelectorAll('input[required], select[required]');
+    if (step === 3) {
+        // Validate inside guest blocks only if any exist
+        const guestBlocks = document.querySelectorAll('.ci-guest-block');
+        if (guestBlocks.length === 0) return true;
+        let ok = true;
+        guestBlocks.forEach(block => {
+            block.querySelectorAll('input[required], select[required]').forEach(el => {
+                el.classList.remove('ci-invalid');
+                if (!el.value.trim()) { el.classList.add('ci-invalid'); ok = false; }
+            });
+        });
+        if (!ok) {
+            document.querySelector('.ci-guest-block .ci-invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            ciShowStepError(3, t('err_required'));
+        } else {
+            ciClearStepError(3);
+        }
+        return ok;
+    }
+
+    section = document.querySelector(`#step-${step}`);
+    required = section.querySelectorAll('input[required], select[required]');
     let ok = true;
 
     required.forEach(el => {
@@ -268,6 +298,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// ─── PERMANENZA ──────────────────────────────────────────────
+
+function ciComputeNights() {
+    const cin = document.getElementById('checkin-date')?.value;
+    const cout = document.getElementById('checkout-date')?.value;
+    if (!cin || !cout) return 0;
+    const ms = new Date(cout) - new Date(cin);
+    return Math.max(0, Math.round(ms / 86400000));
+}
+
+function ciUpdatePermanenzaDisplay() {
+    const el = document.getElementById('permanenza-display');
+    if (!el) return;
+    const nights = ciComputeNights();
+    if (nights <= 0) { el.textContent = '—'; return; }
+    const suffix = nights === 1 ? t('night_suffix') : t('nights_suffix');
+    el.textContent = `${nights} ${suffix}`;
+}
+
+// ─── CITIZENSHIP CONDITIONAL COMUNI ─────────────────────────
+// Comune di nascita, comune di residenza, comune di rilascio doc
+// are required only for Italian citizens (comune is an Italian concept).
+
+function ciIsItalian(val) {
+    return /^italian[aoe]?$/i.test(val.trim());
+}
+
+function ciUpdateComuneVisibility(cittadinanzaInput) {
+    // Scope: the closest .ci-guest-block, or #step-2 for referente
+    const scope = cittadinanzaInput.closest('.ci-guest-block') || document.getElementById('step-2');
+    const isItalian = ciIsItalian(cittadinanzaInput.value);
+
+    scope.querySelectorAll('.ci-comune-field').forEach(wrap => {
+        const input = wrap.querySelector('input');
+        if (isItalian) {
+            wrap.style.display = '';
+            if (input) input.required = true;
+        } else {
+            wrap.style.display = 'none';
+            if (input) { input.required = false; input.classList.remove('ci-invalid'); }
+        }
+    });
+}
+
 // ─── GUEST MANAGEMENT ───────────────────────────────────────
 
 function ciSyncGuestsFromAdults() {
@@ -307,8 +381,8 @@ function ciAddGuest() {
             </div>
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
-                    <label for="g${idx}-sesso"><span data-i18n="lbl_sesso">${tr.lbl_sesso}</span></label>
-                    <select id="g${idx}-sesso" name="g${idx}_sesso">
+                    <label for="g${idx}-sesso"><span data-i18n="lbl_sesso">${tr.lbl_sesso}</span> <span class="req">*</span></label>
+                    <select id="g${idx}-sesso" name="g${idx}_sesso" required>
                         <option value="">—</option>
                         <option value="M" data-i18n="opt_sesso_m">${tr.opt_sesso_m}</option>
                         <option value="F" data-i18n="opt_sesso_f">${tr.opt_sesso_f}</option>
@@ -324,7 +398,7 @@ function ciAddGuest() {
                 </div>
             </div>
             <div class="ci-row ci-row--2">
-                <div class="ci-field">
+                <div class="ci-field ci-comune-field">
                     <label for="g${idx}-nascita-comune"><span data-i18n="lbl_nascita_comune">${tr.lbl_nascita_comune}</span> <span class="req">*</span></label>
                     <input type="text" id="g${idx}-nascita-comune" name="g${idx}_nascita_comune" required autocomplete="off">
                 </div>
@@ -333,13 +407,31 @@ function ciAddGuest() {
                     <input type="text" id="g${idx}-nascita-stato" name="g${idx}_nascita_stato" value="${tr.default_country}" data-i18n-value="default_country" required autocomplete="off">
                 </div>
             </div>
+            <div class="ci-row ci-row--2">
+                <div class="ci-field ci-comune-field">
+                    <label for="g${idx}-comune-res"><span data-i18n="lbl_comune_res">${tr.lbl_comune_res}</span> <span class="req">*</span></label>
+                    <input type="text" id="g${idx}-comune-res" name="g${idx}_comune_res" required autocomplete="off">
+                </div>
+                <div class="ci-field">
+                    <label for="g${idx}-stato-res"><span data-i18n="lbl_paese">${tr.lbl_paese}</span> <span class="req">*</span></label>
+                    <input type="text" id="g${idx}-stato-res" name="g${idx}_stato_res" value="${tr.default_country}" data-i18n-value="default_country" required autocomplete="off">
+                </div>
+            </div>
         </div>`;
 
     container.appendChild(block);
+
     // Remove invalid on input
     block.querySelectorAll('input, select').forEach(el => {
         el.addEventListener('input', () => el.classList.remove('ci-invalid'));
     });
+
+    // Citizenship listener for this guest
+    const citInput = document.getElementById(`g${idx}-cittadinanza`);
+    if (citInput) {
+        citInput.addEventListener('input', () => ciUpdateComuneVisibility(citInput));
+        ciUpdateComuneVisibility(citInput); // initialize based on default
+    }
 
     const addBtn = document.getElementById('add-guest-btn');
     if (addBtn) addBtn.style.display = guestCount >= MAX_GUESTS ? 'none' : '';
@@ -373,6 +465,9 @@ function ciBuildSummary() {
         gruppo_amici: tr.chip_gruppo, singolo: tr.chip_singolo, altro: tr.chip_altro
     };
 
+    const nights = ciComputeNights();
+    const nightLabel = nights === 1 ? t('night_suffix') : t('nights_suffix');
+
     let guestsHTML = '';
     document.querySelectorAll('.ci-guest-block').forEach((block, i) => {
         const nome = block.querySelector(`[id$="-nome"]`)?.value || '—';
@@ -388,6 +483,7 @@ function ciBuildSummary() {
             <div class="summary-row"><span class="summary-label">${tr.sum_apt}</span><span class="summary-value">${v('appartamento') || '—'}</span></div>
             <div class="summary-row"><span class="summary-label">${tr.sum_arrival}</span><span class="summary-value">${ciFormatDate(v('checkin-date'))}</span></div>
             <div class="summary-row"><span class="summary-label">${tr.sum_departure}</span><span class="summary-value">${ciFormatDate(v('checkout-date'))}</span></div>
+            <div class="summary-row"><span class="summary-label">${tr.sum_permanenza}</span><span class="summary-value">${nights > 0 ? nights + ' ' + nightLabel : '—'}</span></div>
             <div class="summary-row"><span class="summary-label">${tr.sum_guests}</span><span class="summary-value">${v('adults-count')} ${tr.adults_suffix} · ${v('children-count')} ${tr.children_suffix}</span></div>
             <div class="summary-row"><span class="summary-label">${tr.sum_type}</span><span class="summary-value">${tripTypeMap[v('trip-type')] || v('trip-type')}</span></div>
             <div class="summary-row"><span class="summary-label">${tr.sum_time}</span><span class="summary-value">${v('ora-arrivo') || '—'}</span></div>
@@ -467,38 +563,48 @@ function ciCollectFormData() {
     const guests = [];
     document.querySelectorAll('.ci-guest-block').forEach((block) => {
         guests.push({
-            nome: block.querySelector(`[id$="-nome"]`)?.value.trim() || '',
-            cognome: block.querySelector(`[id$="-cognome"]`)?.value.trim() || '',
-            sesso: block.querySelector(`[id$="-sesso"]`)?.value || '',
-            data_nascita: block.querySelector(`[id$="-nascita"]:not([id*="comune"]):not([id*="stato"])`)?.value || '',
+            nome:           block.querySelector(`[id$="-nome"]`)?.value.trim() || '',
+            cognome:        block.querySelector(`[id$="-cognome"]`)?.value.trim() || '',
+            sesso:          block.querySelector(`[id$="-sesso"]`)?.value || '',
+            data_nascita:   block.querySelector(`[id$="-nascita"]:not([id*="comune"]):not([id*="stato"])`)?.value || '',
             comune_nascita: block.querySelector(`[id$="-nascita-comune"]`)?.value.trim() || '',
-            stato_nascita: block.querySelector(`[id$="-nascita-stato"]`)?.value.trim() || '',
-            cittadinanza: block.querySelector(`[id$="-cittadinanza"]`)?.value.trim() || ''
+            stato_nascita:  block.querySelector(`[id$="-nascita-stato"]`)?.value.trim() || '',
+            cittadinanza:   block.querySelector(`[id$="-cittadinanza"]`)?.value.trim() || '',
+            comune_res:     block.querySelector(`[id$="-comune-res"]`)?.value.trim() || '',
+            stato_res:      block.querySelector(`[id$="-stato-res"]`)?.value.trim() || ''
         });
     });
 
     return {
-        timestamp: new Date().toISOString(),
-        appartamento: v('appartamento'),
-        checkin_date: v('checkin-date'),
-        checkout_date: v('checkout-date'),
-        adults_count: v('adults-count'),
-        children_count: v('children-count'),
-        trip_type: v('trip-type'),
-        ora_arrivo: v('ora-arrivo'),
-        r_nome: v('r-nome'), r_cognome: v('r-cognome'),
-        r_sesso: v('r-sesso'), r_nascita_data: v('r-nascita-data'),
-        r_nascita_comune: v('r-nascita-comune'), r_nascita_stato: v('r-nascita-stato'),
-        r_cittadinanza: v('r-cittadinanza'),
-        r_indirizzo: v('r-indirizzo'), r_comune: v('r-comune'),
-        r_cap: v('r-cap'), r_paese: v('r-paese'),
-        r_doc_tipo: v('r-doc-tipo'), r_doc_numero: v('r-doc-numero'),
-        r_doc_emissione: v('r-doc-emissione'), r_doc_scadenza: v('r-doc-scadenza'),
-        r_doc_rilascio: v('r-doc-rilascio'),
-        r_email: v('r-email'), r_telefono: v('r-telefono'),
-        guests_count: guests.length,
-        guests: guests,
-        note: v('note')
+        timestamp:           new Date().toISOString(),
+        permanenza_notti:    ciComputeNights(),
+        appartamento:        v('appartamento'),
+        checkin_date:        v('checkin-date'),
+        checkout_date:       v('checkout-date'),
+        adults_count:        v('adults-count'),
+        children_count:      v('children-count'),
+        trip_type:           v('trip-type'),
+        ora_arrivo:          v('ora-arrivo'),
+        r_nome:              v('r-nome'),
+        r_cognome:           v('r-cognome'),
+        r_sesso:             v('r-sesso'),
+        r_nascita_data:      v('r-nascita-data'),
+        r_nascita_comune:    v('r-nascita-comune'),
+        r_nascita_stato:     v('r-nascita-stato'),
+        r_cittadinanza:      v('r-cittadinanza'),
+        r_comune:            v('r-comune'),
+        r_paese:             v('r-paese'),
+        r_doc_tipo:          v('r-doc-tipo'),
+        r_doc_numero:        v('r-doc-numero'),
+        r_doc_emissione:     v('r-doc-emissione'),
+        r_doc_scadenza:      v('r-doc-scadenza'),
+        r_doc_rilascio_stato: v('r-doc-rilascio-stato'),
+        r_doc_rilascio_comune: v('r-doc-rilascio-comune'),
+        r_email:             v('r-email'),
+        r_telefono:          v('r-telefono'),
+        guests_count:        guests.length,
+        guests:              guests,
+        note:                v('note')
     };
 }
 
@@ -510,12 +616,15 @@ function ciShowSuccess(data) {
 
     const tr = CI_TRANS[currentLang];
     const greeting = document.getElementById('success-greeting');
-    if (greeting) greeting.innerHTML = `${tr.btn_next !== 'Next' ? 'Grazie' : 'Thank you'} <strong>${data.r_nome || ''}</strong>${tr.success_greeting}`;
+    if (greeting) greeting.innerHTML = `${currentLang === 'it' ? 'Grazie' : 'Thank you'} <strong>${data.r_nome || ''}</strong>${tr.success_greeting}`;
 
+    const nights = data.permanenza_notti || 0;
+    const nightLabel = nights === 1 ? t('night_suffix') : t('nights_suffix');
     document.getElementById('success-summary').innerHTML = `
         <div class="success-detail">
             <span>🏠 ${data.appartamento || 'Casa Paolina'}</span>
             <span>📅 ${ciFormatDate(data.checkin_date)} → ${ciFormatDate(data.checkout_date)}</span>
+            <span>🌙 ${nights} ${nightLabel}</span>
             <span>👥 ${parseInt(data.adults_count || 0) + parseInt(data.children_count || 0)} ${tr.adults_suffix}</span>
         </div>`;
 }
@@ -546,7 +655,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cout && !cout.value) cout.value = fmt(nextWeek);
     if (cin) cin.min = fmt(today);
 
-    cin?.addEventListener('change', () => {
+    // Permanenza init
+    ciUpdatePermanenzaDisplay();
+
+    const updateDates = () => {
         const cinVal = new Date(cin.value);
         const coutVal = new Date(cout.value);
         if (cout && cinVal >= coutVal) {
@@ -554,7 +666,18 @@ document.addEventListener('DOMContentLoaded', () => {
             cout.value = fmt(d);
         }
         if (cout) cout.min = cin.value;
-    });
+        ciUpdatePermanenzaDisplay();
+    };
+
+    cin?.addEventListener('change', updateDates);
+    cout?.addEventListener('change', ciUpdatePermanenzaDisplay);
+
+    // Citizenship conditional comuni for referente
+    const rCit = document.getElementById('r-cittadinanza');
+    if (rCit) {
+        rCit.addEventListener('input', () => ciUpdateComuneVisibility(rCit));
+        ciUpdateComuneVisibility(rCit); // init with default "Italiana"
+    }
 
     // Auto-uppercase document number
     document.getElementById('r-doc-numero')?.addEventListener('input', function () {

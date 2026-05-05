@@ -390,6 +390,27 @@ body {
     color: white;
 }
 
+/* ─── PERMANENZA ─────────────────────────────────────────── */
+.ci-permanenza {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(44,120,115,0.07), rgba(44,120,115,0.13));
+    border: 1.5px solid rgba(44,120,115,0.22);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    min-height: 42px;
+    text-align: center;
+    letter-spacing: 0.01em;
+}
+
+/* ─── CONDITIONAL COMUNE FIELDS ─────────────────────────── */
+/* Hidden by JS when citizenship is non-Italian */
+.ci-comune-field[style*="display: none"] { display: none !important; }
+
 /* ─── GUEST BLOCKS ──────────────────────────────────────── */
 .ci-guest-block {
     margin-bottom: 20px;

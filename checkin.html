@@ -77,7 +77,7 @@
         </div>
 
         <div class="ci-card">
-            <div class="ci-row ci-row--2">
+            <div class="ci-row ci-row--3">
                 <div class="ci-field">
                     <label for="checkin-date"><span data-i18n="lbl_checkin">Data di arrivo</span> <span class="req">*</span></label>
                     <input type="date" id="checkin-date" name="checkin_date" required>
@@ -85,6 +85,10 @@
                 <div class="ci-field">
                     <label for="checkout-date"><span data-i18n="lbl_checkout">Data di partenza</span> <span class="req">*</span></label>
                     <input type="date" id="checkout-date" name="checkout_date" required>
+                </div>
+                <div class="ci-field">
+                    <label><span data-i18n="lbl_permanenza">Permanenza</span></label>
+                    <div class="ci-permanenza" id="permanenza-display">—</div>
                 </div>
             </div>
 
@@ -170,8 +174,8 @@
 
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
-                    <label for="r-sesso"><span data-i18n="lbl_sesso">Sesso</span></label>
-                    <select id="r-sesso" name="r_sesso">
+                    <label for="r-sesso"><span data-i18n="lbl_sesso">Sesso</span> <span class="req">*</span></label>
+                    <select id="r-sesso" name="r_sesso" required>
                         <option value="">—</option>
                         <option value="M" data-i18n="opt_sesso_m">Maschio</option>
                         <option value="F" data-i18n="opt_sesso_f">Femmina</option>
@@ -188,7 +192,7 @@
             </div>
 
             <div class="ci-row ci-row--2">
-                <div class="ci-field">
+                <div class="ci-field ci-comune-field">
                     <label for="r-nascita-comune"><span data-i18n="lbl_nascita_comune">Comune di nascita</span> <span class="req">*</span></label>
                     <input type="text" id="r-nascita-comune" name="r_nascita_comune" required>
                 </div>
@@ -203,22 +207,13 @@
         <div class="ci-card">
             <h3 class="ci-card-title" data-i18n="card_residenza">Residenza</h3>
 
-            <div class="ci-field">
-                <label for="r-indirizzo"><span data-i18n="lbl_indirizzo">Indirizzo</span> <span class="req">*</span></label>
-                <input type="text" id="r-indirizzo" name="r_indirizzo" required autocomplete="street-address">
-            </div>
-
-            <div class="ci-row ci-row--3">
-                <div class="ci-field">
-                    <label for="r-comune"><span data-i18n="lbl_comune">Comune</span> <span class="req">*</span></label>
+            <div class="ci-row ci-row--2">
+                <div class="ci-field ci-comune-field">
+                    <label for="r-comune"><span data-i18n="lbl_comune">Comune di residenza</span> <span class="req">*</span></label>
                     <input type="text" id="r-comune" name="r_comune" required autocomplete="address-level2">
                 </div>
                 <div class="ci-field">
-                    <label for="r-cap"><span data-i18n="lbl_cap">CAP</span></label>
-                    <input type="text" id="r-cap" name="r_cap" maxlength="10" autocomplete="postal-code">
-                </div>
-                <div class="ci-field">
-                    <label for="r-paese"><span data-i18n="lbl_paese">Paese</span> <span class="req">*</span></label>
+                    <label for="r-paese"><span data-i18n="lbl_paese">Stato di residenza</span> <span class="req">*</span></label>
                     <input type="text" id="r-paese" name="r_paese" value="Italia" data-i18n-value="default_country" required autocomplete="country-name">
                 </div>
             </div>
@@ -245,18 +240,25 @@
                 </div>
             </div>
 
-            <div class="ci-row ci-row--3">
-                <div class="ci-field">
-                    <label for="r-doc-emissione" data-i18n="lbl_doc_emissione">Data emissione</label>
-                    <input type="date" id="r-doc-emissione" name="r_doc_emissione">
-                </div>
+            <div class="ci-row ci-row--2">
                 <div class="ci-field">
                     <label for="r-doc-scadenza"><span data-i18n="lbl_doc_scadenza">Data scadenza</span> <span class="req">*</span></label>
                     <input type="date" id="r-doc-scadenza" name="r_doc_scadenza" required>
                 </div>
                 <div class="ci-field">
-                    <label for="r-doc-rilascio"><span data-i18n="lbl_doc_rilascio">Luogo di rilascio</span> <span class="req">*</span></label>
-                    <input type="text" id="r-doc-rilascio" name="r_doc_rilascio" required>
+                    <label for="r-doc-emissione" data-i18n="lbl_doc_emissione">Data emissione</label>
+                    <input type="date" id="r-doc-emissione" name="r_doc_emissione">
+                </div>
+            </div>
+
+            <div class="ci-row ci-row--2">
+                <div class="ci-field">
+                    <label for="r-doc-rilascio-stato"><span data-i18n="lbl_doc_rilascio_stato">Stato di rilascio</span> <span class="req">*</span></label>
+                    <input type="text" id="r-doc-rilascio-stato" name="r_doc_rilascio_stato" value="Italia" data-i18n-value="default_country" required>
+                </div>
+                <div class="ci-field ci-comune-field">
+                    <label for="r-doc-rilascio-comune"><span data-i18n="lbl_doc_rilascio_comune">Comune di rilascio</span> <span class="req">*</span></label>
+                    <input type="text" id="r-doc-rilascio-comune" name="r_doc_rilascio_comune" required>
                 </div>
             </div>
         </div>
@@ -266,12 +268,12 @@
             <h3 class="ci-card-title" data-i18n="card_contatti">Contatti</h3>
             <div class="ci-row ci-row--2">
                 <div class="ci-field">
-                    <label for="r-email"><span data-i18n="lbl_email">Email</span> <span class="req">*</span></label>
-                    <input type="email" id="r-email" name="r_email" required autocomplete="email">
+                    <label for="r-email"><span data-i18n="lbl_email">Email</span></label>
+                    <input type="email" id="r-email" name="r_email" autocomplete="email">
                 </div>
                 <div class="ci-field">
-                    <label for="r-telefono"><span data-i18n="lbl_telefono">Telefono</span> <span class="req">*</span></label>
-                    <input type="tel" id="r-telefono" name="r_telefono" required autocomplete="tel">
+                    <label for="r-telefono"><span data-i18n="lbl_telefono">Telefono</span></label>
+                    <input type="tel" id="r-telefono" name="r_telefono" autocomplete="tel">
                 </div>
             </div>
         </div>

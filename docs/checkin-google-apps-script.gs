@@ -21,13 +21,12 @@
 //  6. Clicca "Deploy" → copia l'URL che appare (Web App URL)
 //
 //  7. Incolla quell'URL in:
-//     js/checkin.js → riga 7 → const SHEETS_SCRIPT_URL = '...'
+//     js/checkin.js → riga 8 → const SHEETS_SCRIPT_URL = '...'
 //
-//  Fine! Ogni check-in apparirà come nuova riga nel foglio.
+//  NOTA: ogni volta che modifichi lo script devi fare una NUOVA
+//  distribuzione (Deploy → Gestisci distribuzioni → Modifica →
+//  Versione: Nuova) per rendere effettive le modifiche.
 // ═══════════════════════════════════════════════════════════════
-
-// NOTA: Lo script deve essere aperto dallo stesso Google Sheet
-// in cui vuoi salvare i dati. Non serve specificare uno spreadsheet ID.
 
 function doPost(e) {
   try {
@@ -70,7 +69,9 @@ function doPost(e) {
           g.data_nascita,
           g.comune_nascita,
           g.stato_nascita,
-          g.cittadinanza
+          g.cittadinanza,
+          g.comune_res,
+          g.stato_res
         ]);
       });
     }
@@ -103,30 +104,30 @@ function buildMainRow(d) {
     d.appartamento,                      // B: Appartamento
     d.checkin_date,                      // C: Data arrivo
     d.checkout_date,                     // D: Data partenza
-    d.adults_count,                      // E: N. adulti
-    d.children_count,                    // F: N. bambini
-    totOspiti,                           // G: Totale ospiti
-    d.trip_type,                         // H: Tipo soggiorno
-    d.ora_arrivo,                        // I: Ora arrivo prevista
+    d.permanenza_notti,                  // E: Notti
+    d.adults_count,                      // F: N. adulti
+    d.children_count,                    // G: N. bambini
+    totOspiti,                           // H: Totale ospiti
+    d.trip_type,                         // I: Tipo soggiorno
+    d.ora_arrivo,                        // J: Ora arrivo prevista
     // Referente — anagrafica
-    d.r_nome,                            // J: Nome
-    d.r_cognome,                         // K: Cognome
-    d.r_sesso,                           // L: Sesso
-    d.r_nascita_data,                    // M: Data di nascita
-    d.r_nascita_comune,                  // N: Comune di nascita
-    d.r_nascita_stato,                   // O: Stato di nascita
-    d.r_cittadinanza,                    // P: Cittadinanza
+    d.r_nome,                            // K: Nome
+    d.r_cognome,                         // L: Cognome
+    d.r_sesso,                           // M: Sesso
+    d.r_nascita_data,                    // N: Data di nascita
+    d.r_nascita_comune,                  // O: Comune di nascita
+    d.r_nascita_stato,                   // P: Stato di nascita
+    d.r_cittadinanza,                    // Q: Cittadinanza
     // Referente — residenza
-    d.r_indirizzo,                       // Q: Indirizzo
     d.r_comune,                          // R: Comune di residenza
-    d.r_cap,                             // S: CAP
-    d.r_paese,                           // T: Paese di residenza
+    d.r_paese,                           // S: Paese di residenza
     // Referente — documento
-    d.r_doc_tipo,                        // U: Tipo documento
-    d.r_doc_numero,                      // V: Numero documento
-    d.r_doc_emissione,                   // W: Data emissione
-    d.r_doc_scadenza,                    // X: Data scadenza
-    d.r_doc_rilascio,                    // Y: Luogo rilascio
+    d.r_doc_tipo,                        // T: Tipo documento
+    d.r_doc_numero,                      // U: Numero documento
+    d.r_doc_emissione,                   // V: Data emissione
+    d.r_doc_scadenza,                    // W: Data scadenza
+    d.r_doc_rilascio_stato,              // X: Stato rilascio
+    d.r_doc_rilascio_comune,             // Y: Comune rilascio
     // Referente — contatti
     d.r_email,                           // Z: Email
     d.r_telefono,                        // AA: Telefono
@@ -142,13 +143,14 @@ function creaIntestazioni(sheet) {
   var headers = [
     'Data Ricezione',
     'Appartamento',
-    'Data Arrivo', 'Data Partenza',
+    'Data Arrivo', 'Data Partenza', 'Notti',
     'Adulti', 'Bambini', 'Totale Ospiti',
     'Tipo Soggiorno', 'Ora Arrivo Prevista',
     'Nome Referente', 'Cognome Referente',
     'Sesso', 'Data Nascita', 'Comune Nascita', 'Stato Nascita', 'Cittadinanza',
-    'Indirizzo', 'Comune Residenza', 'CAP', 'Paese Residenza',
-    'Tipo Documento', 'N. Documento', 'Data Emissione Doc.', 'Data Scadenza Doc.', 'Luogo Rilascio',
+    'Comune Residenza', 'Paese Residenza',
+    'Tipo Documento', 'N. Documento', 'Data Emissione Doc.', 'Data Scadenza Doc.',
+    'Stato Rilascio Doc.', 'Comune Rilascio Doc.',
     'Email', 'Telefono',
     'N. Accompagnatori',
     'Note'
@@ -173,7 +175,9 @@ function creaIntestazioni(sheet) {
 function creaIntestazioniOspiti(sheet) {
   var headers = [
     'Ref. Prenotazione', 'Referente', 'Data Arrivo', 'Data Partenza', 'Appartamento',
-    'Nome', 'Cognome', 'Sesso', 'Data Nascita', 'Comune Nascita', 'Stato Nascita', 'Cittadinanza'
+    'Nome', 'Cognome', 'Sesso', 'Data Nascita',
+    'Comune Nascita', 'Stato Nascita', 'Cittadinanza',
+    'Comune Residenza', 'Stato Residenza'
   ];
   sheet.appendRow(headers);
 
