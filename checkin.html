@@ -23,8 +23,8 @@
     <div class="ci-header-right">
         <span class="ci-header-badge" data-i18n="header_badge">Check-in Online</span>
         <div class="ci-lang-switcher">
-            <button class="ci-lang-btn active" data-lang="it" onclick="applyLang('it')">🇮🇹 IT</button>
-            <button class="ci-lang-btn" data-lang="en" onclick="applyLang('en')">🇬🇧 EN</button>
+            <button class="ci-lang-btn active" data-lang="it" onclick="applyLang('it')"><span class="ci-flag">🇮🇹</span> IT</button>
+            <button class="ci-lang-btn" data-lang="en" onclick="applyLang('en')"><span class="ci-flag">🇬🇧</span> EN</button>
         </div>
     </div>
 </header>
@@ -170,8 +170,8 @@
 
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
-                    <label for="r-sesso"><span data-i18n="lbl_sesso">Sesso</span> <span class="req">*</span></label>
-                    <select id="r-sesso" name="r_sesso" required>
+                    <label for="r-sesso"><span data-i18n="lbl_sesso">Sesso</span></label>
+                    <select id="r-sesso" name="r_sesso">
                         <option value="">—</option>
                         <option value="M" data-i18n="opt_sesso_m">Maschio</option>
                         <option value="F" data-i18n="opt_sesso_f">Femmina</option>
@@ -214,8 +214,8 @@
                     <input type="text" id="r-comune" name="r_comune" required autocomplete="address-level2">
                 </div>
                 <div class="ci-field">
-                    <label for="r-cap"><span data-i18n="lbl_cap">CAP</span> <span class="req">*</span></label>
-                    <input type="text" id="r-cap" name="r_cap" maxlength="10" required autocomplete="postal-code">
+                    <label for="r-cap"><span data-i18n="lbl_cap">CAP</span></label>
+                    <input type="text" id="r-cap" name="r_cap" maxlength="10" autocomplete="postal-code">
                 </div>
                 <div class="ci-field">
                     <label for="r-paese"><span data-i18n="lbl_paese">Paese</span> <span class="req">*</span></label>

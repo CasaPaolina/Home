@@ -45,6 +45,7 @@ const CI_TRANS = {
         lbl_email: 'Email', lbl_telefono: 'Telefono',
         s3_title: 'Accompagnatori', s3_sub: 'Aggiungi i dati degli altri ospiti (se presenti)',
         btn_add_guest: 'Aggiungi ospite',
+        btn_remove_guest: 'Rimuovi',
         hint_guests: 'Se siete solo voi due (o solo il referente), potete passare direttamente al passo successivo.',
         ospite: 'Ospite',
         s4_title: 'Riepilogo e conferma', s4_sub: 'Controlla i dati prima di inviare',
@@ -105,6 +106,7 @@ const CI_TRANS = {
         lbl_email: 'Email', lbl_telefono: 'Phone',
         s3_title: 'Companions', s3_sub: 'Add details of other guests (if any)',
         btn_add_guest: 'Add guest',
+        btn_remove_guest: 'Remove',
         hint_guests: "If it's just the two of you (or just the main guest), you can skip to the next step.",
         ospite: 'Guest',
         s4_title: 'Summary and confirmation', s4_sub: 'Review your details before submitting',
@@ -290,7 +292,7 @@ function ciAddGuest() {
     block.innerHTML = `
         <div class="ci-guest-block-header">
             <h3><span data-i18n="ospite">${tr.ospite}</span> ${idx}</h3>
-            <button type="button" class="ci-remove-guest" onclick="ciRemoveGuest(${idx})" title="Remove">✕</button>
+            <button type="button" class="ci-remove-guest" onclick="ciRemoveGuest(${idx})">✕ <span data-i18n="btn_remove_guest">${tr.btn_remove_guest}</span></button>
         </div>
         <div class="ci-card">
             <div class="ci-row ci-row--2">
@@ -305,8 +307,8 @@ function ciAddGuest() {
             </div>
             <div class="ci-row ci-row--3">
                 <div class="ci-field">
-                    <label for="g${idx}-sesso"><span data-i18n="lbl_sesso">${tr.lbl_sesso}</span> <span class="req">*</span></label>
-                    <select id="g${idx}-sesso" name="g${idx}_sesso" required>
+                    <label for="g${idx}-sesso"><span data-i18n="lbl_sesso">${tr.lbl_sesso}</span></label>
+                    <select id="g${idx}-sesso" name="g${idx}_sesso">
                         <option value="">—</option>
                         <option value="M" data-i18n="opt_sesso_m">${tr.opt_sesso_m}</option>
                         <option value="F" data-i18n="opt_sesso_f">${tr.opt_sesso_f}</option>
