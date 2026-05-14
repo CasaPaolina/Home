@@ -193,6 +193,7 @@ const guestTranslations = {
         section_tag_rules: "📜 Regole",
         section_tag_meteo: "🌤️ Meteo",
         section_tag_excursions: "🚤 Escursioni",
+        follow_us: "Seguici su",
         footer_copy: "© 2026 Casa Paolina. Tutti i diritti riservati.",
 
         // Mobile tab toggle
@@ -461,6 +462,7 @@ const guestTranslations = {
         section_tag_rules: "📜 Rules",
         section_tag_meteo: "🌤️ Weather",
         section_tag_excursions: "🚤 Excursions",
+        follow_us: "Follow us on",
         footer_copy: "© 2026 Casa Paolina. All rights reserved.",
 
         // Mobile tab toggle
@@ -740,6 +742,7 @@ const guestTranslations = {
         section_tag_rules: "📜 Règles",
         section_tag_meteo: "🌤️ Météo",
         section_tag_excursions: "🚤 Excursions",
+        follow_us: "Suivez-nous sur",
         footer_copy: "© 2026 Casa Paolina. Tous droits réservés.",
 
         // Mobile tab toggle
@@ -1016,6 +1019,7 @@ const guestTranslations = {
         section_tag_rules: "📜 Reglas",
         section_tag_meteo: "🌤️ Tiempo",
         section_tag_excursions: "🚤 Excursiones",
+        follow_us: "Síguenos en",
         footer_copy: "© 2026 Casa Paolina. Todos los derechos reservados.",
 
         // Mobile tab toggle
@@ -1283,6 +1287,7 @@ const guestTranslations = {
         section_tag_rules: "📜 Regeln",
         section_tag_meteo: "🌤️ Wetter",
         section_tag_excursions: "🚤 Ausflüge",
+        follow_us: "Folge uns auf",
         footer_copy: "© 2026 Casa Paolina. Alle Rechte vorbehalten.",
 
         // Mobile tab toggle

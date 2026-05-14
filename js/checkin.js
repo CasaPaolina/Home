@@ -333,7 +333,7 @@ function ciUpdateComuneVisibility(cittadinanzaInput) {
             if (input) input.required = true;
         } else {
             wrap.style.display = 'none';
-            if (input) { input.required = false; input.classList.remove('ci-invalid'); }
+            if (input) { input.required = false; input.value = ''; input.classList.remove('ci-invalid'); }
         }
     });
 }

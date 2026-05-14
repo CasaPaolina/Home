@@ -951,6 +951,18 @@
 .guest-footer a { color: #7dd3c9; text-decoration: none; font-weight: 600; }
 .guest-footer a:hover { color: white; }
 .footer-copy { color: rgba(255,255,255,0.4); font-size: 0.78rem; margin-top: 14px !important; }
+.footer-follow-us { margin-top: 14px !important; font-size: 0.88rem; color: rgba(255,255,255,0.6); }
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #7dd3c9 !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.footer-social-link:hover { color: white !important; }
+.footer-social-link svg { vertical-align: middle; }
 
 /* ── Inline map button ── */
 .inline-map-btn {

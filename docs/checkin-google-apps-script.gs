@@ -140,9 +140,9 @@ function inviaEmail_(data, sheetUrl) {
   var citt      = data.r_cittadinanza      || '-';
   var comune    = data.r_comune            || '-';
   var paese     = data.r_paese             || '-';
-  var docTipo   = data.r_doc_tipo          || '-';
-  var docNum    = data.r_doc_numero        || '-';
-  var docRilSt  = data.r_doc_rilascio_stato  || '-';
+  var docTipo   = data.r_doc_tipo               || '-';
+  var docNum    = data.r_doc_numero             || '-';
+  var docRilSt  = data.r_doc_rilascio_stato     || '-';
   var docRilCom = data.r_doc_rilascio_comune || '-';
   var email     = data.r_email             || '-';
   var telefono  = data.r_telefono          || '-';
@@ -303,15 +303,15 @@ function buildMainRow(d) {
     d.r_cognome,                 // L: Cognome
     d.r_sesso,                   // M: Sesso
     d.r_nascita_data,            // N: Data di nascita
-    d.r_nascita_comune,          // O: Comune di nascita
-    d.r_nascita_stato,           // P: Stato di nascita
-    d.r_cittadinanza,            // Q: Cittadinanza
-    d.r_comune,                  // R: Comune di residenza
-    d.r_paese,                   // S: Paese di residenza
-    d.r_doc_tipo,                // T: Tipo documento
-    d.r_doc_numero,              // U: Numero documento
-    d.r_doc_rilascio_stato,      // V: Stato rilascio
-    d.r_doc_rilascio_comune,     // W: Comune rilascio
+    d.r_nascita_comune   || null, // O: Comune di nascita (null se non italiano)
+    d.r_nascita_stato    || null, // P: Stato di nascita
+    d.r_cittadinanza     || null, // Q: Cittadinanza
+    d.r_comune           || null, // R: Comune di residenza (null se non italiano)
+    d.r_paese            || null, // S: Paese di residenza
+    d.r_doc_tipo         || null, // T: Tipo documento
+    d.r_doc_numero       || null, // U: Numero documento
+    d.r_doc_rilascio_stato  || null, // V: Stato rilascio
+    d.r_doc_rilascio_comune || null, // W: Comune rilascio (null se non italiano)
     d.r_email,                   // X: Email
     d.r_telefono,                // Y: Telefono
     d.guests_count,              // Z: N. accompagnatori
