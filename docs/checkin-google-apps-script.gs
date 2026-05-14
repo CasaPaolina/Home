@@ -366,6 +366,78 @@ function creaIntestazioniOspiti(sheet) {
 
 
 // ════════════════════════════════════════════════════════════════
+//  AGGIORNA INTESTAZIONI — esegui UNA VOLTA per correggere
+//  le intestazioni di un foglio gia' esistente creato con
+//  una versione precedente dello script.
+//
+//  Seleziona "aggiornaIntestazioni" dal menu a tendina e clicca
+//  ▶ Esegui. Non cancella i dati, sovrascrive solo la riga 1.
+// ════════════════════════════════════════════════════════════════
+
+function aggiornaIntestazioni() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // ── Foglio Prenotazioni ──────────────────────────────────────
+  var sheet = ss.getSheetByName('Prenotazioni');
+  if (sheet) {
+    var headers = [
+      'Data Ricezione',
+      'Appartamento',
+      'Data Arrivo', 'Data Partenza', 'Notti',
+      'Adulti', 'Bambini', 'Totale Ospiti',
+      'Tipo Soggiorno', 'Ora Arrivo Prevista',
+      'Nome Referente', 'Cognome Referente',
+      'Sesso', 'Data Nascita', 'Comune Nascita', 'Stato Nascita', 'Cittadinanza',
+      'Comune Residenza', 'Paese Residenza',
+      'Tipo Documento', 'N. Documento',
+      'Stato Rilascio Doc.', 'Comune Rilascio Doc.',
+      'Email', 'Telefono',
+      'N. Accompagnatori',
+      'Note'
+    ];
+    // Sovrascrive solo la riga 1
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    // Cancella eventuali colonne extra a destra (vecchie colonne eliminate)
+    var lastCol = sheet.getLastColumn();
+    if (lastCol > headers.length) {
+      sheet.deleteColumns(headers.length + 1, lastCol - headers.length);
+    }
+    // Stile
+    var r = sheet.getRange(1, 1, 1, headers.length);
+    r.setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
+    Logger.log('Intestazioni Prenotazioni aggiornate: ' + headers.length + ' colonne.');
+  } else {
+    Logger.log('Foglio "Prenotazioni" non trovato.');
+  }
+
+  // ── Foglio Ospiti ────────────────────────────────────────────
+  var guestSheet = ss.getSheetByName('Ospiti');
+  if (guestSheet) {
+    var gHeaders = [
+      'Ref. Prenotazione', 'Referente', 'Data Arrivo', 'Data Partenza', 'Appartamento',
+      'Nome', 'Cognome', 'Sesso', 'Data Nascita',
+      'Comune Nascita', 'Stato Nascita', 'Cittadinanza',
+      'Comune Residenza', 'Stato Residenza'
+    ];
+    guestSheet.getRange(1, 1, 1, gHeaders.length).setValues([gHeaders]);
+    var gLastCol = guestSheet.getLastColumn();
+    if (gLastCol > gHeaders.length) {
+      guestSheet.deleteColumns(gHeaders.length + 1, gLastCol - gHeaders.length);
+    }
+    guestSheet.getRange(1, 1, 1, gHeaders.length)
+      .setFontWeight('bold').setBackground('#264653').setFontColor('#ffffff').setFontSize(10);
+    Logger.log('Intestazioni Ospiti aggiornate: ' + gHeaders.length + ' colonne.');
+  }
+
+  SpreadsheetApp.getUi().alert(
+    'Intestazioni aggiornate!\n\n' +
+    'Le colonne "Data Emissione" e "Data Scadenza" sono state rimosse.\n' +
+    'I dati esistenti non sono stati toccati.'
+  );
+}
+
+
+// ════════════════════════════════════════════════════════════════
 //  TEST — seleziona "testEmail" e clicca ▶ Esegui
 // ════════════════════════════════════════════════════════════════
 
