@@ -125,6 +125,9 @@ function renderBookings(aptFilter) {
 
         const originalIdx = allBookings.indexOf(booking);
 
+        const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || '—';
+        const ospitiLabel = booking.adults_count ? ` · ${booking.adults_count} ospiti` : '';
+
         const card = document.createElement('div');
         card.className = 'ci-card';
         card.style.marginBottom = '14px';
@@ -133,10 +136,10 @@ function renderBookings(aptFilter) {
                 <div class="adm-booking-meta">
                     <span class="adm-apt-badge" style="${aptStyle}">${booking.appartamento || 'N/D'}</span>
                     <span class="adm-status adm-status--${status}">${STATUS_LABELS[status]}</span>
-                    <div class="adm-booking-name">${booking.ospite || '—'}</div>
+                    <div class="adm-booking-name">${guestName}</div>
                     <div class="adm-booking-dates">
                         ${formatAdminDate(booking.checkin)} → ${formatAdminDate(booking.checkout)}
-                        &nbsp;·&nbsp; ${nights} ${nights === 1 ? 'notte' : 'notti'}
+                        &nbsp;·&nbsp; ${nights} ${nights === 1 ? 'notte' : 'notti'}${ospitiLabel}
                     </div>
                 </div>
                 <div>
@@ -157,9 +160,14 @@ function avviaCheckin(idx) {
     const booking = allBookings[idx];
     if (!booking) return;
 
-    const parts   = (booking.ospite || '').trim().split(/\s+/);
-    const nome    = parts[0] || '';
-    const cognome = parts.slice(1).join(' ') || '';
+    // Nome/Cognome come colonne separate; fallback a split di ospite
+    let nome    = booking.nome    || '';
+    let cognome = booking.cognome || '';
+    if (!nome && !cognome && booking.ospite) {
+        const parts = booking.ospite.trim().split(/\s+/);
+        nome    = parts[0] || '';
+        cognome = parts.slice(1).join(' ') || '';
+    }
 
     const preFill = {
         checkin_date:  booking.checkin  || '',
@@ -167,6 +175,7 @@ function avviaCheckin(idx) {
         appartamento:  booking.appartamento || '',
         r_nome:        nome,
         r_cognome:     cognome,
+        adults_count:  booking.adults_count || '',
     };
 
     sessionStorage.setItem('ciAdminPreFill', JSON.stringify(preFill));

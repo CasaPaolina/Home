@@ -686,12 +686,21 @@ document.addEventListener('DOMContentLoaded', () => {
             sessionStorage.removeItem('ciAdminPreFill');
             if (pre.checkin_date  && cin)  cin.value  = pre.checkin_date;
             if (pre.checkout_date && cout) cout.value = pre.checkout_date;
+            // Appartamento: case-insensitive match against <select> options
             const aptEl = document.getElementById('appartamento');
-            if (pre.appartamento && aptEl) aptEl.value = pre.appartamento;
+            if (pre.appartamento && aptEl) {
+                const match = [...aptEl.options].find(
+                    o => o.value.toLowerCase() === pre.appartamento.toLowerCase()
+                );
+                if (match) aptEl.value = match.value;
+            }
             const rNome = document.getElementById('r-nome');
             const rCogn = document.getElementById('r-cognome');
             if (pre.r_nome    && rNome) rNome.value = pre.r_nome;
             if (pre.r_cognome && rCogn) rCogn.value = pre.r_cognome;
+            // N° Ospiti → Adulti
+            const adultiEl = document.getElementById('adults-count');
+            if (pre.adults_count && adultiEl) adultiEl.value = pre.adults_count;
             ciUpdatePermanenzaDisplay();
         } catch(e) { /* ignore malformed data */ }
     }

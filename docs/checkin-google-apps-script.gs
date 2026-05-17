@@ -126,7 +126,10 @@ function doGet(e) {
 //    CHECK-IN  | CHECKIN  | ARRIVO
 //    CHECK-OUT | CHECKOUT | PARTENZA
 //    APPARTAMENTO | APPARTMENT | APT
-//    OSPITE | GUEST | NOME
+//    NOME | FIRST NAME
+//    COGNOME | LAST NAME
+//    OSPITE | GUEST           (usato se Nome/Cognome non presenti)
+//    N° OSPITI | OSPITI | PAX (→ campo Adulti nel form)
 // ════════════════════════════════════════════════════════════════
 
 function getBookings_() {
@@ -149,10 +152,13 @@ function getBookings_() {
 
     var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
 
-    var colCin  = findCol_(headers, ['check-in', 'checkin', 'arrivo', 'data arrivo', 'data-arrivo']);
-    var colCout = findCol_(headers, ['check-out', 'checkout', 'partenza', 'data partenza', 'data-partenza']);
-    var colApt  = findCol_(headers, ['appartamento', 'appartment', 'apartment', 'apt', 'alloggio']);
-    var colName = findCol_(headers, ['ospite', 'guest', 'nome', 'nome ospite', 'guest name', 'cliente']);
+    var colCin    = findCol_(headers, ['check-in', 'checkin', 'arrivo', 'data arrivo', 'data-arrivo']);
+    var colCout   = findCol_(headers, ['check-out', 'checkout', 'partenza', 'data partenza', 'data-partenza']);
+    var colApt    = findCol_(headers, ['appartamento', 'appartment', 'apartment', 'apt', 'alloggio']);
+    var colNome   = findCol_(headers, ['nome', 'first name', 'firstname', 'name']);
+    var colCogn   = findCol_(headers, ['cognome', 'last name', 'lastname', 'surname']);
+    var colOspite = findCol_(headers, ['ospite', 'guest', 'nome ospite', 'guest name', 'cliente']);
+    var colN      = findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone']);
 
     var bookings = [];
     for (var i = 1; i < data.length; i++) {
@@ -161,10 +167,13 @@ function getBookings_() {
       if (row.every(function(c) { return c === '' || c === null; })) continue;
 
       bookings.push({
-        checkin:      colCin  >= 0 ? formatSheetDate_(row[colCin])  : '',
-        checkout:     colCout >= 0 ? formatSheetDate_(row[colCout]) : '',
-        appartamento: colApt  >= 0 ? String(row[colApt]  || '').trim() : '',
-        ospite:       colName >= 0 ? String(row[colName] || '').trim() : '',
+        checkin:      colCin    >= 0 ? formatSheetDate_(row[colCin])    : '',
+        checkout:     colCout   >= 0 ? formatSheetDate_(row[colCout])   : '',
+        appartamento: colApt    >= 0 ? String(row[colApt]    || '').trim() : '',
+        nome:         colNome   >= 0 ? String(row[colNome]   || '').trim() : '',
+        cognome:      colCogn   >= 0 ? String(row[colCogn]   || '').trim() : '',
+        ospite:       colOspite >= 0 ? String(row[colOspite] || '').trim() : '',
+        adults_count: colN      >= 0 ? String(row[colN]      || '').trim() : '',
       });
     }
 
