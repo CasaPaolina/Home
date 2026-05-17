@@ -678,6 +678,24 @@ document.addEventListener('DOMContentLoaded', () => {
         this.value = this.value.toUpperCase();
     });
 
+    // Admin pre-fill (from admin-checkin.html handoff)
+    const adminPreFillRaw = sessionStorage.getItem('ciAdminPreFill');
+    if (adminPreFillRaw) {
+        try {
+            const pre = JSON.parse(adminPreFillRaw);
+            sessionStorage.removeItem('ciAdminPreFill');
+            if (pre.checkin_date  && cin)  cin.value  = pre.checkin_date;
+            if (pre.checkout_date && cout) cout.value = pre.checkout_date;
+            const aptEl = document.getElementById('appartamento');
+            if (pre.appartamento && aptEl) aptEl.value = pre.appartamento;
+            const rNome = document.getElementById('r-nome');
+            const rCogn = document.getElementById('r-cognome');
+            if (pre.r_nome    && rNome) rNome.value = pre.r_nome;
+            if (pre.r_cognome && rCogn) rCogn.value = pre.r_cognome;
+            ciUpdatePermanenzaDisplay();
+        } catch(e) { /* ignore malformed data */ }
+    }
+
     // Remove invalid highlight on input
     document.querySelectorAll('input, select').forEach(el => {
         el.addEventListener('input', () => el.classList.remove('ci-invalid'));

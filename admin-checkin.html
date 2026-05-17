@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Check-in — Casa Paolina</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico" sizes="32x32 64x64" type="image/x-icon">
+    <link rel="stylesheet" href="css/checkin.css">
+    <style>
+        .adm-apt-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .adm-status {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 20px;
+        }
+        .adm-status--oggi   { background:#dcfce7; color:#166534; }
+        .adm-status--pros   { background:#e0f2fe; color:#075985; }
+        .adm-status--pass   { background:#f1f5f9; color:#94a3b8; }
+        .adm-booking-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .adm-booking-meta { flex: 1; min-width: 220px; }
+        .adm-booking-name { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin: 8px 0 5px; }
+        .adm-booking-dates { font-size: 0.88rem; color: var(--text-light); }
+        .adm-empty { text-align:center; padding: 48px 24px; color: var(--text-light); }
+        .adm-empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+        .adm-filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom: 20px; }
+        .adm-refresh {
+            margin-left: auto;
+            background: none;
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .adm-refresh:hover { background: var(--bg); color: var(--text-dark); }
+        .adm-header-badge {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.03em;
+        }
+        @media (max-width: 500px) {
+            .adm-booking-row { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─────────────────────────────────────────── -->
+<header class="ci-header">
+    <a href="index.html" class="ci-logo">
+        <span class="ci-logo-icon">🏠</span>
+        <span class="ci-logo-text">Casa Paolina</span>
+    </a>
+    <div class="ci-header-right">
+        <span class="adm-header-badge">🔧 Admin</span>
+    </div>
+</header>
+
+<!-- ─── PASSWORD GATE ──────────────────────────────────── -->
+<div id="admin-gate">
+    <main class="ci-main" style="max-width:420px;padding-top:56px">
+        <div class="ci-card" style="text-align:center;padding:36px 32px">
+            <div style="font-size:2.8rem;margin-bottom:14px">🔐</div>
+            <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:6px">Accesso Amministratore</h2>
+            <p style="color:var(--text-light);font-size:0.88rem;margin-bottom:28px">Area riservata al gestore dell'appartamento</p>
+            <div class="ci-field" style="margin-bottom:12px">
+                <input type="password" id="admin-pwd"
+                       style="text-align:center;font-size:1rem;letter-spacing:0.12em;padding:12px 16px"
+                       placeholder="Password">
+            </div>
+            <div id="admin-error" class="ci-step-error" style="display:none;margin-bottom:12px">
+                ⚠ Password errata. Riprova.
+            </div>
+            <button class="ci-btn ci-btn--next" style="width:100%;border-radius:10px;justify-content:center" onclick="adminLogin()">
+                Entra
+            </button>
+        </div>
+    </main>
+</div>
+
+<!-- ─── ADMIN PANEL ─────────────────────────────────────── -->
+<div id="admin-panel" style="display:none">
+
+    <div class="ci-hero" style="padding:28px 24px 24px">
+        <div class="ci-hero-inner">
+            <h1 style="font-size:1.7rem;font-style:normal;font-family:inherit;font-weight:700;letter-spacing:0">
+                Dashboard Check-in
+            </h1>
+            <p style="opacity:0.85">Seleziona una prenotazione per avviare il check-in manuale</p>
+        </div>
+    </div>
+
+    <main class="ci-main">
+
+        <!-- Filters + refresh -->
+        <div class="adm-filters">
+            <span style="font-size:0.82rem;font-weight:600;color:var(--text-light)">Appartamento:</span>
+            <button class="ci-chip active" data-apt="all"     onclick="filterApt(this,'all')">Tutti</button>
+            <button class="ci-chip"        data-apt="Verde"   onclick="filterApt(this,'Verde')">Verde</button>
+            <button class="ci-chip"        data-apt="Celeste" onclick="filterApt(this,'Celeste')">Celeste</button>
+            <button class="ci-chip"        data-apt="Suite"   onclick="filterApt(this,'Suite')">Suite</button>
+            <button class="adm-refresh" onclick="loadBookings()">↻ Aggiorna</button>
+        </div>
+
+        <!-- Loading -->
+        <div id="bookings-loading" class="ci-card" style="text-align:center;padding:40px;display:none">
+            <p style="color:var(--text-light)">⏳ Caricamento prenotazioni…</p>
+        </div>
+
+        <!-- Error -->
+        <div id="bookings-error" class="ci-error-box" style="display:none">
+            ⚠ Impossibile caricare le prenotazioni. Verifica che:
+            <ul style="margin:8px 0 0 18px;font-size:0.88rem">
+                <li>Lo script sia stato deployato correttamente</li>
+                <li>Esista un foglio chiamato esattamente <strong>Booking</strong> nel Google Sheet</li>
+                <li>Il foglio abbia le colonne: <strong>CHECK-IN · CHECK-OUT · Appartamento · Ospite</strong></li>
+            </ul>
+        </div>
+
+        <!-- Booking cards -->
+        <div id="bookings-list"></div>
+
+    </main>
+</div>
+
+<!-- ─── FOOTER ──────────────────────────────────────────── -->
+<footer class="ci-footer">
+    <p>© 2026 Casa Paolina · Pannello Amministratore</p>
+</footer>
+
+<script src="js/admin-checkin.js" defer></script>
+</body>
+</html>

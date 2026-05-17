@@ -106,10 +106,100 @@ function doPost(e) {
   }
 }
 
-function doGet() {
+function doGet(e) {
+  var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : '';
+
+  if (action === 'bookings') {
+    return getBookings_();
+  }
+
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'ok', message: 'Casa Paolina Check-in API' }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  ADMIN: legge il foglio "Booking" e restituisce le prenotazioni
+//
+//  Colonne attese (case-insensitive, varianti accettate):
+//    CHECK-IN  | CHECKIN  | ARRIVO
+//    CHECK-OUT | CHECKOUT | PARTENZA
+//    APPARTAMENTO | APPARTMENT | APT
+//    OSPITE | GUEST | NOME
+// ════════════════════════════════════════════════════════════════
+
+function getBookings_() {
+  try {
+    var ss    = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Booking') || ss.getSheetByName('Prenotazioni Booking') || ss.getSheetByName('booking');
+
+    if (!sheet) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'error', error: 'Foglio "Booking" non trovato' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    var data    = sheet.getDataRange().getValues();
+    if (data.length < 2) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', bookings: [] }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
+
+    var colCin  = findCol_(headers, ['check-in', 'checkin', 'arrivo', 'data arrivo', 'data-arrivo']);
+    var colCout = findCol_(headers, ['check-out', 'checkout', 'partenza', 'data partenza', 'data-partenza']);
+    var colApt  = findCol_(headers, ['appartamento', 'appartment', 'apartment', 'apt', 'alloggio']);
+    var colName = findCol_(headers, ['ospite', 'guest', 'nome', 'nome ospite', 'guest name', 'cliente']);
+
+    var bookings = [];
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      // Skip fully empty rows
+      if (row.every(function(c) { return c === '' || c === null; })) continue;
+
+      bookings.push({
+        checkin:      colCin  >= 0 ? formatSheetDate_(row[colCin])  : '',
+        checkout:     colCout >= 0 ? formatSheetDate_(row[colCout]) : '',
+        appartamento: colApt  >= 0 ? String(row[colApt]  || '').trim() : '',
+        ospite:       colName >= 0 ? String(row[colName] || '').trim() : '',
+      });
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'ok', bookings: bookings }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function findCol_(headers, candidates) {
+  for (var i = 0; i < candidates.length; i++) {
+    var idx = headers.indexOf(candidates[i]);
+    if (idx >= 0) return idx;
+  }
+  return -1;
+}
+
+function formatSheetDate_(val) {
+  if (!val) return '';
+  if (val instanceof Date) {
+    var y = val.getFullYear();
+    var m = String(val.getMonth() + 1).padStart(2, '0');
+    var d = String(val.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+  }
+  // Already a string — normalise DD/MM/YYYY → YYYY-MM-DD
+  var s = String(val).trim();
+  var parts = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/);
+  if (parts) return parts[3] + '-' + parts[2].padStart(2,'0') + '-' + parts[1].padStart(2,'0');
+  return s;
 }
 
 
