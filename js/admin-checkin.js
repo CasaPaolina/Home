@@ -129,12 +129,8 @@ function renderBookings(aptFilter) {
         const ospitiLabel = booking.adults_count ? ` · ${booking.adults_count} ospiti` : '';
         const checkinDoneBadge = booking.checkin_done ? '<span class="adm-status" style="background:#dbeafe;color:#1e40af;margin-left:6px">✓ Check-in già fatto</span>' : '';
         const buttonHTML = booking.checkin_done 
-            ? ''
-            : `<button class="ci-btn ci-btn--next"
-                       style="white-space:nowrap;padding:10px 20px;font-size:0.88rem"
-                       onclick="avviaCheckin(${originalIdx})">
-                Avvia Check-in ›
-            </button>`;
+            ? `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem" onclick="viewCheckinDetails('${booking.nome}', '${booking.cognome}')">Visualizza ›</button>`
+            : `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem" onclick="avviaCheckin(${originalIdx})">Avvia Check-in ›</button>`;
 
         const card = document.createElement('div');
         card.className = 'ci-card';
@@ -195,6 +191,79 @@ function formatAdminDate(str) {
     if (m) return `${m[3]}/${m[2]}/${m[1]}`;
     return str;
 }
+
+// ─── DETAILS MODAL ───────────────────────────────────────
+
+function viewCheckinDetails(nome, cognome) {
+    const modal = document.getElementById('details-modal');
+    const content = document.getElementById('details-content');
+    
+    content.innerHTML = '<p style="text-align:center;color:var(--text-light)">⏳ Caricamento...</p>';
+    modal.style.display = 'block';
+    
+    const url = SHEETS_SCRIPT_URL + '?action=checkin-details&nome=' + encodeURIComponent(nome) + '&cognome=' + encodeURIComponent(cognome);
+    
+    fetch(url)
+        .then(r => r.json())
+        .then(json => {
+            if (json.status === 'ok' && json.details) {
+                const d = json.details;
+                const html = `
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:0.9rem">
+                        <div>
+                            <p style="color:var(--text-light);margin:0 0 4px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Soggiorno</p>
+                            <p style="margin:0 0 12px;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+                                <strong>Appartamento:</strong> ${d.appartamento || '-'}<br>
+                                <strong>Arrivo:</strong> ${d.data_arrivo || '-'} ore ${d.ora_arrivo || '-'}<br>
+                                <strong>Partenza:</strong> ${d.data_partenza || '-'}<br>
+                                <strong>Notti:</strong> ${d.notti || '-'}<br>
+                                <strong>Ospiti:</strong> ${d.totale_ospiti || '-'} (${d.adulti || '0'} adulti, ${d.bambini || '0'} bambini)<br>
+                                <strong>Tipo:</strong> ${d.tipo_soggiorno || '-'}
+                            </p>
+                        </div>
+                        <div>
+                            <p style="color:var(--text-light);margin:0 0 4px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Contatti</p>
+                            <p style="margin:0 0 12px;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+                                <strong>Email:</strong> <a href="mailto:${d.email}" style="color:#2c7873">${d.email || '-'}</a><br>
+                                <strong>Telefono:</strong> <a href="tel:${d.telefono}" style="color:#2c7873">${d.telefono || '-'}</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb">
+                        <p style="color:var(--text-light);margin:0 0 8px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Referente</p>
+                        <p style="margin:0;line-height:1.6">
+                            <strong>Nome:</strong> ${d.nome || '-'} ${d.cognome || '-'}<br>
+                            <strong>Sesso:</strong> ${d.sesso || '-'}<br>
+                            <strong>Data nascita:</strong> ${d.data_nascita || '-'} a ${d.comune_nascita || '-'} (${d.stato_nascita || '-'})<br>
+                            <strong>Cittadinanza:</strong> ${d.cittadinanza || '-'}<br>
+                            <strong>Residenza:</strong> ${d.comune_residenza || '-'} (${d.paese_residenza || '-'})<br>
+                            <strong>Documento:</strong> ${d.tipo_documento || '-'} n. ${d.numero_documento || '-'}<br>
+                            <strong style="color:#666">Rilasciato:</strong> ${d.comune_rilascio || '-'} (${d.stato_rilascio || '-'})
+                        </p>
+                    </div>
+                    ${d.note ? '<div style="margin-top:16px;padding:12px;background:#fff9e6;border-left:4px solid #f4a261;border-radius:4px"><strong style="color:#d97706">Note:</strong> ' + d.note + '</div>' : ''}
+                `;
+                content.innerHTML = html;
+            } else {
+                content.innerHTML = '<p style="color:#ef4444">Errore nel caricamento dei dettagli</p>';
+            }
+        })
+        .catch(err => {
+            content.innerHTML = '<p style="color:#ef4444">Errore nella richiesta</p>';
+        });
+}
+
+function closeDetailsModal() {
+    document.getElementById('details-modal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('details-modal');
+    if (e.target === modal) {
+        closeDetailsModal();
+    }
+});
 
 // ─── INIT ────────────────────────────────────────────────────
 

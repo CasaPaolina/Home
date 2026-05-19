@@ -113,6 +113,12 @@ function doGet(e) {
     return getBookings_();
   }
 
+  if (action === 'checkin-details') {
+    var nome = (e && e.parameter && e.parameter.nome) ? e.parameter.nome : '';
+    var cognome = (e && e.parameter && e.parameter.cognome) ? e.parameter.cognome : '';
+    return getCheckinDetails_(nome, cognome);
+  }
+
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'ok', message: 'Casa Paolina Check-in API' }))
     .setMimeType(ContentService.MimeType.JSON);
@@ -131,6 +137,80 @@ function doGet(e) {
 //    OSPITE | GUEST           (usato se Nome/Cognome non presenti)
 //    N° OSPITI | OSPITI | PAX (→ campo Adulti nel form)
 // ════════════════════════════════════════════════════════════════
+
+function getCheckinDetails_(nome, cognome) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Prenotazioni');
+    
+    if (!sheet) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'error', error: 'Foglio Prenotazioni non trovato' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    var data = sheet.getDataRange().getValues();
+    if (data.length < 2) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'error', error: 'Nessun dato trovato' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Search for matching nome/cognome
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      var rowNome = String(row[10] || '').trim().toLowerCase();
+      var rowCognome = String(row[11] || '').trim().toLowerCase();
+      
+      if (rowNome === nome.toLowerCase() && rowCognome === cognome.toLowerCase()) {
+        // Found a match - return the full row data
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            status: 'ok',
+            details: {
+              data_ricezione: row[0],
+              appartamento: row[1],
+              data_arrivo: row[2],
+              data_partenza: row[3],
+              notti: row[4],
+              adulti: row[5],
+              bambini: row[6],
+              totale_ospiti: row[7],
+              tipo_soggiorno: row[8],
+              ora_arrivo: row[9],
+              nome: row[10],
+              cognome: row[11],
+              sesso: row[12],
+              data_nascita: row[13],
+              comune_nascita: row[14],
+              stato_nascita: row[15],
+              cittadinanza: row[16],
+              comune_residenza: row[17],
+              paese_residenza: row[18],
+              tipo_documento: row[19],
+              numero_documento: row[20],
+              stato_rilascio: row[21],
+              comune_rilascio: row[22],
+              email: row[23],
+              telefono: row[24],
+              n_accompagnatori: row[25],
+              note: row[26]
+            }
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', error: 'Check-in non trovato' }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
 function getExistingCheckIns_() {
   // Get all completed check-ins from Prenotazioni sheet
