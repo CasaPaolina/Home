@@ -2,7 +2,7 @@
 //  Casa Paolina — Admin Check-in Dashboard
 // ─────────────────────────────────────────────────────────────
 
-const ADMIN_PASSWORD    = 'casapaolina2026';
+const ADMIN_PASSWORD = 'salvatore';
 const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2kYpdep7maP8j8biDP7TZfIp23RuNo1qCfqCMLTuvY1fyuqleHECcjXJdJZmNbP-2-Q/exec';
 
 // ─── STATE ───────────────────────────────────────────────────
