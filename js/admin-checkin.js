@@ -128,6 +128,13 @@ function renderBookings(aptFilter) {
         const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || '—';
         const ospitiLabel = booking.adults_count ? ` · ${booking.adults_count} ospiti` : '';
         const checkinDoneBadge = booking.checkin_done ? '<span class="adm-status" style="background:#dbeafe;color:#1e40af;margin-left:6px">✓ Check-in già fatto</span>' : '';
+        const buttonHTML = booking.checkin_done 
+            ? ''
+            : `<button class="ci-btn ci-btn--next"
+                       style="white-space:nowrap;padding:10px 20px;font-size:0.88rem"
+                       onclick="avviaCheckin(${originalIdx})">
+                Avvia Check-in ›
+            </button>`;
 
         const card = document.createElement('div');
         card.className = 'ci-card';
@@ -145,11 +152,7 @@ function renderBookings(aptFilter) {
                     </div>
                 </div>
                 <div>
-                    <button class="ci-btn ci-btn--next"
-                            style="white-space:nowrap;padding:10px 20px;font-size:0.88rem"
-                            onclick="avviaCheckin(${originalIdx})">
-                        Avvia Check-in ›
-                    </button>
+                    ${buttonHTML}
                 </div>
             </div>`;
         list.appendChild(card);
