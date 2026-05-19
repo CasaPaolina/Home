@@ -466,11 +466,25 @@ function ciBuildSummary() {
 
     let guestsHTML = '';
     document.querySelectorAll('.ci-guest-block').forEach((block, i) => {
-        const nome = block.querySelector(`[id$="-nome"]`)?.value || '—';
-        const cognome = block.querySelector(`[id$="-cognome"]`)?.value || '—';
-        const nascita = block.querySelector(`[id$="-nascita"]:not([id*="comune"]):not([id*="stato"])`)?.value || '—';
-        const cit = block.querySelector(`[id$="-cittadinanza"]`)?.value || '—';
-        guestsHTML += `<div class="summary-guest"><strong>${tr.ospite} ${i + 1}:</strong> ${nome} ${cognome} · ${ciFormatDate(nascita)} · ${cit}</div>`;
+        const nome          = block.querySelector(`[id$="-nome"]`)?.value || '—';
+        const cognome       = block.querySelector(`[id$="-cognome"]`)?.value || '—';
+        const sesso         = block.querySelector(`[id$="-sesso"]`)?.value || '—';
+        const nascita       = block.querySelector(`[id$="-nascita"]:not([id*="comune"]):not([id*="stato"])`)?.value || '—';
+        const nascitaComune = block.querySelector(`[id$="-nascita-comune"]`)?.value || '—';
+        const nascitaStato  = block.querySelector(`[id$="-nascita-stato"]`)?.value || '—';
+        const cit           = block.querySelector(`[id$="-cittadinanza"]`)?.value || '—';
+        const comuneRes     = block.querySelector(`[id$="-comune-res"]`)?.value || '—';
+        const statoRes      = block.querySelector(`[id$="-stato-res"]`)?.value || '—';
+        guestsHTML += `
+            <div class="summary-guest">
+                <div class="summary-guest-title"><strong>${tr.ospite} ${i + 1}:</strong> ${nome} ${cognome}</div>
+                <div class="summary-guest-details">
+                    <span>${tr.lbl_sesso}: ${sesso}</span>
+                    <span>${tr.lbl_nascita_data}: ${ciFormatDate(nascita)} — ${nascitaComune} (${nascitaStato})</span>
+                    <span>${tr.lbl_cittadinanza}: ${cit}</span>
+                    <span>${tr.lbl_comune_res}: ${comuneRes} (${statoRes})</span>
+                </div>
+            </div>`;
     });
 
     document.getElementById('summary-card').innerHTML = `
@@ -497,8 +511,9 @@ function ciBuildSummary() {
 
 function ciFormatDate(dateStr) {
     if (!dateStr || dateStr === '—') return '—';
-    const [y, m, d] = dateStr.split('-');
-    return `${d}/${m}/${y}`;
+    const match = String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) return `${match[3]}/${match[2]}/${match[1]}`;
+    return dateStr;
 }
 
 // ─── FORM SUBMISSION ────────────────────────────────────────
