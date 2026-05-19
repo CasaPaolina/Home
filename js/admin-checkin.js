@@ -127,6 +127,7 @@ function renderBookings(aptFilter) {
 
         const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || '—';
         const ospitiLabel = booking.adults_count ? ` · ${booking.adults_count} ospiti` : '';
+        const checkinDoneBadge = booking.checkin_done ? '<span class="adm-status" style="background:#dbeafe;color:#1e40af;margin-left:6px">✓ Check-in già fatto</span>' : '';
 
         const card = document.createElement('div');
         card.className = 'ci-card';
@@ -136,6 +137,7 @@ function renderBookings(aptFilter) {
                 <div class="adm-booking-meta">
                     <span class="adm-apt-badge" style="${aptStyle}">${booking.appartamento || 'N/D'}</span>
                     <span class="adm-status adm-status--${status}">${STATUS_LABELS[status]}</span>
+                    ${checkinDoneBadge}
                     <div class="adm-booking-name">${guestName}</div>
                     <div class="adm-booking-dates">
                         ${formatAdminDate(booking.checkin)} → ${formatAdminDate(booking.checkout)}

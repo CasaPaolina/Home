@@ -132,6 +132,30 @@ function doGet(e) {
 //    N° OSPITI | OSPITI | PAX (→ campo Adulti nel form)
 // ════════════════════════════════════════════════════════════════
 
+function getExistingCheckIns_() {
+  // Get all completed check-ins from Prenotazioni sheet
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Prenotazioni');
+  var existing = {};
+  
+  if (!sheet) return existing;
+  
+  var data = sheet.getDataRange().getValues();
+  if (data.length < 2) return existing;
+  
+  // Assuming K=Nome (col 11), L=Cognome (col 12)
+  for (var i = 1; i < data.length; i++) {
+    var nome = String(data[i][10] || '').trim().toLowerCase();
+    var cognome = String(data[i][11] || '').trim().toLowerCase();
+    if (nome && cognome) {
+      var key = nome + '|' + cognome;
+      existing[key] = true;
+    }
+  }
+  
+  return existing;
+}
+
 function getBookings_() {
   try {
     var ss    = SpreadsheetApp.getActiveSpreadsheet();
@@ -160,20 +184,29 @@ function getBookings_() {
     var colOspite = findCol_(headers, ['ospite', 'guest', 'nome ospite', 'guest name', 'cliente']);
     var colN      = findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone']);
 
+    // Get existing check-ins once
+    var existingCheckIns = getExistingCheckIns_();
+
     var bookings = [];
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
       // Skip fully empty rows
       if (row.every(function(c) { return c === '' || c === null; })) continue;
 
+      var nome = colNome >= 0 ? String(row[colNome] || '').trim() : '';
+      var cognome = colCogn >= 0 ? String(row[colCogn] || '').trim() : '';
+      var key = nome.toLowerCase() + '|' + cognome.toLowerCase();
+      var checkinDone = existingCheckIns[key] || false;
+
       bookings.push({
         checkin:      colCin    >= 0 ? formatSheetDate_(row[colCin])    : '',
         checkout:     colCout   >= 0 ? formatSheetDate_(row[colCout])   : '',
         appartamento: colApt    >= 0 ? String(row[colApt]    || '').trim() : '',
-        nome:         colNome   >= 0 ? String(row[colNome]   || '').trim() : '',
-        cognome:      colCogn   >= 0 ? String(row[colCogn]   || '').trim() : '',
+        nome:         nome,
+        cognome:      cognome,
         ospite:       colOspite >= 0 ? String(row[colOspite] || '').trim() : '',
         adults_count: colN      >= 0 ? String(row[colN]      || '').trim() : '',
+        checkin_done: checkinDone
       });
     }
 
