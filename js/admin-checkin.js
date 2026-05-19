@@ -128,14 +128,20 @@ function renderBookings(aptFilter) {
         const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || '—';
         const ospitiLabel = booking.adults_count ? ` · ${booking.adults_count} ospiti` : '';
         const checkinDoneBadge = booking.checkin_done ? '<span class="adm-status" style="background:#dbeafe;color:#1e40af;margin-left:6px">✓ Check-in già fatto</span>' : '';
-        const buttonHTML = booking.checkin_done 
-            ? `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem" onclick="viewCheckinDetails('${booking.nome}', '${booking.cognome}')">Visualizza ›</button>`
-            : `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem" onclick="avviaCheckin(${originalIdx})">Avvia Check-in ›</button>`;
+        
+        let buttonHTML = '';
+        if (booking.checkin_done) {
+            buttonHTML = `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem">Visualizza ›</button>`;
+        } else {
+            buttonHTML = `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem" onclick="avviaCheckin(${originalIdx})">Avvia Check-in ›</button>`;
+        }
 
         const card = document.createElement('div');
         card.className = 'ci-card';
         card.style.marginBottom = '14px';
-        card.innerHTML = `
+        
+        // Store reference to click handler on the button
+        const html = `
             <div class="adm-booking-row">
                 <div class="adm-booking-meta">
                     <span class="adm-apt-badge" style="${aptStyle}">${booking.appartamento || 'N/D'}</span>
@@ -151,6 +157,15 @@ function renderBookings(aptFilter) {
                     ${buttonHTML}
                 </div>
             </div>`;
+        
+        card.innerHTML = html;
+        
+        // Add click handler for Visualizza button if needed
+        if (booking.checkin_done) {
+            const button = card.querySelector('button');
+            button.onclick = () => viewCheckinDetails(booking.nome, booking.cognome);
+        }
+        
         list.appendChild(card);
     });
 }

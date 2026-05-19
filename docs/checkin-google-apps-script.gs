@@ -156,49 +156,53 @@ function getCheckinDetails_(nome, cognome) {
         .setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Search for matching nome/cognome
+    // Search for matching nome/cognome — return the most recent (last row)
+    var lastMatch = null;
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
-      var rowNome = String(row[10] || '').trim().toLowerCase();
-      var rowCognome = String(row[11] || '').trim().toLowerCase();
+      var rowNome = String(row[10] || '').trim();
+      var rowCognome = String(row[11] || '').trim();
       
-      if (rowNome === nome.toLowerCase() && rowCognome === cognome.toLowerCase()) {
-        // Found a match - return the full row data
-        return ContentService
-          .createTextOutput(JSON.stringify({
-            status: 'ok',
-            details: {
-              data_ricezione: row[0],
-              appartamento: row[1],
-              data_arrivo: row[2],
-              data_partenza: row[3],
-              notti: row[4],
-              adulti: row[5],
-              bambini: row[6],
-              totale_ospiti: row[7],
-              tipo_soggiorno: row[8],
-              ora_arrivo: row[9],
-              nome: row[10],
-              cognome: row[11],
-              sesso: row[12],
-              data_nascita: row[13],
-              comune_nascita: row[14],
-              stato_nascita: row[15],
-              cittadinanza: row[16],
-              comune_residenza: row[17],
-              paese_residenza: row[18],
-              tipo_documento: row[19],
-              numero_documento: row[20],
-              stato_rilascio: row[21],
-              comune_rilascio: row[22],
-              email: row[23],
-              telefono: row[24],
-              n_accompagnatori: row[25],
-              note: row[26]
-            }
-          }))
-          .setMimeType(ContentService.MimeType.JSON);
+      if (rowNome.toLowerCase() === nome.toLowerCase() && rowCognome.toLowerCase() === cognome.toLowerCase()) {
+        lastMatch = row; // Keep updating to get the last/most recent match
       }
+    }
+    
+    if (lastMatch) {
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          status: 'ok',
+          details: {
+            data_ricezione: lastMatch[0],
+            appartamento: lastMatch[1],
+            data_arrivo: lastMatch[2],
+            data_partenza: lastMatch[3],
+            notti: lastMatch[4],
+            adulti: lastMatch[5],
+            bambini: lastMatch[6],
+            totale_ospiti: lastMatch[7],
+            tipo_soggiorno: lastMatch[8],
+            ora_arrivo: lastMatch[9],
+            nome: lastMatch[10],
+            cognome: lastMatch[11],
+            sesso: lastMatch[12],
+            data_nascita: lastMatch[13],
+            comune_nascita: lastMatch[14],
+            stato_nascita: lastMatch[15],
+            cittadinanza: lastMatch[16],
+            comune_residenza: lastMatch[17],
+            paese_residenza: lastMatch[18],
+            tipo_documento: lastMatch[19],
+            numero_documento: lastMatch[20],
+            stato_rilascio: lastMatch[21],
+            comune_rilascio: lastMatch[22],
+            email: lastMatch[23],
+            telefono: lastMatch[24],
+            n_accompagnatori: lastMatch[25],
+            note: lastMatch[26]
+          }
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
     }
     
     return ContentService
