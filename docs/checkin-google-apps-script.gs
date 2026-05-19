@@ -175,7 +175,7 @@ function getCheckinDetails_(nome, cognome) {
       
       if (guestSheet) {
         var guestData = guestSheet.getDataRange().getValues();
-        var refName = String(lastMatch[10] || '') + ' ' + String(lastMatch[11] || '');
+        var refName = String(lastMatch[10] || '').trim() + ' ' + String(lastMatch[11] || '').trim();
         
         for (var i = 1; i < guestData.length; i++) {
           if (String(guestData[i][1] || '').trim() === refName.trim()) {

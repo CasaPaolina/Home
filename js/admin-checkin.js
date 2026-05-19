@@ -233,32 +233,36 @@ function viewCheckinDetails(nome, cognome) {
             if (json.status === 'ok' && json.details) {
                 const d = json.details;
                 
+                const nAcc = parseInt(d.n_accompagnatori) || 0;
                 let guestsHtml = '';
-                if (d.guests && d.guests.length > 0) {
+                if (nAcc > 0) {
+                    const guestList = (d.guests && d.guests.length > 0) ? d.guests : [];
+                    let guestCards = '';
+
+                    if (guestList.length > 0) {
+                        guestList.forEach((guest, idx) => {
+                            guestCards += `
+                                <div style="background:#f8f9fa;padding:10px 12px;border-radius:6px;font-size:0.85rem;line-height:1.6">
+                                    <div style="font-weight:600;margin-bottom:4px">${idx + 1}. ${guest.nome || ''} ${guest.cognome || ''}</div>
+                                    <div style="color:#555">
+                                        <span style="margin-right:12px"><strong>Sesso:</strong> ${guest.sesso || '-'}</span>
+                                        <span><strong>Nato/a il:</strong> ${formatDateIT(guest.data_nascita)} a ${guest.comune_nascita || '-'} (${guest.stato_nascita || '-'})</span>
+                                    </div>
+                                    <div style="color:#555">
+                                        <span style="margin-right:12px"><strong>Cittadinanza:</strong> ${guest.cittadinanza || '-'}</span>
+                                        <span><strong>Residenza:</strong> ${guest.comune_res || '-'} (${guest.stato_res || '-'})</span>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        guestCards = `<p style="color:#999;font-size:0.85rem;margin:0">${nAcc} accompagnator${nAcc === 1 ? 'e registrato' : 'i registrati'} — dettagli non ancora disponibili nel foglio Ospiti.</p>`;
+                    }
+
                     guestsHtml = `
                         <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb">
-                            <p style="color:var(--text-light);margin:0 0 12px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Accompagnatori (${d.guests.length})</p>
-                            <div style="display:flex;flex-direction:column;gap:10px">
-                    `;
-
-                    d.guests.forEach((guest, idx) => {
-                        guestsHtml += `
-                            <div style="background:#f8f9fa;padding:10px 12px;border-radius:6px;font-size:0.85rem;line-height:1.6">
-                                <div style="font-weight:600;margin-bottom:4px">${idx + 1}. ${guest.nome || ''} ${guest.cognome || ''}</div>
-                                <div style="color:#555">
-                                    <span style="margin-right:12px"><strong>Sesso:</strong> ${guest.sesso || '-'}</span>
-                                    <span><strong>Nato/a il:</strong> ${formatDateIT(guest.data_nascita)} a ${guest.comune_nascita || '-'} (${guest.stato_nascita || '-'})</span>
-                                </div>
-                                <div style="color:#555">
-                                    <span style="margin-right:12px"><strong>Cittadinanza:</strong> ${guest.cittadinanza || '-'}</span>
-                                    <span><strong>Residenza:</strong> ${guest.comune_res || '-'} (${guest.stato_res || '-'})</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    guestsHtml += `
-                            </div>
+                            <p style="color:var(--text-light);margin:0 0 12px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Accompagnatori (${nAcc})</p>
+                            <div style="display:flex;flex-direction:column;gap:10px">${guestCards}</div>
                         </div>
                     `;
                 }
