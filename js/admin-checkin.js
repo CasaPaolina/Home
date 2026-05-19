@@ -211,9 +211,11 @@ function formatAdminDate(str) {
 
 function formatDateIT(dateStr) {
     if (!dateStr) return '-';
-    const parts = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const s = String(dateStr);
+    // Handles YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS.xxxZ (ISO datetime from GAS)
+    const parts = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if (parts) return `${parts[3]}/${parts[2]}/${parts[1]}`;
-    return dateStr;
+    return s;
 }
 
 function viewCheckinDetails(nome, cognome) {
@@ -236,35 +238,40 @@ function viewCheckinDetails(nome, cognome) {
                     guestsHtml = `
                         <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb">
                             <p style="color:var(--text-light);margin:0 0 12px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Accompagnatori (${d.guests.length})</p>
-                            <div style="display:flex;flex-direction:column;gap:12px">
+                            <div style="display:flex;flex-direction:column;gap:10px">
                     `;
-                    
+
                     d.guests.forEach((guest, idx) => {
                         guestsHtml += `
-                            <div style="background:#f8f9fa;padding:10px;border-radius:6px;font-size:0.85rem;line-height:1.5">
-                                <strong>${idx + 1}. ${guest.nome || ''} ${guest.cognome || ''}</strong><br>
-                                <strong>Sesso:</strong> ${guest.sesso || '-'}<br>
-                                <strong>Data nascita:</strong> ${formatDateIT(guest.data_nascita) || '-'} a ${guest.comune_nascita || '-'} (${guest.stato_nascita || '-'})<br>
-                                <strong>Cittadinanza:</strong> ${guest.cittadinanza || '-'}<br>
-                                <strong>Residenza:</strong> ${guest.comune_res || '-'} (${guest.stato_res || '-'})
+                            <div style="background:#f8f9fa;padding:10px 12px;border-radius:6px;font-size:0.85rem;line-height:1.6">
+                                <div style="font-weight:600;margin-bottom:4px">${idx + 1}. ${guest.nome || ''} ${guest.cognome || ''}</div>
+                                <div style="color:#555">
+                                    <span style="margin-right:12px"><strong>Sesso:</strong> ${guest.sesso || '-'}</span>
+                                    <span><strong>Nato/a il:</strong> ${formatDateIT(guest.data_nascita)} a ${guest.comune_nascita || '-'} (${guest.stato_nascita || '-'})</span>
+                                </div>
+                                <div style="color:#555">
+                                    <span style="margin-right:12px"><strong>Cittadinanza:</strong> ${guest.cittadinanza || '-'}</span>
+                                    <span><strong>Residenza:</strong> ${guest.comune_res || '-'} (${guest.stato_res || '-'})</span>
+                                </div>
                             </div>
                         `;
                     });
-                    
+
                     guestsHtml += `
                             </div>
                         </div>
                     `;
                 }
-                
+
                 const html = `
+                    <p style="color:var(--text-light);font-size:0.8rem;margin:0 0 16px">Check-in ricevuto il ${formatDateIT(d.data_ricezione)}</p>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:0.9rem;margin-bottom:16px">
                         <div>
                             <p style="color:var(--text-light);margin:0 0 4px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Soggiorno</p>
                             <p style="margin:0;border-bottom:1px solid #e5e7eb;padding-bottom:12px;line-height:1.6">
                                 <strong>Appartamento:</strong> ${d.appartamento || '-'}<br>
-                                <strong>Arrivo:</strong> ${formatDateIT(d.data_arrivo) || '-'} ore ${d.ora_arrivo || '-'}<br>
-                                <strong>Partenza:</strong> ${formatDateIT(d.data_partenza) || '-'}<br>
+                                <strong>Arrivo:</strong> ${formatDateIT(d.data_arrivo)} ore ${d.ora_arrivo || '-'}<br>
+                                <strong>Partenza:</strong> ${formatDateIT(d.data_partenza)}<br>
                                 <strong>Notti:</strong> ${d.notti || '-'}<br>
                                 <strong>Ospiti:</strong> ${d.totale_ospiti || '-'} (${d.adulti || '0'} adulti, ${d.bambini || '0'} bambini)<br>
                                 <strong>Tipo:</strong> ${d.tipo_soggiorno || '-'}
@@ -283,7 +290,7 @@ function viewCheckinDetails(nome, cognome) {
                         <p style="margin:0;line-height:1.6;font-size:0.9rem">
                             <strong>Nome:</strong> ${d.nome || '-'} ${d.cognome || '-'}<br>
                             <strong>Sesso:</strong> ${d.sesso || '-'}<br>
-                            <strong>Data nascita:</strong> ${formatDateIT(d.data_nascita) || '-'} a ${d.comune_nascita || '-'} (${d.stato_nascita || '-'})<br>
+                            <strong>Data nascita:</strong> ${formatDateIT(d.data_nascita)} a ${d.comune_nascita || '-'} (${d.stato_nascita || '-'})<br>
                             <strong>Cittadinanza:</strong> ${d.cittadinanza || '-'}<br>
                             <strong>Residenza:</strong> ${d.comune_residenza || '-'} (${d.paese_residenza || '-'})<br>
                             <strong>Documento:</strong> ${d.tipo_documento || '-'} n. ${d.numero_documento || '-'}<br>
