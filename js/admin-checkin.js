@@ -209,6 +209,13 @@ function formatAdminDate(str) {
 
 // ─── DETAILS MODAL ───────────────────────────────────────
 
+function formatDateIT(dateStr) {
+    if (!dateStr) return '-';
+    const parts = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (parts) return `${parts[3]}/${parts[2]}/${parts[1]}`;
+    return dateStr;
+}
+
 function viewCheckinDetails(nome, cognome) {
     const modal = document.getElementById('details-modal');
     const content = document.getElementById('details-content');
@@ -223,14 +230,41 @@ function viewCheckinDetails(nome, cognome) {
         .then(json => {
             if (json.status === 'ok' && json.details) {
                 const d = json.details;
+                
+                let guestsHtml = '';
+                if (d.guests && d.guests.length > 0) {
+                    guestsHtml = `
+                        <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb">
+                            <p style="color:var(--text-light);margin:0 0 12px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Accompagnatori (${d.guests.length})</p>
+                            <div style="display:flex;flex-direction:column;gap:12px">
+                    `;
+                    
+                    d.guests.forEach((guest, idx) => {
+                        guestsHtml += `
+                            <div style="background:#f8f9fa;padding:10px;border-radius:6px;font-size:0.85rem;line-height:1.5">
+                                <strong>${idx + 1}. ${guest.nome || ''} ${guest.cognome || ''}</strong><br>
+                                <strong>Sesso:</strong> ${guest.sesso || '-'}<br>
+                                <strong>Data nascita:</strong> ${formatDateIT(guest.data_nascita) || '-'} a ${guest.comune_nascita || '-'} (${guest.stato_nascita || '-'})<br>
+                                <strong>Cittadinanza:</strong> ${guest.cittadinanza || '-'}<br>
+                                <strong>Residenza:</strong> ${guest.comune_res || '-'} (${guest.stato_res || '-'})
+                            </div>
+                        `;
+                    });
+                    
+                    guestsHtml += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
                 const html = `
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:0.9rem">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:0.9rem;margin-bottom:16px">
                         <div>
                             <p style="color:var(--text-light);margin:0 0 4px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Soggiorno</p>
-                            <p style="margin:0 0 12px;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+                            <p style="margin:0;border-bottom:1px solid #e5e7eb;padding-bottom:12px;line-height:1.6">
                                 <strong>Appartamento:</strong> ${d.appartamento || '-'}<br>
-                                <strong>Arrivo:</strong> ${d.data_arrivo || '-'} ore ${d.ora_arrivo || '-'}<br>
-                                <strong>Partenza:</strong> ${d.data_partenza || '-'}<br>
+                                <strong>Arrivo:</strong> ${formatDateIT(d.data_arrivo) || '-'} ore ${d.ora_arrivo || '-'}<br>
+                                <strong>Partenza:</strong> ${formatDateIT(d.data_partenza) || '-'}<br>
                                 <strong>Notti:</strong> ${d.notti || '-'}<br>
                                 <strong>Ospiti:</strong> ${d.totale_ospiti || '-'} (${d.adulti || '0'} adulti, ${d.bambini || '0'} bambini)<br>
                                 <strong>Tipo:</strong> ${d.tipo_soggiorno || '-'}
@@ -238,25 +272,26 @@ function viewCheckinDetails(nome, cognome) {
                         </div>
                         <div>
                             <p style="color:var(--text-light);margin:0 0 4px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Contatti</p>
-                            <p style="margin:0 0 12px;border-bottom:1px solid #e5e7eb;padding-bottom:12px">
+                            <p style="margin:0;border-bottom:1px solid #e5e7eb;padding-bottom:12px;line-height:1.6">
                                 <strong>Email:</strong> <a href="mailto:${d.email}" style="color:#2c7873">${d.email || '-'}</a><br>
                                 <strong>Telefono:</strong> <a href="tel:${d.telefono}" style="color:#2c7873">${d.telefono || '-'}</a>
                             </p>
                         </div>
                     </div>
-                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb">
+                    <div style="padding-top:16px;border-top:1px solid #e5e7eb">
                         <p style="color:var(--text-light);margin:0 0 8px;font-size:0.8rem;font-weight:600;text-transform:uppercase">Referente</p>
-                        <p style="margin:0;line-height:1.6">
+                        <p style="margin:0;line-height:1.6;font-size:0.9rem">
                             <strong>Nome:</strong> ${d.nome || '-'} ${d.cognome || '-'}<br>
                             <strong>Sesso:</strong> ${d.sesso || '-'}<br>
-                            <strong>Data nascita:</strong> ${d.data_nascita || '-'} a ${d.comune_nascita || '-'} (${d.stato_nascita || '-'})<br>
+                            <strong>Data nascita:</strong> ${formatDateIT(d.data_nascita) || '-'} a ${d.comune_nascita || '-'} (${d.stato_nascita || '-'})<br>
                             <strong>Cittadinanza:</strong> ${d.cittadinanza || '-'}<br>
                             <strong>Residenza:</strong> ${d.comune_residenza || '-'} (${d.paese_residenza || '-'})<br>
                             <strong>Documento:</strong> ${d.tipo_documento || '-'} n. ${d.numero_documento || '-'}<br>
                             <strong style="color:#666">Rilasciato:</strong> ${d.comune_rilascio || '-'} (${d.stato_rilascio || '-'})
                         </p>
                     </div>
-                    ${d.note ? '<div style="margin-top:16px;padding:12px;background:#fff9e6;border-left:4px solid #f4a261;border-radius:4px"><strong style="color:#d97706">Note:</strong> ' + d.note + '</div>' : ''}
+                    ${guestsHtml}
+                    ${d.note ? '<div style="margin-top:16px;padding:12px;background:#fff9e6;border-left:4px solid #f4a261;border-radius:4px;font-size:0.9rem"><strong style="color:#d97706">Note:</strong> ' + d.note + '</div>' : ''}
                 `;
                 content.innerHTML = html;
             } else {

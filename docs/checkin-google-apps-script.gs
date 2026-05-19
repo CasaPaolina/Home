@@ -169,6 +169,31 @@ function getCheckinDetails_(nome, cognome) {
     }
     
     if (lastMatch) {
+      // Get guests from Ospiti sheet
+      var guestSheet = ss.getSheetByName('Ospiti');
+      var guests = [];
+      
+      if (guestSheet) {
+        var guestData = guestSheet.getDataRange().getValues();
+        var refName = String(lastMatch[10] || '') + ' ' + String(lastMatch[11] || '');
+        
+        for (var i = 1; i < guestData.length; i++) {
+          if (String(guestData[i][1] || '').trim() === refName.trim()) {
+            guests.push({
+              nome: guestData[i][5] || '',
+              cognome: guestData[i][6] || '',
+              sesso: guestData[i][7] || '',
+              data_nascita: guestData[i][8] || '',
+              comune_nascita: guestData[i][9] || '',
+              stato_nascita: guestData[i][10] || '',
+              cittadinanza: guestData[i][11] || '',
+              comune_res: guestData[i][12] || '',
+              stato_res: guestData[i][13] || ''
+            });
+          }
+        }
+      }
+      
       return ContentService
         .createTextOutput(JSON.stringify({
           status: 'ok',
@@ -199,7 +224,8 @@ function getCheckinDetails_(nome, cognome) {
             email: lastMatch[23],
             telefono: lastMatch[24],
             n_accompagnatori: lastMatch[25],
-            note: lastMatch[26]
+            note: lastMatch[26],
+            guests: guests
           }
         }))
         .setMimeType(ContentService.MimeType.JSON);
