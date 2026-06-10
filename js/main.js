@@ -770,7 +770,7 @@ function showGuestLogin() {
         const password = passwordInput.value;
 
         // Simple password check (in production, this should be server-side)
-        if (password === 'Paolina23') {
+        if (password === '__GUEST_AREA__') {
             sessionStorage.setItem('guestLoggedIn', 'true');
             document.body.removeChild(modal);
             document.body.style.overflow = '';

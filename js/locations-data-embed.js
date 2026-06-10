@@ -397,14 +397,16 @@ const LOCATIONS_DATA = {
       "type": "beach",
       "sandType": "rocks",
       "protectedFrom": [
-        "E",
+        "N",
         "NE",
+        "E",
         "SE"
       ],
       "exposed": [
+        "S",
+        "SW",
         "W",
-        "NW",
-        "SW"
+        "NW"
       ],
       "description": "Wild natural reserve with pristine rocky coastline",
       "translationKey": "beach_porto_selvaggio",
@@ -426,14 +428,16 @@ const LOCATIONS_DATA = {
       "type": "beach",
       "sandType": "fine_sand",
       "protectedFrom": [
-        "E",
+        "N",
         "NE",
+        "E",
         "SE"
       ],
       "exposed": [
+        "S",
+        "SW",
         "W",
-        "NW",
-        "SW"
+        "NW"
       ],
       "description": "Lively beach with nightlife and beach clubs",
       "translationKey": "beach_baia_verde",
@@ -457,14 +461,16 @@ const LOCATIONS_DATA = {
       "type": "beach",
       "sandType": "golden_sand",
       "protectedFrom": [
-        "E",
+        "N",
         "NE",
+        "E",
         "SE"
       ],
       "exposed": [
+        "S",
+        "SW",
         "W",
-        "NW",
-        "SW"
+        "NW"
       ],
       "description": "Beautiful golden sand beach on Ionian coast",
       "translationKey": "beach_punta_suina",
@@ -487,14 +493,16 @@ const LOCATIONS_DATA = {
       "type": "beach",
       "sandType": "fine_sand",
       "protectedFrom": [
-        "E",
+        "N",
         "NE",
+        "E",
         "SE"
       ],
       "exposed": [
+        "S",
+        "SW",
         "W",
-        "NW",
-        "SW"
+        "NW"
       ],
       "description": "Marine protected area with crystal clear water",
       "translationKey": "beach_porto_cesareo",
@@ -518,14 +526,16 @@ const LOCATIONS_DATA = {
       "type": "beach",
       "sandType": "rocks",
       "protectedFrom": [
-        "E",
+        "N",
         "NE",
+        "E",
         "SE"
       ],
       "exposed": [
+        "S",
+        "SW",
         "W",
-        "NW",
-        "SW"
+        "NW"
       ],
       "description": "Rocky cliffs with natural pools",
       "translationKey": "beach_santa_maria_bagno",
@@ -547,14 +557,16 @@ const LOCATIONS_DATA = {
       "type": "beach",
       "sandType": "rocks",
       "protectedFrom": [
-        "E",
+        "N",
         "NE",
+        "E",
         "SE"
       ],
       "exposed": [
+        "S",
+        "SW",
         "W",
-        "NW",
-        "SW"
+        "NW"
       ],
       "description": "Spectacular caves and rocky cliffs",
       "translationKey": "beach_santa_caterina",
@@ -576,14 +588,16 @@ const LOCATIONS_DATA = {
       "type": "beach",
       "sandType": "fine_sand",
       "protectedFrom": [
-        "E",
+        "N",
         "NE",
-        "N"
+        "E",
+        "SE"
       ],
       "exposed": [
-        "W",
+        "S",
         "SW",
-        "S"
+        "W",
+        "NW"
       ],
       "description": "Family-friendly sandy beach with shallow water",
       "translationKey": "beach_torre_san_giovanni",
