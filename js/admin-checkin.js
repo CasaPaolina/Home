@@ -57,6 +57,55 @@ function loadBookings() {
         });
 }
 
+// ─── SYNC CALENDAR + RELOAD ──────────────────────────────────
+//  Pulsante "Aggiorna": legge i calendari (15, 15A, 17), inserisce
+//  nel foglio Booking le nuove prenotazioni e ricarica la lista.
+
+function syncCalendar(btn) {
+    const original = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Sincronizzo…'; }
+
+    fetch(SHEETS_SCRIPT_URL + '?action=sync-calendar')
+        .then(r => r.json())
+        .then(json => {
+            if (json.status !== 'ok') throw new Error(json.error || 'Errore sync');
+            const ins = (json.inserted || []).length;
+            const skip = (json.skipped || []).length;
+            const err = (json.errors || []).length;
+            const missing = json.calendarsMissing || [];
+            let msg = `✓ ${ins} nuove · ${skip} già presenti`;
+            if (err) msg += ` · ${err} con errori`;
+            if (missing.length) msg += ` · calendari non trovati: ${missing.join(', ')}`;
+            showSyncToast(msg, err || missing.length ? 'warn' : 'ok');
+        })
+        .catch(e => {
+            showSyncToast('Errore sincronizzazione: ' + e.message, 'err');
+        })
+        .finally(() => {
+            if (btn) { btn.disabled = false; btn.innerHTML = original; }
+            loadBookings();
+        });
+}
+
+function showSyncToast(message, type) {
+    let toast = document.getElementById('sync-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'sync-toast';
+        toast.style.cssText =
+            'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;' +
+            'padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;color:#fff;' +
+            'box-shadow:0 6px 20px rgba(0,0,0,.25);max-width:90vw;text-align:center;';
+        document.body.appendChild(toast);
+    }
+    const colors = { ok: '#15803d', warn: '#b45309', err: '#dc2626' };
+    toast.style.background = colors[type] || colors.ok;
+    toast.textContent = message;
+    toast.style.opacity = '1';
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { toast.style.transition = 'opacity .5s'; toast.style.opacity = '0'; }, 5000);
+}
+
 // ─── FILTER ──────────────────────────────────────────────────
 
 function filterApt(btn, apt) {

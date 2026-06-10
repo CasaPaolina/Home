@@ -20,6 +20,34 @@
 
 // ── CONFIGURAZIONE ───────────────────────────────────────────────
 var NOTIFICATION_EMAIL = 'casapaolina23@gmail.com';   
+
+// ── CONFIGURAZIONE PORTAFOGLIO ───────────────────────────────────
+//  Foglio dove vengono inserite le prenotazioni dal calendario.
+var PORTAFOGLIO_SHEET = 'Portafoglio';
+//  Codice appartamento (ultima riga dell'evento) → nome appartamento.
+var APARTMENT_MAP = { '15A': 'Celeste', '1': 'Suite', '15': 'Verde' };
+//  Lettera dopo il nome → canale di prenotazione.
+var CHANNEL_MAP   = { 'B': 'Booking.com', 'A': 'Airbnb' };
+//  Metti a true per aggiungere una colonna "Canale" in fondo.
+var INCLUDE_CHANNEL_COLUMN = false;
+//  Mesi italiani → indice (0 = gennaio).
+var MESI_IT = {
+  gennaio:0, febbraio:1, marzo:2, aprile:3, maggio:4, giugno:5,
+  luglio:6, agosto:7, settembre:8, ottobre:9, novembre:10, dicembre:11
+};
+// ────────────────────────────────────────────────────────────────
+
+// ── CONFIGURAZIONE CALENDARIO ────────────────────────────────────
+//  Un calendario Google per appartamento. La chiave e' il NOME del
+//  calendario in Google Calendar, il valore e' il nome appartamento.
+//  ⚠️ Verifica che "17" sia davvero la Suite (in precedenza era "1").
+var CALENDAR_APARTMENT_MAP = {
+  '15':  'Verde',
+  '15A': 'Celeste',
+  '17':  'Suite'
+};
+//  Quanti mesi in avanti scansionare dalla data odierna.
+var CALENDAR_MONTHS_AHEAD = 12;
 // ────────────────────────────────────────────────────────────────
 
 
@@ -111,6 +139,16 @@ function doGet(e) {
 
   if (action === 'bookings') {
     return getBookings_();
+  }
+
+  if (action === 'sync-calendar') {
+    return syncCalendarToBooking_();
+  }
+
+  if (action === 'portafoglio') {
+    return HtmlService.createHtmlOutput(getPortafoglioFormHtml_())
+      .setTitle('Casa Paolina — Aggiorna Portafoglio')
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1');
   }
 
   if (action === 'checkin-details') {
@@ -676,6 +714,523 @@ function aggiornaIntestazioni() {
     'Le colonne "Data Emissione" e "Data Scadenza" sono state rimosse.\n' +
     'I dati esistenti non sono stati toccati.'
   );
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  PORTAFOGLIO — importa prenotazioni dal testo del calendario
+//
+//  Formato evento (3 righe):
+//     👤👤(Franca Scaravaggi)B
+//     8 – 27 giugno 2026
+//     15A
+//
+//  - numero di 👤  → N° Ospiti
+//  - (Nome Cognome) → Nome / Cognome ospite
+//  - lettera finale → canale (B = Booking.com, A = Airbnb)
+//  - riga date      → CHECK-IN / CHECK-OUT (anche a cavallo di mesi/anni)
+//  - codice apt     → 15A=Celeste, 1=Suite, 15=Verde
+//
+//  Si possono incollare piu' eventi insieme (uno dopo l'altro).
+//  Apri la pagina:  <URL_WEB_APP>?action=portafoglio
+// ════════════════════════════════════════════════════════════════
+
+// Chiamata dal pulsante della pagina web (google.script.run).
+function importPortafoglioFromText(text) {
+  try {
+    var records = parsePortafoglioText_(text);
+    if (!records.length) {
+      return { status: 'error', error: 'Nessuna prenotazione riconosciuta nel testo.' };
+    }
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(PORTAFOGLIO_SHEET) || ss.insertSheet(PORTAFOGLIO_SHEET);
+    if (sheet.getLastRow() === 0) creaIntestazioniPortafoglio_(sheet);
+
+    var existing = getPortafoglioKeys_(sheet);
+    var inserted = [], skipped = [], errors = [];
+
+    records.forEach(function(rec) {
+      if (rec.error) { errors.push({ raw: rec.raw, error: rec.error }); return; }
+      var key = portafoglioKey_(rec);
+      if (existing[key]) { skipped.push(formatRecForClient_(rec)); return; }
+      sheet.appendRow(buildPortafoglioRow_(rec));
+      existing[key] = true;
+      inserted.push(formatRecForClient_(rec));
+    });
+
+    return { status: 'ok', inserted: inserted, skipped: skipped, errors: errors };
+
+  } catch (err) {
+    return { status: 'error', error: err.toString() };
+  }
+}
+
+// Parsing del testo grezzo → array di record.
+function parsePortafoglioText_(text) {
+  var lines = String(text || '').split(/\r?\n/);
+  var records = [];
+  var current = null;
+  var monthRe = new RegExp('\\b(' + Object.keys(MESI_IT).join('|') + ')\\b', 'i');
+
+  function pushCurrent() {
+    if (current) { records.push(finalizeRecord_(current)); current = null; }
+  }
+
+  lines.forEach(function(rawLine) {
+    var line = rawLine.trim();
+    if (!line) return;
+
+    var nameMatch = line.match(/\(([^)]+)\)/);
+    var isDateLine = monthRe.test(line);
+    var aptName = mapAppartamento_(line);
+
+    if (nameMatch) {
+      // Nuova prenotazione (la riga con il nome apre sempre un record)
+      pushCurrent();
+      current = { raw: line, persone: countPersone_(line), nameRaw: nameMatch[1].trim() };
+      var chMatch = line.match(/\)\s*([A-Za-z]+)/);
+      current.canaleCode = chMatch ? chMatch[1].toUpperCase() : '';
+    } else if (isDateLine) {
+      if (!current) current = { raw: line };
+      current.dateRaw = line;
+    } else if (aptName) {
+      if (!current) current = { raw: line };
+      current.aptCode = line.trim().toUpperCase().replace(/\s+/g, '');
+      current.appartamento = aptName;
+    }
+  });
+  pushCurrent();
+  return records;
+}
+
+// Completa il record: nome/cognome, date, validazione.
+function finalizeRecord_(rec) {
+  var out = {
+    raw: rec.raw || '',
+    persone: rec.persone || 0,
+    appartamento: rec.appartamento || '',
+    aptCode: rec.aptCode || '',
+    canaleCode: rec.canaleCode || '',
+    canale: CHANNEL_MAP[rec.canaleCode] || rec.canaleCode || ''
+  };
+
+  if (rec.nameRaw) {
+    var parts = rec.nameRaw.split(/\s+/);
+    out.nome = parts.shift() || '';
+    out.cognome = parts.join(' ');
+  } else {
+    out.nome = '';
+    out.cognome = '';
+  }
+  if (!out.persone && rec.nameRaw) out.persone = 1;
+
+  var dates = parseDateRange_(rec.dateRaw || '');
+  if (dates) {
+    out.checkIn = dates.start;
+    out.checkOut = dates.end;
+  }
+
+  var problems = [];
+  if (!rec.nameRaw)        problems.push('nome ospite mancante');
+  if (!dates)              problems.push('date non riconosciute' + (rec.dateRaw ? ' ("' + rec.dateRaw + '")' : ''));
+  if (!out.appartamento)   problems.push('appartamento non riconosciuto' + (rec.aptCode ? ' ("' + rec.aptCode + '")' : ''));
+  if (problems.length)     out.error = problems.join(' | ');
+
+  return out;
+}
+
+// Conta le icone persona 👤 nella riga.
+function countPersone_(line) {
+  var m = String(line).match(/👤/g);
+  return m ? m.length : 0;
+}
+
+// Mappa il codice appartamento → nome (null se non riconosciuto).
+function mapAppartamento_(line) {
+  var code = String(line || '').trim().toUpperCase().replace(/\s+/g, '');
+  return APARTMENT_MAP[code] || null;
+}
+
+// Interpreta "8 – 27 giugno 2026", "28 giugno – 3 luglio 2026",
+// "28 dicembre – 3 gennaio 2026", "28 dicembre 2025 – 3 gennaio 2026".
+function parseDateRange_(line) {
+  if (!line) return null;
+  var s = String(line).replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
+  var idx = s.indexOf('-');
+  if (idx < 0) return null;
+
+  var left  = s.slice(0, idx).trim();
+  var right = s.slice(idx + 1).trim();
+
+  // Lato destro: giorno + mese (+ anno opzionale)
+  var rM = right.match(/(\d{1,2})\s+([A-Za-zÀ-ù]+)(?:\s+(\d{4}))?/);
+  if (!rM) return null;
+  var endDay   = parseInt(rM[1], 10);
+  var endMonth = MESI_IT[rM[2].toLowerCase()];
+  var endYear  = rM[3] ? parseInt(rM[3], 10) : null;
+  if (endMonth === undefined) return null;
+
+  // Lato sinistro: prova giorno+mese+anno, poi giorno+mese, poi solo giorno
+  var startDay, startMonth, startYear = null;
+  var lFull = left.match(/(\d{1,2})\s+([A-Za-zÀ-ù]+)\s+(\d{4})/);
+  var lDM   = left.match(/(\d{1,2})\s+([A-Za-zÀ-ù]+)/);
+  var lD    = left.match(/(\d{1,2})/);
+
+  if (lFull && MESI_IT[lFull[2].toLowerCase()] !== undefined) {
+    startDay = parseInt(lFull[1], 10);
+    startMonth = MESI_IT[lFull[2].toLowerCase()];
+    startYear = parseInt(lFull[3], 10);
+  } else if (lDM && MESI_IT[lDM[2].toLowerCase()] !== undefined) {
+    startDay = parseInt(lDM[1], 10);
+    startMonth = MESI_IT[lDM[2].toLowerCase()];
+  } else if (lD) {
+    startDay = parseInt(lD[1], 10);
+    startMonth = endMonth;
+  } else {
+    return null;
+  }
+  if (startMonth === undefined) return null;
+
+  if (endYear === null) endYear = new Date().getFullYear();
+  if (startYear === null) {
+    startYear = endYear;
+    // A cavallo di anno: se il mese d'inizio viene dopo quello di fine
+    if (startMonth > endMonth) startYear = endYear - 1;
+  }
+
+  var start = new Date(startYear, startMonth, startDay);
+  var end   = new Date(endYear, endMonth, endDay);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
+  return { start: start, end: end };
+}
+
+// Costruisce la riga nell'ordine delle colonne del foglio.
+function buildPortafoglioRow_(rec) {
+  var row = [
+    rec.checkIn,        // CHECK-IN
+    rec.checkOut,       // CHECK-OUT
+    rec.appartamento,   // Appartamento
+    rec.nome,           // Nome Ospite
+    rec.cognome,        // Cognome Ospite
+    rec.persone         // N° Ospiti
+  ];
+  if (INCLUDE_CHANNEL_COLUMN) row.push(rec.canale);
+  return row;
+}
+
+// Chiave anti-duplicato: data arrivo + appartamento + cognome.
+function portafoglioKey_(rec) {
+  return [
+    rec.checkIn ? rec.checkIn.getTime() : '',
+    rec.appartamento,
+    String(rec.cognome || '').toLowerCase()
+  ].join('|');
+}
+
+function getPortafoglioKeys_(sheet) {
+  var keys = {};
+  var last = sheet.getLastRow();
+  if (last < 2) return keys;
+  var values = sheet.getRange(2, 1, last - 1, 5).getValues();
+  values.forEach(function(r) {
+    var ci = (r[0] instanceof Date) ? r[0].getTime() : (r[0] ? new Date(r[0]).getTime() : '');
+    keys[[ci, r[2], String(r[4] || '').toLowerCase()].join('|')] = true;
+  });
+  return keys;
+}
+
+function creaIntestazioniPortafoglio_(sheet) {
+  var headers = ['CHECK-IN', 'CHECK-OUT', 'Appartamento', 'Nome Ospite', 'Cognome Ospite', 'N° Ospiti'];
+  if (INCLUDE_CHANNEL_COLUMN) headers.push('Canale');
+  sheet.appendRow(headers);
+  sheet.getRange(1, 1, 1, headers.length)
+    .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
+  sheet.setFrozenRows(1);
+  sheet.getRange(2, 1, sheet.getMaxRows() - 1, 2).setNumberFormat('dd/mm/yyyy');
+  sheet.setColumnWidth(1, 100);
+  sheet.setColumnWidth(2, 100);
+}
+
+function formatRecForClient_(rec) {
+  var tz = Session.getScriptTimeZone();
+  return {
+    nome: rec.nome,
+    cognome: rec.cognome,
+    appartamento: rec.appartamento,
+    checkIn:  rec.checkIn  ? Utilities.formatDate(rec.checkIn,  tz, 'dd/MM/yyyy') : '',
+    checkOut: rec.checkOut ? Utilities.formatDate(rec.checkOut, tz, 'dd/MM/yyyy') : '',
+    persone: rec.persone,
+    canale: rec.canale
+  };
+}
+
+// Pagina web (textarea + pulsante) servita da doGet?action=portafoglio.
+function getPortafoglioFormHtml_() {
+  return '' +
+'<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">' +
+'<style>' +
+'*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;background:#f0f2f4;margin:0;padding:24px;color:#1e293b}' +
+'.card{max-width:640px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.1);padding:28px}' +
+'h1{color:#2c7873;font-size:20px;margin:0 0 4px}p.sub{color:#64748b;font-size:13px;margin:0 0 18px}' +
+'textarea{width:100%;min-height:170px;padding:12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;resize:vertical}' +
+'textarea:focus{outline:none;border-color:#2c7873}' +
+'button{margin-top:14px;width:100%;padding:13px;background:#2c7873;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}' +
+'button:disabled{opacity:.6;cursor:default}' +
+'#result{margin-top:18px;font-size:14px}' +
+'.ok{color:#15803d}.warn{color:#b45309}.err{color:#dc2626}' +
+'.row{padding:8px 12px;border-radius:6px;margin-bottom:6px;background:#f8fafc;border-left:4px solid #cbd5e1}' +
+'.row.ins{border-color:#22c55e}.row.skip{border-color:#f59e0b}.row.bad{border-color:#ef4444}' +
+'small{color:#64748b}' +
+'</style></head><body>' +
+'<div class="card">' +
+'<h1>🏠 Casa Paolina — Portafoglio</h1>' +
+'<p class="sub">Incolla uno o piu\' eventi dal calendario (3 righe ciascuno) e premi Aggiungi.</p>' +
+'<textarea id="txt" placeholder="👤👤(Franca Scaravaggi)B&#10;8 – 27 giugno 2026&#10;15A"></textarea>' +
+'<button id="btn" onclick="invia()">Aggiungi al foglio</button>' +
+'<div id="result"></div>' +
+'</div>' +
+'<script>' +
+'function esc(s){return String(s==null?"":s).replace(/[&<>]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}' +
+'function invia(){' +
+'var t=document.getElementById("txt").value;' +
+'var b=document.getElementById("btn");var r=document.getElementById("result");' +
+'if(!t.trim()){r.innerHTML="<span class=\\"warn\\">Inserisci almeno un evento.</span>";return;}' +
+'b.disabled=true;b.textContent="Attendere...";r.innerHTML="";' +
+'google.script.run.withSuccessHandler(function(res){b.disabled=false;b.textContent="Aggiungi al foglio";mostra(res,r);})' +
+'.withFailureHandler(function(e){b.disabled=false;b.textContent="Aggiungi al foglio";r.innerHTML="<span class=\\"err\\">Errore: "+esc(e.message)+"</span>";})' +
+'.importPortafoglioFromText(t);}' +
+'function mostra(res,r){' +
+'if(!res||res.status!=="ok"){r.innerHTML="<span class=\\"err\\">"+esc(res&&res.error||"Errore sconosciuto")+"</span>";return;}' +
+'var h="";' +
+'h+="<p class=\\"ok\\"><b>"+res.inserted.length+"</b> inserite · <b>"+res.skipped.length+"</b> gia\' presenti · <b>"+res.errors.length+"</b> errori</p>";' +
+'res.inserted.forEach(function(x){h+="<div class=\\"row ins\\">✅ "+esc(x.nome)+" "+esc(x.cognome)+" — "+esc(x.appartamento)+" — "+esc(x.checkIn)+" → "+esc(x.checkOut)+" · "+esc(x.persone)+"p"+(x.canale?" · "+esc(x.canale):"")+"</div>";});' +
+'res.skipped.forEach(function(x){h+="<div class=\\"row skip\\">⏭️ "+esc(x.nome)+" "+esc(x.cognome)+" — "+esc(x.appartamento)+" — "+esc(x.checkIn)+" (gia\' presente)</div>";});' +
+'res.errors.forEach(function(x){h+="<div class=\\"row bad\\">⚠️ "+esc(x.error)+"<br><small>"+esc(x.raw)+"</small></div>";});' +
+'if(res.inserted.length){document.getElementById("txt").value="";}' +
+'r.innerHTML=h;}' +
+'</script></body></html>';
+}
+
+// Test manuale: seleziona "testPortafoglio" e clicca ▶ Esegui.
+function testPortafoglio() {
+  var sample =
+    '👤👤(Franca Scaravaggi)B\n' +
+    '8 – 27 giugno 2026\n' +
+    '15A\n' +
+    '\n' +
+    '👤(Mario Rossi)A\n' +
+    '28 giugno – 3 luglio 2026\n' +
+    '1';
+  Logger.log(JSON.stringify(parsePortafoglioText_(sample), null, 2));
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  SYNC CALENDARIO → FOGLIO BOOKING
+//
+//  Legge gli eventi dei calendari per appartamento (15, 15A, 17),
+//  li interpreta nel formato Casa Paolina e inserisce una riga nel
+//  foglio "Booking" se non gia' presente. Usato dal pulsante
+//  "Aggiorna" della dashboard admin (?action=sync-calendar).
+//
+//  ⚠️ Richiede l'autorizzazione a Google Calendar: la prima volta
+//     esegui manualmente "syncCalendarManuale" e accetta i permessi.
+// ════════════════════════════════════════════════════════════════
+
+function syncCalendarToBooking_() {
+  try {
+    var result = doCalendarSync_();
+    return ContentService
+      .createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Esecuzione manuale dall'editor (per autorizzare Calendar e testare).
+function syncCalendarManuale() {
+  var res = doCalendarSync_();
+  Logger.log(JSON.stringify(res, null, 2));
+}
+
+function doCalendarSync_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = getBookingSheet_(ss);
+  if (!sheet) { sheet = ss.insertSheet('Booking'); }
+  if (sheet.getLastRow() === 0) creaIntestazioniBooking_(sheet);
+
+  var cols = getBookingColumns_(sheet);
+  var existing = getBookingKeys_(sheet, cols);
+
+  var now   = new Date();
+  var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var end   = new Date(start.getTime());
+  end.setMonth(end.getMonth() + CALENDAR_MONTHS_AHEAD);
+
+  var inserted = [], skipped = [], errors = [], calendarsMissing = [];
+
+  Object.keys(CALENDAR_APARTMENT_MAP).forEach(function(calName) {
+    var aptName = CALENDAR_APARTMENT_MAP[calName];
+    var cals = CalendarApp.getCalendarsByName(calName);
+    if (!cals || !cals.length) { calendarsMissing.push(calName); return; }
+
+    cals.forEach(function(cal) {
+      var events = cal.getEvents(start, end);
+      events.forEach(function(ev) {
+        var rec = parseCalendarEvent_(ev, aptName);
+        if (rec.error) { errors.push({ raw: rec.raw, error: rec.error }); return; }
+
+        var key = bookingRecordKey_(rec);
+        if (existing[key]) { skipped.push(formatRecForClient_(rec)); return; }
+
+        sheet.appendRow(buildBookingRow_(rec, cols));
+        existing[key] = true;
+        inserted.push(formatRecForClient_(rec));
+      });
+    });
+  });
+
+  return {
+    status: 'ok',
+    inserted: inserted,
+    skipped: skipped,
+    errors: errors,
+    calendarsMissing: calendarsMissing
+  };
+}
+
+// Interpreta un evento del calendario → record prenotazione.
+function parseCalendarEvent_(ev, calApt) {
+  var title = ev.getTitle ? (ev.getTitle() || '') : '';
+  var descr = ev.getDescription ? (ev.getDescription() || '') : '';
+  var text  = (title + '\n' + descr).trim();
+  var rec   = { raw: title, appartamento: calApt || '' };
+
+  // N° ospiti = numero di icone 👤
+  rec.persone = (text.match(/👤/g) || []).length;
+
+  // Nome ospite = contenuto tra parentesi ( )
+  var nameMatch = text.match(/\(([^)]+)\)/);
+  if (nameMatch) {
+    var parts = nameMatch[1].trim().split(/\s+/);
+    rec.nome = parts.shift() || '';
+    rec.cognome = parts.join(' ');
+    if (!rec.persone) rec.persone = 1;
+
+    // Canale = lettera subito dopo la parentesi chiusa
+    var after = text.slice(text.indexOf(nameMatch[0]) + nameMatch[0].length);
+    var chM = after.match(/^\s*([A-Za-z]+)/);
+    rec.canaleCode = chM ? chM[1].toUpperCase() : '';
+    rec.canale = CHANNEL_MAP[rec.canaleCode] || rec.canaleCode || '';
+  } else {
+    rec.nome = '';
+    rec.cognome = '';
+  }
+
+  // Date: prima dal testo (riga con il mese), poi dagli orari evento.
+  var dateText = text;
+  if (nameMatch) {
+    dateText = text.slice(text.indexOf(nameMatch[0]) + nameMatch[0].length)
+                   .replace(/^\s*[A-Za-z]+/, ' ');
+  }
+  var dates = parseDateRange_(dateText.replace(/\n/g, ' '));
+  if (dates) {
+    rec.checkIn = dates.start;
+    rec.checkOut = dates.end;
+  } else if (ev.getStartTime) {
+    rec.checkIn = ev.getStartTime();
+    rec.checkOut = ev.getEndTime();
+    // Eventi "tutto il giorno": la fine in Google e' esclusiva (giorno dopo)
+    if (ev.isAllDayEvent && ev.isAllDayEvent()) {
+      rec.checkOut = new Date(rec.checkOut.getTime() - 86400000);
+    }
+  }
+
+  // Appartamento: usa il calendario; in fallback il codice nel testo.
+  if (!rec.appartamento) {
+    var aptLine = text.split(/\r?\n/).map(function(l){ return mapAppartamento_(l); }).filter(Boolean)[0];
+    if (aptLine) rec.appartamento = aptLine;
+  }
+
+  var problems = [];
+  if (!rec.nome && !rec.cognome) problems.push('nome ospite mancante');
+  if (!rec.checkIn || !rec.checkOut) problems.push('date non riconosciute');
+  if (!rec.appartamento) problems.push('appartamento non riconosciuto');
+  if (problems.length) rec.error = problems.join(' | ') + ' — "' + title + '"';
+
+  return rec;
+}
+
+// ── Foglio Booking: utilità colonne / chiavi / righe ─────────────
+
+function getBookingSheet_(ss) {
+  return ss.getSheetByName('Booking')
+      || ss.getSheetByName('Prenotazioni Booking')
+      || ss.getSheetByName('booking');
+}
+
+function getBookingColumns_(sheet) {
+  var headers = sheet.getRange(1, 1, 1, Math.max(1, sheet.getLastColumn())).getValues()[0]
+                  .map(function(h){ return String(h).trim().toLowerCase(); });
+  return {
+    width: headers.length,
+    cin:    findCol_(headers, ['check-in', 'checkin', 'arrivo', 'data arrivo', 'data-arrivo']),
+    cout:   findCol_(headers, ['check-out', 'checkout', 'partenza', 'data partenza', 'data-partenza']),
+    apt:    findCol_(headers, ['appartamento', 'appartment', 'apartment', 'apt', 'alloggio']),
+    nome:   findCol_(headers, ['nome', 'first name', 'firstname', 'name']),
+    cogn:   findCol_(headers, ['cognome', 'last name', 'lastname', 'surname']),
+    ospite: findCol_(headers, ['ospite', 'guest', 'nome ospite', 'guest name', 'cliente']),
+    n:      findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone'])
+  };
+}
+
+function buildBookingRow_(rec, cols) {
+  var row = [];
+  for (var i = 0; i < cols.width; i++) row.push('');
+  if (cols.cin  >= 0) row[cols.cin]  = rec.checkIn;
+  if (cols.cout >= 0) row[cols.cout] = rec.checkOut;
+  if (cols.apt  >= 0) row[cols.apt]  = rec.appartamento;
+  if (cols.nome >= 0) row[cols.nome] = rec.nome;
+  if (cols.cogn >= 0) row[cols.cogn] = rec.cognome;
+  if (cols.ospite >= 0 && cols.nome < 0 && cols.cogn < 0) {
+    row[cols.ospite] = (rec.nome + ' ' + rec.cognome).trim();
+  }
+  if (cols.n >= 0) row[cols.n] = rec.persone;
+  return row;
+}
+
+function bookingRecordKey_(rec) {
+  var ci = rec.checkIn instanceof Date ? rec.checkIn.getTime() : '';
+  return [ci, rec.appartamento, String(rec.cognome || '').toLowerCase()].join('|');
+}
+
+function getBookingKeys_(sheet, cols) {
+  var keys = {};
+  var last = sheet.getLastRow();
+  if (last < 2) return keys;
+  var values = sheet.getRange(2, 1, last - 1, cols.width).getValues();
+  values.forEach(function(r) {
+    var cinVal = cols.cin >= 0 ? r[cols.cin] : '';
+    var ci = (cinVal instanceof Date) ? cinVal.getTime()
+           : (cinVal ? new Date(formatSheetDate_(cinVal)).getTime() : '');
+    var apt = cols.apt >= 0 ? r[cols.apt] : '';
+    var cogn = cols.cogn >= 0 ? r[cols.cogn]
+             : (cols.ospite >= 0 ? String(r[cols.ospite] || '').split(/\s+/).slice(1).join(' ') : '');
+    keys[[ci, apt, String(cogn || '').toLowerCase()].join('|')] = true;
+  });
+  return keys;
+}
+
+function creaIntestazioniBooking_(sheet) {
+  var headers = ['Check-in', 'Check-out', 'Appartamento', 'Nome', 'Cognome', 'N° Ospiti'];
+  sheet.appendRow(headers);
+  sheet.getRange(1, 1, 1, headers.length)
+    .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
+  sheet.setFrozenRows(1);
 }
 
 
