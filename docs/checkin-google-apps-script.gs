@@ -1178,6 +1178,9 @@ function doCalendarSync_() {
     sheet.deleteRow(m.row);
   });
 
+  // Ordina le prenotazioni per CHECK-IN crescente (le piu' future in fondo).
+  sortBookingByCheckin_(sheet, cols);
+
   return {
     status: 'ok',
     inserted: inserted,
@@ -1410,6 +1413,26 @@ function bookingValuesEqual_(a, b) {
     return da.getTime() === db.getTime();
   }
   return String(a == null ? '' : a).trim() === String(b == null ? '' : b).trim();
+}
+
+// Ordina le righe dati per CHECK-IN crescente (A->Z, le piu' future in fondo).
+// Le righe senza data valida vengono messe in coda.
+function sortBookingByCheckin_(sheet, cols) {
+  if (cols.cin < 0) return;
+  var last = sheet.getLastRow();
+  if (last < 3) return; // 0/1 riga dati: niente da ordinare
+  var range = sheet.getRange(2, 1, last - 1, cols.width);
+  var rows = range.getValues();
+
+  function ciTime_(r) {
+    var v = r[cols.cin];
+    var t = (v instanceof Date) ? stripTime_(v).getTime()
+          : (v ? new Date(formatSheetDate_(v)).getTime() : NaN);
+    return isNaN(t) ? Infinity : t; // senza data -> in fondo
+  }
+
+  rows.sort(function(a, b) { return ciTime_(a) - ciTime_(b); });
+  range.setValues(rows);
 }
 
 function creaIntestazioniBooking_(sheet) {
