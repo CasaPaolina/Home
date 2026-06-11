@@ -25,7 +25,7 @@ var NOTIFICATION_EMAIL = 'casapaolina23@gmail.com';
 //  Foglio dove vengono inserite le prenotazioni dal calendario.
 var PORTAFOGLIO_SHEET = 'Portafoglio';
 //  Codice appartamento (ultima riga dell'evento) → nome appartamento.
-var APARTMENT_MAP = { '15A': 'Celeste', '1': 'Suite', '15': 'Verde' };
+var APARTMENT_MAP = { '15A': 'celeste', '1': 'suite', '15': 'verde' };
 //  Lettera dopo il nome → canale di prenotazione.
 var CHANNEL_MAP   = { 'B': 'Booking.com', 'A': 'Airbnb' };
 //  Metti a true per aggiungere una colonna "Canale" in fondo.
@@ -35,6 +35,11 @@ var MESI_IT = {
   gennaio:0, febbraio:1, marzo:2, aprile:3, maggio:4, giugno:5,
   luglio:6, agosto:7, settembre:8, ottobre:9, novembre:10, dicembre:11
 };
+//  Mesi italiani abbreviati (prime 3 lettere) → indice.
+var MESI_ABBR = {
+  gen:0, feb:1, mar:2, apr:3, mag:4, giu:5,
+  lug:6, ago:7, set:8, ott:9, nov:10, dic:11
+};
 // ────────────────────────────────────────────────────────────────
 
 // ── CONFIGURAZIONE CALENDARIO ────────────────────────────────────
@@ -42,9 +47,9 @@ var MESI_IT = {
 //  calendario in Google Calendar, il valore e' il nome appartamento.
 //  ⚠️ Verifica che "17" sia davvero la Suite (in precedenza era "1").
 var CALENDAR_APARTMENT_MAP = {
-  '15':  'Verde',
-  '15A': 'Celeste',
-  '17':  'Suite'
+  '15':  'verde',
+  '15A': 'celeste',
+  '17':  'suite'
 };
 //  Quanti mesi in avanti scansionare dalla data odierna.
 var CALENDAR_MONTHS_AHEAD = 12;
@@ -771,7 +776,8 @@ function parsePortafoglioText_(text) {
   var lines = String(text || '').split(/\r?\n/);
   var records = [];
   var current = null;
-  var monthRe = new RegExp('\\b(' + Object.keys(MESI_IT).join('|') + ')\\b', 'i');
+  var monthRe = new RegExp('\\b(' +
+    Object.keys(MESI_IT).concat(Object.keys(MESI_ABBR)).join('|') + ')\\b', 'i');
 
   function pushCurrent() {
     if (current) { records.push(finalizeRecord_(current)); current = null; }
@@ -853,56 +859,86 @@ function mapAppartamento_(line) {
 }
 
 // Interpreta "8 – 27 giugno 2026", "28 giugno – 3 luglio 2026",
-// "28 dicembre – 3 gennaio 2026", "28 dicembre 2025 – 3 gennaio 2026".
+// "28 dicembre – 3 gennaio 2026", "28 dicembre 2025 – 3 gennaio 2026",
+// e il formato abbreviato "19-Ago", "19-Ago – 25-Ago",
+// "19-Ago - 25-Ago 2026". Mesi anche abbreviati (gen, feb, mar, ...).
 function parseDateRange_(line) {
   if (!line) return null;
-  var s = String(line).replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
-  var idx = s.indexOf('-');
-  if (idx < 0) return null;
+  var s = String(line).replace(/\s+/g, ' ').trim();
 
-  var left  = s.slice(0, idx).trim();
-  var right = s.slice(idx + 1).trim();
+  // Normalizza i separatori di INTERVALLO in "|", mantenendo i trattini
+  // "interni" dei token tipo 19-Ago (trattino tra cifra e lettera).
+  s = s.replace(/\s*[–—→]\s*/g, '|')        // en/em dash, freccia
+       .replace(/\s+-\s+/g, '|')             // trattino tra spazi
+       .replace(/(\d)\s*-\s*(?=\d)/g, '$1|') // trattino tra due cifre (es. 8-27)
+       .replace(/\s+(?:al|a)\s+/gi, '|');    // " al " / " a "
 
-  // Lato destro: giorno + mese (+ anno opzionale)
-  var rM = right.match(/(\d{1,2})\s+([A-Za-zÀ-ù]+)(?:\s+(\d{4}))?/);
-  if (!rM) return null;
-  var endDay   = parseInt(rM[1], 10);
-  var endMonth = MESI_IT[rM[2].toLowerCase()];
-  var endYear  = rM[3] ? parseInt(rM[3], 10) : null;
-  if (endMonth === undefined) return null;
+  var parts = s.split('|');
+  if (parts.length < 2) return null;
 
-  // Lato sinistro: prova giorno+mese+anno, poi giorno+mese, poi solo giorno
-  var startDay, startMonth, startYear = null;
-  var lFull = left.match(/(\d{1,2})\s+([A-Za-zÀ-ù]+)\s+(\d{4})/);
-  var lDM   = left.match(/(\d{1,2})\s+([A-Za-zÀ-ù]+)/);
-  var lD    = left.match(/(\d{1,2})/);
+  var left  = parseDateToken_(parts[0]);
+  var right = parseDateToken_(parts[parts.length - 1]);
+  if (!left || !right) return null;
 
-  if (lFull && MESI_IT[lFull[2].toLowerCase()] !== undefined) {
-    startDay = parseInt(lFull[1], 10);
-    startMonth = MESI_IT[lFull[2].toLowerCase()];
-    startYear = parseInt(lFull[3], 10);
-  } else if (lDM && MESI_IT[lDM[2].toLowerCase()] !== undefined) {
-    startDay = parseInt(lDM[1], 10);
-    startMonth = MESI_IT[lDM[2].toLowerCase()];
-  } else if (lD) {
-    startDay = parseInt(lD[1], 10);
-    startMonth = endMonth;
-  } else {
-    return null;
-  }
-  if (startMonth === undefined) return null;
+  // Mese mancante su un lato → eredita dall'altro
+  if (left.month === null)  left.month  = right.month;
+  if (right.month === null) right.month = left.month;
+  if (left.month === null || right.month === null) return null;
 
-  if (endYear === null) endYear = new Date().getFullYear();
+  var endYear   = right.year;
+  var startYear = left.year;
+  if (endYear === null)   endYear   = (startYear !== null) ? startYear : new Date().getFullYear();
   if (startYear === null) {
     startYear = endYear;
     // A cavallo di anno: se il mese d'inizio viene dopo quello di fine
-    if (startMonth > endMonth) startYear = endYear - 1;
+    if (left.month > right.month) startYear = endYear - 1;
   }
 
-  var start = new Date(startYear, startMonth, startDay);
-  var end   = new Date(endYear, endMonth, endDay);
+  var start = new Date(startYear, left.month, left.day);
+  var end   = new Date(endYear, right.month, right.day);
   if (isNaN(start.getTime()) || isNaN(end.getTime())) return null;
   return { start: start, end: end };
+}
+
+// Risolve un nome di mese italiano (completo o abbreviato) → indice 0-11.
+function resolveMese_(name) {
+  if (name == null) return undefined;
+  var key = String(name).toLowerCase().replace(/\./g, '').trim();
+  if (MESI_IT[key] !== undefined) return MESI_IT[key];
+  var abbr = key.slice(0, 3);
+  if (MESI_ABBR[abbr] !== undefined) return MESI_ABBR[abbr];
+  return undefined;
+}
+
+// Interpreta un singolo estremo di data: "27 giugno 2026", "19-Ago",
+// "19 ago 2026", "3 luglio", "12/08/2026", "12/08" o solo "27".
+// Ritorna { day, month (0-11 o null), year (numero o null) } oppure null.
+function parseDateToken_(token) {
+  if (!token) return null;
+  token = String(token).trim();
+  if (!token) return null;
+
+  // DD/MM/YYYY oppure DD/MM (anche con punti)
+  var slash = token.match(/^(\d{1,2})[\/\.](\d{1,2})(?:[\/\.](\d{2,4}))?$/);
+  if (slash) {
+    var yr = slash[3] ? parseInt(slash[3], 10) : null;
+    if (yr !== null && yr < 100) yr += 2000;
+    return { day: parseInt(slash[1], 10), month: parseInt(slash[2], 10) - 1, year: yr };
+  }
+
+  // DD<sep>Mese[ YYYY]  con sep = spazio o trattino (es. "19-Ago", "27 giugno 2026")
+  var dm = token.match(/^(\d{1,2})[\s\-]+([A-Za-zÀ-ù]+)\.?(?:[\s\-]+(\d{4}))?$/);
+  if (dm) {
+    var m = resolveMese_(dm[2]);
+    if (m === undefined) return null;
+    return { day: parseInt(dm[1], 10), month: m, year: dm[3] ? parseInt(dm[3], 10) : null };
+  }
+
+  // Solo giorno (il mese verra' ereditato dall'altro estremo)
+  var d = token.match(/^(\d{1,2})$/);
+  if (d) return { day: parseInt(d[1], 10), month: null, year: null };
+
+  return null;
 }
 
 // Costruisce la riga nell'ordine delle colonne del foglio.
@@ -1021,7 +1057,11 @@ function testPortafoglio() {
     '\n' +
     '👤(Mario Rossi)A\n' +
     '28 giugno – 3 luglio 2026\n' +
-    '1';
+    '1\n' +
+    '\n' +
+    '👤👤👤(Luca Bianchi)B\n' +
+    '19-Ago – 25-Ago 2026\n' +
+    '15';
   Logger.log(JSON.stringify(parsePortafoglioText_(sample), null, 2));
 }
 
@@ -1131,23 +1171,24 @@ function parseCalendarEvent_(ev, calApt) {
     rec.cognome = '';
   }
 
-  // Date: prima dal testo (riga con il mese), poi dagli orari evento.
-  var dateText = text;
-  if (nameMatch) {
-    dateText = text.slice(text.indexOf(nameMatch[0]) + nameMatch[0].length)
-                   .replace(/^\s*[A-Za-z]+/, ' ');
-  }
-  var dates = parseDateRange_(dateText.replace(/\n/g, ' '));
-  if (dates) {
-    rec.checkIn = dates.start;
-    rec.checkOut = dates.end;
-  } else if (ev.getStartTime) {
-    rec.checkIn = ev.getStartTime();
-    rec.checkOut = ev.getEndTime();
-    // Eventi "tutto il giorno": la fine in Google e' esclusiva (giorno dopo)
-    if (ev.isAllDayEvent && ev.isAllDayEvent()) {
-      rec.checkOut = new Date(rec.checkOut.getTime() - 86400000);
+  // Date dal CALENDARIO.
+  //   check-in  = giorno di inizio evento
+  //   check-out = giorno di fine evento
+  if (ev.getStartTime) {
+    rec.checkIn  = stripTime_(ev.getStartTime());
+    rec.checkOut = stripTime_(ev.getEndTime());
+  } else {
+    // Fallback: eventuali date scritte nel testo dell'evento.
+    var dates = parseDateRange_(text.replace(/\n/g, ' '));
+    if (dates) {
+      rec.checkIn  = stripTime_(dates.start);
+      rec.checkOut = stripTime_(dates.end);
     }
+  }
+
+  // Garantisce almeno 1 notte: il check-out e' sempre dopo il check-in.
+  if (rec.checkIn && rec.checkOut && rec.checkOut.getTime() <= rec.checkIn.getTime()) {
+    rec.checkOut = new Date(rec.checkIn.getTime() + 86400000);
   }
 
   // Appartamento: usa il calendario; in fallback il codice nel testo.
@@ -1166,6 +1207,12 @@ function parseCalendarEvent_(ev, calApt) {
 }
 
 // ── Foglio Booking: utilità colonne / chiavi / righe ─────────────
+
+// Azzera l'orario di una data → mezzanotte (solo giorno).
+function stripTime_(date) {
+  if (!(date instanceof Date)) return date;
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
 
 function getBookingSheet_(ss) {
   return ss.getSheetByName('Booking')
@@ -1226,7 +1273,7 @@ function getBookingKeys_(sheet, cols) {
 }
 
 function creaIntestazioniBooking_(sheet) {
-  var headers = ['Check-in', 'Check-out', 'Appartamento', 'Nome', 'Cognome', 'N° Ospiti'];
+  var headers = ['CHECK-IN', 'CHECK-OUT', 'Appartamento', 'Nome', 'Cognome', 'N° Ospiti'];
   sheet.appendRow(headers);
   sheet.getRange(1, 1, 1, headers.length)
     .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
