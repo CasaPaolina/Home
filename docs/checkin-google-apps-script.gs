@@ -823,8 +823,8 @@ function finalizeRecord_(rec) {
 
   if (rec.nameRaw) {
     var parts = rec.nameRaw.split(/\s+/);
-    out.nome = parts.shift() || '';
-    out.cognome = parts.join(' ');
+    out.nome = splitCamelCase_(parts.shift() || '');
+    out.cognome = splitCamelCase_(parts.join(' '));
   } else {
     out.nome = '';
     out.cognome = '';
@@ -850,6 +850,13 @@ function finalizeRecord_(rec) {
 function countPersone_(line) {
   var m = String(line).match(/👤/g);
   return m ? m.length : 0;
+}
+
+// Stacca le parole "attaccate" da una maiuscola: "MariaSabina" -> "Maria Sabina".
+// Inserisce uno spazio tra una lettera minuscola e la maiuscola che segue.
+function splitCamelCase_(s) {
+  if (!s) return s;
+  return String(s).replace(/([a-zà-ÿ])([A-ZÀ-Þ])/g, '$1 $2');
 }
 
 // Mappa il codice appartamento → nome (null se non riconosciuto).
@@ -1157,8 +1164,8 @@ function parseCalendarEvent_(ev, calApt) {
   var nameMatch = text.match(/\(([^)]+)\)/);
   if (nameMatch) {
     var parts = nameMatch[1].trim().split(/\s+/);
-    rec.nome = parts.shift() || '';
-    rec.cognome = parts.join(' ');
+    rec.nome = splitCamelCase_(parts.shift() || '');
+    rec.cognome = splitCamelCase_(parts.join(' '));
     if (!rec.persone) rec.persone = 1;
 
     // Canale = lettera subito dopo la parentesi chiusa
