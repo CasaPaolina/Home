@@ -70,10 +70,12 @@ function syncCalendar(btn) {
         .then(json => {
             if (json.status !== 'ok') throw new Error(json.error || 'Errore sync');
             const ins = (json.inserted || []).length;
+            const upd = (json.updated || []).length;
+            const canc = (json.cancelled || []).length;
             const skip = (json.skipped || []).length;
             const err = (json.errors || []).length;
             const missing = json.calendarsMissing || [];
-            let msg = `✓ ${ins} nuove · ${skip} già presenti`;
+            let msg = `✓ ${ins} nuove · ${upd} aggiornate · ${canc} cancellate · ${skip} invariate`;
             if (err) msg += ` · ${err} con errori`;
             if (missing.length) msg += ` · calendari non trovati: ${missing.join(', ')}`;
             showSyncToast(msg, err || missing.length ? 'warn' : 'ok');

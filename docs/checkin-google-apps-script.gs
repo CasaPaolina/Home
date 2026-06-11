@@ -1111,14 +1111,16 @@ function doCalendarSync_() {
   if (sheet.getLastRow() === 0) creaIntestazioniBooking_(sheet);
 
   var cols = getBookingColumns_(sheet);
-  var existing = getBookingKeys_(sheet, cols);
+  ensureEventIdColumn_(sheet, cols);          // garantisce la colonna EventId
+  var index = getBookingIndex_(sheet, cols);  // righe esistenti per eventId / chiave
 
   var now   = new Date();
   var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   var end   = new Date(start.getTime());
   end.setMonth(end.getMonth() + CALENDAR_MONTHS_AHEAD);
 
-  var inserted = [], skipped = [], errors = [], calendarsMissing = [];
+  var inserted = [], updated = [], skipped = [], cancelled = [], errors = [], calendarsMissing = [];
+  var seenEventIds = {};
 
   Object.keys(CALENDAR_APARTMENT_MAP).forEach(function(calName) {
     var aptName = CALENDAR_APARTMENT_MAP[calName];
@@ -1129,22 +1131,59 @@ function doCalendarSync_() {
       var events = cal.getEvents(start, end);
       events.forEach(function(ev) {
         var rec = parseCalendarEvent_(ev, aptName);
+        rec.eventId = (ev && ev.getId) ? ev.getId() : '';
+        // Segna l'evento come "visto" SEMPRE (anche se in errore), cosi'
+        // un evento esistente non viene mai cancellato per sbaglio.
+        if (rec.eventId) seenEventIds[rec.eventId] = true;
         if (rec.error) { errors.push({ raw: rec.raw, error: rec.error }); return; }
 
-        var key = bookingRecordKey_(rec);
-        if (existing[key]) { skipped.push(formatRecForClient_(rec)); return; }
+        // 1) Match per eventId. 2) In fallback adotta una riga legacy
+        //    (senza eventId) che combacia per data+appartamento+cognome.
+        var existingRow = (rec.eventId && index.byEvent[rec.eventId])
+                            ? index.byEvent[rec.eventId].row : null;
+        if (existingRow == null) {
+          var legacyRow = index.byKey[bookingRecordKey_(rec)];
+          if (legacyRow != null) existingRow = legacyRow;
+        }
 
-        sheet.appendRow(buildBookingRow_(rec, cols));
-        existing[key] = true;
-        inserted.push(formatRecForClient_(rec));
+        if (existingRow != null) {
+          var dataChanged = updateBookingRowIfChanged_(sheet, existingRow, rec, cols);
+          if (dataChanged) updated.push(formatRecForClient_(rec));
+          else             skipped.push(formatRecForClient_(rec));
+        } else {
+          sheet.appendRow(buildBookingRow_(rec, cols));
+          if (rec.eventId) index.byEvent[rec.eventId] = { row: sheet.getLastRow() };
+          inserted.push(formatRecForClient_(rec));
+        }
       });
     });
+  });
+
+  // ── CANCELLAZIONI ────────────────────────────────────────────
+  //  Righe gestite dal sync (con EventId) il cui evento non esiste piu'
+  //  nel calendario. Tocchiamo SOLO i soggiorni futuri nella finestra
+  //  scansionata: le prenotazioni passate restano intatte.
+  var toDelete = [];
+  index.managed.forEach(function(m) {
+    if (seenEventIds[m.eventId]) return;            // ancora presente
+    if (!m.ciTime) return;                          // senza data: non toccare
+    if (m.ciTime < start.getTime()) return;         // passato: non toccare
+    if (m.ciTime > end.getTime())  return;          // fuori finestra
+    toDelete.push(m);
+  });
+  // Elimina dal basso verso l'alto per non sfalsare i numeri di riga.
+  toDelete.sort(function(a, b) { return b.row - a.row; });
+  toDelete.forEach(function(m) {
+    cancelled.push({ nome: m.nome, cognome: m.cogn, appartamento: m.apt, checkIn: m.ciStr });
+    sheet.deleteRow(m.row);
   });
 
   return {
     status: 'ok',
     inserted: inserted,
+    updated: updated,
     skipped: skipped,
+    cancelled: cancelled,
     errors: errors,
     calendarsMissing: calendarsMissing
   };
@@ -1238,7 +1277,8 @@ function getBookingColumns_(sheet) {
     nome:   findCol_(headers, ['nome', 'first name', 'firstname', 'name']),
     cogn:   findCol_(headers, ['cognome', 'last name', 'lastname', 'surname']),
     ospite: findCol_(headers, ['ospite', 'guest', 'nome ospite', 'guest name', 'cliente']),
-    n:      findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone'])
+    n:      findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone']),
+    evid:   findCol_(headers, ['eventid', 'event id', '_eventid', 'id evento', 'idevento'])
   };
 }
 
@@ -1254,6 +1294,7 @@ function buildBookingRow_(rec, cols) {
     row[cols.ospite] = (rec.nome + ' ' + rec.cognome).trim();
   }
   if (cols.n >= 0) row[cols.n] = rec.persone;
+  if (cols.evid >= 0) row[cols.evid] = rec.eventId || '';
   return row;
 }
 
@@ -1279,8 +1320,100 @@ function getBookingKeys_(sheet, cols) {
   return keys;
 }
 
+// Garantisce la colonna "EventId" (id evento Google Calendar). Se manca la
+// aggiunge in fondo e aggiorna cols.width / cols.evid.
+function ensureEventIdColumn_(sheet, cols) {
+  if (cols.evid >= 0) return cols.evid;
+  var newColIdx0 = cols.width;          // 0-based: nuova colonna
+  sheet.getRange(1, cols.width + 1).setValue('EventId')
+    .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
+  cols.width = cols.width + 1;
+  cols.evid  = newColIdx0;
+  return cols.evid;
+}
+
+// Indicizza le righe del foglio Booking:
+//   byEvent : eventId  -> { row }
+//   byKey   : data|apt|cognome (solo righe SENZA eventId, legacy)
+//   managed : righe con eventId (candidate a update/cancellazione)
+function getBookingIndex_(sheet, cols) {
+  var idx = { byEvent: {}, byKey: {}, managed: [] };
+  var last = sheet.getLastRow();
+  if (last < 2) return idx;
+  var values = sheet.getRange(2, 1, last - 1, cols.width).getValues();
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    var rowNum = i + 2;
+    var cinVal = cols.cin >= 0 ? r[cols.cin] : '';
+    var ciTime = (cinVal instanceof Date) ? stripTime_(cinVal).getTime()
+               : (cinVal ? new Date(formatSheetDate_(cinVal)).getTime() : 0);
+    var apt  = cols.apt  >= 0 ? r[cols.apt]  : '';
+    var nome = cols.nome >= 0 ? r[cols.nome] : '';
+    var cogn = cols.cogn >= 0 ? r[cols.cogn]
+             : (cols.ospite >= 0 ? String(r[cols.ospite] || '').split(/\s+/).slice(1).join(' ') : '');
+    var evid = cols.evid >= 0 ? String(r[cols.evid] || '').trim() : '';
+
+    if (evid) {
+      idx.byEvent[evid] = { row: rowNum };
+      idx.managed.push({
+        row: rowNum, eventId: evid,
+        ciTime: ciTime || 0,
+        ciStr: ciTime ? formatSheetDate_(new Date(ciTime)) : '',
+        apt: apt, nome: nome, cogn: cogn
+      });
+    } else {
+      idx.byKey[[ciTime, apt, String(cogn || '').toLowerCase()].join('|')] = rowNum;
+    }
+  }
+  return idx;
+}
+
+// Aggiorna una riga esistente solo se i dati gestiti sono cambiati.
+// Scrive comunque l'eventId mancante (adozione righe legacy) ma in quel
+// caso NON conta come "modifica". Ritorna true se i dati sono cambiati.
+function updateBookingRowIfChanged_(sheet, rowNum, rec, cols) {
+  var range = sheet.getRange(rowNum, 1, 1, cols.width);
+  var row = range.getValues()[0];
+  var dataChanged = false, anyChange = false;
+
+  function setData(c, val) {
+    if (c < 0) return;
+    if (!bookingValuesEqual_(row[c], val)) { row[c] = val; dataChanged = true; anyChange = true; }
+  }
+  setData(cols.cin,  rec.checkIn);
+  setData(cols.cout, rec.checkOut);
+  setData(cols.apt,  rec.appartamento);
+  if (cols.nome >= 0 || cols.cogn >= 0) {
+    setData(cols.nome, rec.nome);
+    setData(cols.cogn, rec.cognome);
+  } else if (cols.ospite >= 0) {
+    setData(cols.ospite, (rec.nome + ' ' + rec.cognome).trim());
+  }
+  setData(cols.n, rec.persone);
+
+  // EventId: tagga senza contare come modifica dati.
+  if (cols.evid >= 0) {
+    var newEv = rec.eventId || row[cols.evid] || '';
+    if (!bookingValuesEqual_(row[cols.evid], newEv)) { row[cols.evid] = newEv; anyChange = true; }
+  }
+
+  if (anyChange) range.setValues([row]);
+  return dataChanged;
+}
+
+// Confronto tollerante: date per giorno, resto come stringa trimmata.
+function bookingValuesEqual_(a, b) {
+  if (a instanceof Date || b instanceof Date) {
+    var da = (a instanceof Date) ? stripTime_(a) : (a ? new Date(formatSheetDate_(a)) : null);
+    var db = (b instanceof Date) ? stripTime_(b) : (b ? new Date(formatSheetDate_(b)) : null);
+    if (!da || !db || isNaN(da.getTime()) || isNaN(db.getTime())) return false;
+    return da.getTime() === db.getTime();
+  }
+  return String(a == null ? '' : a).trim() === String(b == null ? '' : b).trim();
+}
+
 function creaIntestazioniBooking_(sheet) {
-  var headers = ['CHECK-IN', 'CHECK-OUT', 'Appartamento', 'Nome', 'Cognome', 'N° Ospiti'];
+  var headers = ['CHECK-IN', 'CHECK-OUT', 'Appartamento', 'Nome', 'Cognome', 'N° Ospiti', 'EventId'];
   sheet.appendRow(headers);
   sheet.getRange(1, 1, 1, headers.length)
     .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
