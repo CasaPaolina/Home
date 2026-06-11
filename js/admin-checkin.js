@@ -181,7 +181,7 @@ function renderBookings(aptFilter) {
         let buttonHTML = '';
         if (booking.checkin_done) {
             buttonHTML = `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem">Visualizza ›</button>`;
-        } else {
+        } else if (status !== 'pass') {
             buttonHTML = `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem" onclick="avviaCheckin(${originalIdx})">Avvia Check-in ›</button>`;
         }
 
