@@ -1178,8 +1178,8 @@ function doCalendarSync_() {
     sheet.deleteRow(m.row);
   });
 
-  // Ordina le prenotazioni per CHECK-IN crescente (le piu' future in fondo).
-  sortBookingByCheckin_(sheet, cols);
+  // NB: nessun ordinamento. Le nuove prenotazioni restano in fondo,
+  //     aggiunte come ultima riga nell'ordine in cui vengono lette.
 
   return {
     status: 'ok',
