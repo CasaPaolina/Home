@@ -14,7 +14,7 @@ const CASA_PAOLINA = {
     email:    'casapaolina23@gmail.com',
     website:  'https://casapaolina.netlify.app/',
     logo:     'images/favicon-180.png',
-    iban:     'IT648384783738738',
+    iban:     'IT25U0357601601010006013412',
     iban_intestatario: 'Salvatore Stefano',
     bonifico_giorni:   3,
 };
@@ -205,8 +205,6 @@ function renderBookings(aptFilter) {
             ? `<button class="ci-btn ci-btn--conferma" style="white-space:nowrap;padding:10px 18px;font-size:0.88rem" onclick="openConfermaForm(${originalIdx})">📄 Genera conferma</button>`
             : '';
 
-        const ricevutaBtn = `<button class="ci-btn ci-btn--ricevuta" style="white-space:nowrap;padding:10px 18px;font-size:0.88rem" onclick="openRicevutaForm(${originalIdx})">🧾 Genera ricevuta</button>`;
-
         const card = document.createElement('div');
         card.className = 'ci-card';
         card.style.marginBottom = '14px';
@@ -228,7 +226,6 @@ function renderBookings(aptFilter) {
                     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
                         ${buttonHTML}
                         ${confermaBtn}
-                        ${ricevutaBtn}
                     </div>
                 </div>
             </div>`;
@@ -477,7 +474,8 @@ async function generateConfermaPdf() {
     }
 
     const restante = totale - acconto;
-    const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || 'Ospite';
+    const lang = (document.getElementById('conf-lingua') || {}).value === 'en' ? 'en' : 'it';
+    const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || (lang === 'en' ? 'Guest' : 'Ospite');
     const nights = Math.max(0, Math.round(
         (new Date(booking.checkout) - new Date(booking.checkin)) / 86400000
     ));
@@ -486,6 +484,53 @@ async function generateConfermaPdf() {
     const deadline = new Date();
     deadline.setDate(deadline.getDate() + CASA_PAOLINA.bonifico_giorni);
     const deadlineStr = formatAdminDate(deadline.toISOString().slice(0, 10));
+
+    // ── Testi bilingue (IT / EN) ──
+    const T = {
+        it: {
+            subtitle:   'Casa vacanze · Salento, Puglia',
+            tel:        'Tel / WhatsApp: ',
+            email:      '    Email: ',
+            title:      'Conferma di Prenotazione',
+            greeting:   'Gentile ' + guestName + ',',
+            intro:      'confermiamo la Sua prenotazione presso Casa Paolina. Di seguito i dettagli del soggiorno.',
+            rApart:     'Appartamento',
+            rCheckin:   'Check-in',
+            rCheckout:  'Check-out',
+            rNights:    'Numero di notti',
+            rGuests:    'Numero di ospiti',
+            costTitle:  'Riepilogo costi',
+            costTotal:  'Costo totale del soggiorno:',
+            acconto:    'Acconto:',
+            accNote:    'Da versare tramite bonifico bancario entro il ' + deadlineStr + ' (3 giorni di calendario).' +
+                        '   IBAN: ' + CASA_PAOLINA.iban + '   Intestatario: ' + CASA_PAOLINA.iban_intestatario,
+            restante:   'Saldo restante:',
+            resNote:    'Da pagare possibilmente in contanti all\u2019arrivo in struttura.',
+            closing:    'La ringraziamo per aver scelto Casa Paolina. Le auguriamo un buon soggiorno!',
+        },
+        en: {
+            subtitle:   'Holiday home · Salento, Apulia',
+            tel:        'Phone / WhatsApp: ',
+            email:      '    Email: ',
+            title:      'Booking Confirmation',
+            greeting:   'Dear ' + guestName + ',',
+            intro:      'we are pleased to confirm your booking at Casa Paolina. Please find the details of your stay below.',
+            rApart:     'Apartment',
+            rCheckin:   'Check-in',
+            rCheckout:  'Check-out',
+            rNights:    'Number of nights',
+            rGuests:    'Number of guests',
+            costTitle:  'Cost summary',
+            costTotal:  'Total cost of stay:',
+            acconto:    'Deposit:',
+            accNote:    'To be paid by bank transfer within ' + deadlineStr + ' (3 calendar days).' +
+                        '   IBAN: ' + CASA_PAOLINA.iban + '   Account holder: ' + CASA_PAOLINA.iban_intestatario,
+            restante:   'Balance due:',
+            resNote:    'Preferably to be paid in cash upon arrival at the property.',
+            closing:    'Thank you for choosing Casa Paolina. We wish you a pleasant stay!',
+        }
+    };
+    const t = T[lang];
 
     const logo = await loadImageDataURL(CASA_PAOLINA.logo);
 
@@ -513,7 +558,7 @@ async function generateConfermaPdf() {
     doc.text(CASA_PAOLINA.nome, textX, 17);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    doc.text('Casa vacanze · Salento, Puglia', textX, 24);
+    doc.text(t.subtitle, textX, 24);
     doc.text('CIN ' + CASA_PAOLINA.cin, textX, 29);
 
     // ── Struttura info row ──
@@ -522,14 +567,14 @@ async function generateConfermaPdf() {
     doc.setFontSize(8.5);
     doc.text(CASA_PAOLINA.indirizzo, margin, y);
     y += 4.5;
-    doc.text('Tel / WhatsApp: ' + CASA_PAOLINA.telefono + '    Email: ' + CASA_PAOLINA.email, margin, y);
+    doc.text(t.tel + CASA_PAOLINA.telefono + t.email + CASA_PAOLINA.email, margin, y);
 
     // ── Title ──
     y += 12;
     doc.setTextColor(dark[0], dark[1], dark[2]);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
-    doc.text('Conferma di Prenotazione', margin, y);
+    doc.text(t.title, margin, y);
     doc.setDrawColor(teal[0], teal[1], teal[2]);
     doc.setLineWidth(0.6);
     doc.line(margin, y + 2.5, margin + contentW, y + 2.5);
@@ -539,22 +584,19 @@ async function generateConfermaPdf() {
     doc.setTextColor(40, 40, 40);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
-    doc.text('Gentile ' + guestName + ',', margin, y);
+    doc.text(t.greeting, margin, y);
     y += 7;
-    const intro = doc.splitTextToSize(
-        'confermiamo la Sua prenotazione presso Casa Paolina. Di seguito i dettagli del soggiorno.',
-        contentW
-    );
+    const intro = doc.splitTextToSize(t.intro, contentW);
     doc.text(intro, margin, y);
     y += intro.length * 5.5 + 4;
 
     // ── Dettagli box ──
     const rows = [
-        ['Appartamento', booking.appartamento || '—'],
-        ['Check-in', formatAdminDate(booking.checkin)],
-        ['Check-out', formatAdminDate(booking.checkout)],
-        ['Numero di notti', String(nights)],
-        ['Numero di ospiti', String(ospiti)],
+        [t.rApart,    booking.appartamento || '—'],
+        [t.rCheckin,  formatAdminDate(booking.checkin)],
+        [t.rCheckout, formatAdminDate(booking.checkout)],
+        [t.rNights,   String(nights)],
+        [t.rGuests,   String(ospiti)],
     ];
     const rowH = 9;
     const boxH = rows.length * rowH;
@@ -581,13 +623,13 @@ async function generateConfermaPdf() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(13);
     doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.text('Riepilogo costi', margin, y);
+    doc.text(t.costTitle, margin, y);
     y += 8;
 
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(40, 40, 40);
-    doc.text('Costo totale del soggiorno:', margin, y);
+    doc.text(t.costTotal, margin, y);
     doc.text('\u20AC ' + formatEuro(totale), margin + contentW, y, { align: 'right' });
     y += 9;
 
@@ -596,17 +638,13 @@ async function generateConfermaPdf() {
     doc.line(margin, y - 3, margin + contentW, y - 3);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10.5);
-    doc.text('Acconto:', margin, y + 2);
+    doc.text(t.acconto, margin, y + 2);
     doc.text('\u20AC ' + formatEuro(acconto), margin + contentW, y + 2, { align: 'right' });
     y += 7;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9.5);
     doc.setTextColor(gray[0], gray[1], gray[2]);
-    const accNote = doc.splitTextToSize(
-        'Da versare tramite bonifico bancario entro il ' + deadlineStr + ' (3 giorni di calendario).' +
-        '   IBAN: ' + CASA_PAOLINA.iban + '   Intestatario: ' + CASA_PAOLINA.iban_intestatario,
-        contentW
-    );
+    const accNote = doc.splitTextToSize(t.accNote, contentW);
     doc.text(accNote, margin, y + 2);
     y += accNote.length * 4.8 + 5;
 
@@ -616,20 +654,20 @@ async function generateConfermaPdf() {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10.5);
     doc.setTextColor(40, 40, 40);
-    doc.text('Saldo restante:', margin, y + 2);
+    doc.text(t.restante, margin, y + 2);
     doc.text('\u20AC ' + formatEuro(restante), margin + contentW, y + 2, { align: 'right' });
     y += 7;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9.5);
     doc.setTextColor(gray[0], gray[1], gray[2]);
-    doc.text('Da pagare possibilmente in contanti all\u2019arrivo in struttura.', margin, y + 2);
+    doc.text(t.resNote, margin, y + 2);
     y += 14;
 
     // ── Closing ──
     doc.setTextColor(40, 40, 40);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10.5);
-    doc.text('La ringraziamo per aver scelto Casa Paolina. Le auguriamo un buon soggiorno!', margin, y);
+    doc.text(t.closing, margin, y);
 
     // ── Footer ──
     const footY = 285;
@@ -642,214 +680,12 @@ async function generateConfermaPdf() {
     doc.text(CASA_PAOLINA.website, margin, footY);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(gray[0], gray[1], gray[2]);
-    doc.text('Tel / WhatsApp: ' + CASA_PAOLINA.telefono, margin + contentW, footY, { align: 'right' });
+    doc.text(t.tel + CASA_PAOLINA.telefono, margin + contentW, footY, { align: 'right' });
 
     const safeName = guestName.replace(/[^a-z0-9]+/gi, '_');
-    doc.save('Conferma_Casa_Paolina_' + safeName + '.pdf');
+    doc.save('Conferma_Casa_Paolina_' + safeName + '_' + lang + '.pdf');
 
     closeConfermaModal();
-}
-
-// ─── GENERA RICEVUTA (PDF) ───────────────────────────────────
-
-let ricevutaBookingIdx = null;
-
-function openRicevutaForm(idx) {
-    const booking = allBookings[idx];
-    if (!booking) return;
-    ricevutaBookingIdx = idx;
-
-    const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || 'Ospite';
-    document.getElementById('ricevuta-guest').textContent =
-        `${guestName} · ${booking.appartamento || ''} · ${formatAdminDate(booking.checkin)} → ${formatAdminDate(booking.checkout)}`;
-
-    document.getElementById('ric-numero').value  = '';
-    document.getElementById('ric-importo').value = '';
-    document.getElementById('ric-metodo').value  = 'Contanti';
-    document.getElementById('ric-causale').value = '';
-    document.getElementById('ricevuta-error').style.display = 'none';
-
-    document.getElementById('ricevuta-modal').style.display = 'block';
-    setTimeout(() => document.getElementById('ric-importo').focus(), 50);
-}
-
-function closeRicevutaModal() {
-    document.getElementById('ricevuta-modal').style.display = 'none';
-    ricevutaBookingIdx = null;
-}
-
-async function generateRicevutaPdf() {
-    const booking = allBookings[ricevutaBookingIdx];
-    if (!booking) return;
-
-    const importo = parseFloat(document.getElementById('ric-importo').value);
-    const numero  = document.getElementById('ric-numero').value.trim();
-    const metodo  = document.getElementById('ric-metodo').value;
-    const causale = document.getElementById('ric-causale').value.trim() || 'Soggiorno turistico';
-    const errBox  = document.getElementById('ricevuta-error');
-
-    if (isNaN(importo) || importo <= 0) {
-        errBox.style.display = 'block';
-        return;
-    }
-    errBox.style.display = 'none';
-
-    if (!window.jspdf || !window.jspdf.jsPDF) {
-        alert('Libreria PDF non caricata. Riprova tra qualche secondo.');
-        return;
-    }
-
-    const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || 'Ospite';
-    const nights = Math.max(0, Math.round(
-        (new Date(booking.checkout) - new Date(booking.checkin)) / 86400000
-    ));
-    const ospiti = booking.adults_count || '—';
-    const oggi = formatAdminDate(new Date().toISOString().slice(0, 10));
-
-    const logo = await loadImageDataURL(CASA_PAOLINA.logo);
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-    const pageW = 210;
-    const margin = 18;
-    const contentW = pageW - margin * 2;
-    const teal = [44, 120, 115];
-    const dark = [38, 70, 73];
-    const gray = [110, 110, 110];
-
-    // ── Header band ──
-    doc.setFillColor(teal[0], teal[1], teal[2]);
-    doc.rect(0, 0, pageW, 34, 'F');
-    if (logo) {
-        doc.addImage(logo.dataUrl, 'PNG', margin, 7, 20, 20);
-    }
-    const textX = logo ? margin + 26 : margin;
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(20);
-    doc.text(CASA_PAOLINA.nome, textX, 17);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.text('Casa vacanze · Salento, Puglia', textX, 24);
-    doc.text('CIN ' + CASA_PAOLINA.cin, textX, 29);
-
-    // ── Struttura info row ──
-    let y = 42;
-    doc.setTextColor(gray[0], gray[1], gray[2]);
-    doc.setFontSize(8.5);
-    doc.text(CASA_PAOLINA.indirizzo, margin, y);
-    y += 4.5;
-    doc.text('Tel / WhatsApp: ' + CASA_PAOLINA.telefono + '    Email: ' + CASA_PAOLINA.email, margin, y);
-
-    // ── Title + numero/data ──
-    y += 12;
-    doc.setTextColor(dark[0], dark[1], dark[2]);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.text('Ricevuta di Pagamento', margin, y);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(gray[0], gray[1], gray[2]);
-    const numLabel = (numero ? 'Ricevuta n. ' + numero + '   ·   ' : '') + 'Data: ' + oggi;
-    doc.text(numLabel, margin + contentW, y, { align: 'right' });
-    doc.setDrawColor(teal[0], teal[1], teal[2]);
-    doc.setLineWidth(0.6);
-    doc.line(margin, y + 2.5, margin + contentW, y + 2.5);
-
-    // ── Body intro ──
-    y += 13;
-    doc.setTextColor(40, 40, 40);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    const intro = doc.splitTextToSize(
-        'Si dichiara di aver ricevuto da ' + guestName + ' la somma di \u20AC ' + formatEuro(importo) +
-        ' (' + euroInParole_(importo) + '), a titolo di ' + causale.toLowerCase() + '.',
-        contentW
-    );
-    doc.text(intro, margin, y);
-    y += intro.length * 5.8 + 6;
-
-    // ── Dettagli box ──
-    const rows = [
-        ['Ospite', guestName],
-        ['Appartamento', booking.appartamento || '—'],
-        ['Periodo', formatAdminDate(booking.checkin) + ' → ' + formatAdminDate(booking.checkout)],
-        ['Notti / Ospiti', nights + ' notti · ' + ospiti + ' ospiti'],
-        ['Causale', causale],
-        ['Metodo di pagamento', metodo],
-    ];
-    const rowH = 9;
-    const boxH = rows.length * rowH;
-    doc.setDrawColor(225, 225, 225);
-    doc.setLineWidth(0.3);
-    doc.setFillColor(247, 250, 249);
-    doc.rect(margin, y, contentW, boxH, 'F');
-    rows.forEach((r, i) => {
-        const ry = y + i * rowH;
-        if (i > 0) doc.line(margin, ry, margin + contentW, ry);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.setTextColor(dark[0], dark[1], dark[2]);
-        doc.text(r[0], margin + 5, ry + 6);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(40, 40, 40);
-        doc.text(String(r[1]), margin + contentW - 5, ry + 6, { align: 'right' });
-    });
-    doc.setDrawColor(225, 225, 225);
-    doc.rect(margin, y, contentW, boxH, 'S');
-    y += boxH + 12;
-
-    // ── Importo totale evidenziato ──
-    doc.setFillColor(teal[0], teal[1], teal[2]);
-    doc.rect(margin, y, contentW, 14, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.text('TOTALE RICEVUTO', margin + 5, y + 9);
-    doc.setFontSize(13);
-    doc.text('\u20AC ' + formatEuro(importo), margin + contentW - 5, y + 9, { align: 'right' });
-    y += 26;
-
-    // ── Firma ──
-    doc.setTextColor(40, 40, 40);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.text('Luogo e data: Uggiano la Chiesa, ' + oggi, margin, y);
-    y += 18;
-    doc.setDrawColor(150, 150, 150);
-    doc.setLineWidth(0.3);
-    doc.line(margin + contentW - 70, y, margin + contentW, y);
-    doc.setFontSize(9);
-    doc.setTextColor(gray[0], gray[1], gray[2]);
-    doc.text('Firma per ricevuta', margin + contentW - 35, y + 5, { align: 'center' });
-
-    // ── Footer ──
-    const footY = 285;
-    doc.setDrawColor(teal[0], teal[1], teal[2]);
-    doc.setLineWidth(0.5);
-    doc.line(margin, footY - 6, margin + contentW, footY - 6);
-    doc.setFontSize(9);
-    doc.setTextColor(teal[0], teal[1], teal[2]);
-    doc.setFont('helvetica', 'bold');
-    doc.text(CASA_PAOLINA.website, margin, footY);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(gray[0], gray[1], gray[2]);
-    doc.text('Tel / WhatsApp: ' + CASA_PAOLINA.telefono, margin + contentW, footY, { align: 'right' });
-
-    const safeName = guestName.replace(/[^a-z0-9]+/gi, '_');
-    const safeNum  = numero ? '_' + numero.replace(/[^a-z0-9]+/gi, '-') : '';
-    doc.save('Ricevuta_Casa_Paolina_' + safeName + safeNum + '.pdf');
-
-    closeRicevutaModal();
-}
-
-// Converte un importo in euro nella sua forma "X,XX euro" testuale semplice.
-function euroInParole_(n) {
-    const euro = Math.floor(n);
-    const cent = Math.round((n - euro) * 100);
-    let s = euro + (euro === 1 ? ' euro' : ' euro');
-    if (cent > 0) s += ' e ' + (cent < 10 ? '0' + cent : cent) + ' centesimi';
-    return s;
 }
 
 // Close modal when clicking outside
@@ -861,10 +697,6 @@ document.addEventListener('click', (e) => {
     const conf = document.getElementById('conferma-modal');
     if (e.target === conf) {
         closeConfermaModal();
-    }
-    const ric = document.getElementById('ricevuta-modal');
-    if (e.target === ric) {
-        closeRicevutaModal();
     }
 });
 
