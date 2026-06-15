@@ -339,6 +339,7 @@ function getBookings_() {
     var colCogn   = findCol_(headers, ['cognome', 'last name', 'lastname', 'surname']);
     var colOspite = findCol_(headers, ['ospite', 'guest', 'nome ospite', 'guest name', 'cliente']);
     var colN      = findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone']);
+    var colPiat   = findCol_(headers, ['piattaforma', 'platform', 'canale', 'channel']);
 
     // Get existing check-ins once
     var existingCheckIns = getExistingCheckIns_();
@@ -363,6 +364,7 @@ function getBookings_() {
         cognome:      cognome,
         ospite:       colOspite >= 0 ? String(row[colOspite] || '').trim() : '',
         adults_count: colN      >= 0 ? String(row[colN]      || '').trim() : '',
+        piattaforma:  colPiat   >= 0 ? String(row[colPiat]   || '').trim() : '',
         checkin_done: checkinDone,
         ora_arrivo:   ciInfo ? (ciInfo.oraArrivo || '') : ''
       });

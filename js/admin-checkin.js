@@ -204,7 +204,9 @@ function renderBookings(aptFilter) {
             buttonHTML = `<button class="ci-btn ci-btn--next" style="white-space:nowrap;padding:10px 20px;font-size:0.88rem" onclick="avviaCheckin(${originalIdx})">Avvia Check-in ›</button>`;
         }
 
-        const confermaBtn = status !== 'pass'
+        const piattaforma = (booking.piattaforma || '').toLowerCase();
+        const isExternalPlatform = piattaforma === 'booking' || piattaforma === 'airbnb';
+        const confermaBtn = (status !== 'pass' && !isExternalPlatform)
             ? `<button class="ci-btn ci-btn--conferma" style="white-space:nowrap;padding:10px 18px;font-size:0.88rem" onclick="openConfermaForm(${originalIdx})">📄 Genera conferma</button>`
             : '';
 
