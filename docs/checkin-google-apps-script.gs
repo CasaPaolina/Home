@@ -28,6 +28,9 @@ var PORTAFOGLIO_SHEET = 'Portafoglio';
 var APARTMENT_MAP = { '15A': 'celeste', '1': 'suite', '15': 'verde' };
 //  Lettera dopo il nome → canale di prenotazione.
 var CHANNEL_MAP   = { 'B': 'Booking.com', 'A': 'Airbnb' };
+//  Lettera dopo il nome → Piattaforma (colonna del foglio Booking).
+//  B = booking, P = privato, A = airbnb.
+var PLATFORM_MAP  = { 'B': 'booking', 'P': 'privato', 'A': 'airbnb' };
 //  Metti a true per aggiungere una colonna "Canale" in fondo.
 var INCLUDE_CHANNEL_COLUMN = false;
 //  Mesi italiani → indice (0 = gennaio).
@@ -296,13 +299,13 @@ function getExistingCheckIns_() {
   var data = sheet.getDataRange().getValues();
   if (data.length < 2) return existing;
   
-  // Assuming K=Nome (col 11), L=Cognome (col 12)
+  // Assuming K=Nome (col 11), L=Cognome (col 12), J=Ora Arrivo (col 10)
   for (var i = 1; i < data.length; i++) {
     var nome = String(data[i][10] || '').trim().toLowerCase();
     var cognome = String(data[i][11] || '').trim().toLowerCase();
     if (nome && cognome) {
       var key = nome + '|' + cognome;
-      existing[key] = true;
+      existing[key] = { oraArrivo: String(data[i][9] || '').trim() };
     }
   }
   
@@ -349,7 +352,8 @@ function getBookings_() {
       var nome = colNome >= 0 ? String(row[colNome] || '').trim() : '';
       var cognome = colCogn >= 0 ? String(row[colCogn] || '').trim() : '';
       var key = nome.toLowerCase() + '|' + cognome.toLowerCase();
-      var checkinDone = existingCheckIns[key] || false;
+      var ciInfo = existingCheckIns[key];
+      var checkinDone = !!ciInfo;
 
       bookings.push({
         checkin:      colCin    >= 0 ? formatSheetDate_(row[colCin])    : '',
@@ -359,7 +363,8 @@ function getBookings_() {
         cognome:      cognome,
         ospite:       colOspite >= 0 ? String(row[colOspite] || '').trim() : '',
         adults_count: colN      >= 0 ? String(row[colN]      || '').trim() : '',
-        checkin_done: checkinDone
+        checkin_done: checkinDone,
+        ora_arrivo:   ciInfo ? (ciInfo.oraArrivo || '') : ''
       });
     }
 
@@ -1178,8 +1183,10 @@ function doCalendarSync_() {
     sheet.deleteRow(m.row);
   });
 
-  // NB: nessun ordinamento. Le nuove prenotazioni restano in fondo,
-  //     aggiunte come ultima riga nell'ordine in cui vengono lette.
+  // NB: sorting reintrodotto piu' in basso.
+
+  // Ordina le prenotazioni per CHECK-IN crescente (le piu' future in fondo).
+  sortBookingByCheckin_(sheet, cols);
 
   return {
     status: 'ok',
@@ -1215,6 +1222,7 @@ function parseCalendarEvent_(ev, calApt) {
     var chM = after.match(/^\s*([A-Za-z]+)/);
     rec.canaleCode = chM ? chM[1].toUpperCase() : '';
     rec.canale = CHANNEL_MAP[rec.canaleCode] || rec.canaleCode || '';
+    rec.piattaforma = PLATFORM_MAP[rec.canaleCode.charAt(0)] || '';
   } else {
     rec.nome = '';
     rec.cognome = '';
@@ -1281,6 +1289,7 @@ function getBookingColumns_(sheet) {
     cogn:   findCol_(headers, ['cognome', 'last name', 'lastname', 'surname']),
     ospite: findCol_(headers, ['ospite', 'guest', 'nome ospite', 'guest name', 'cliente']),
     n:      findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone']),
+    piat:   findCol_(headers, ['piattaforma', 'platform', 'canale', 'channel']),
     evid:   findCol_(headers, ['eventid', 'event id', '_eventid', 'id evento', 'idevento'])
   };
 }
@@ -1297,6 +1306,7 @@ function buildBookingRow_(rec, cols) {
     row[cols.ospite] = (rec.nome + ' ' + rec.cognome).trim();
   }
   if (cols.n >= 0) row[cols.n] = rec.persone;
+  if (cols.piat >= 0) row[cols.piat] = rec.piattaforma || '';
   if (cols.evid >= 0) row[cols.evid] = rec.eventId || '';
   return row;
 }
@@ -1393,6 +1403,7 @@ function updateBookingRowIfChanged_(sheet, rowNum, rec, cols) {
     setData(cols.ospite, (rec.nome + ' ' + rec.cognome).trim());
   }
   setData(cols.n, rec.persone);
+  setData(cols.piat, rec.piattaforma || '');
 
   // EventId: tagga senza contare come modifica dati.
   if (cols.evid >= 0) {
@@ -1436,11 +1447,51 @@ function sortBookingByCheckin_(sheet, cols) {
 }
 
 function creaIntestazioniBooking_(sheet) {
-  var headers = ['CHECK-IN', 'CHECK-OUT', 'Appartamento', 'Nome', 'Cognome', 'N° Ospiti', 'EventId'];
-  sheet.appendRow(headers);
+  var headers = ['CHECK-IN', 'CHECK-OUT', 'Appartamento', 'Nome', 'Cognome', 'N° Ospiti', 'Piattaforma', 'EventId'];
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   sheet.getRange(1, 1, 1, headers.length)
     .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
+  // 8 colonne vuote riservate dopo EventId (per IMPORTRANGE verso il 2° foglio).
+  sheet.getRange(1, headers.length + 1, 1, 8).setBackground('#d9e8e6');
   sheet.setFrozenRows(1);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  AGGIORNA COLONNE BOOKING — esegui UNA VOLTA per adeguare un foglio
+//  "Booking" gia' esistente: aggiunge la colonna "Piattaforma" dopo
+//  "N° Ospiti", garantisce "EventId" e riserva 8 colonne vuote in fondo.
+//  Non cancella dati. La colonna Piattaforma viene poi popolata al
+//  prossimo "Aggiorna" (sync) per le prenotazioni nella finestra.
+// ════════════════════════════════════════════════════════════════
+function aggiornaIntestazioniBooking() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = getBookingSheet_(ss);
+  if (!sheet) { SpreadsheetApp.getUi().alert('Foglio "Booking" non trovato.'); return; }
+
+  var cols = getBookingColumns_(sheet);
+
+  // 1) Colonna "Piattaforma" subito dopo "N° Ospiti" (o in fondo ai dati).
+  if (cols.piat < 0) {
+    var afterCol = (cols.n >= 0) ? cols.n + 1 : sheet.getLastColumn();
+    sheet.insertColumnAfter(afterCol);
+    sheet.getRange(1, afterCol + 1).setValue('Piattaforma')
+      .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
+    cols = getBookingColumns_(sheet);
+  }
+
+  // 2) Garantisci la colonna tecnica EventId.
+  ensureEventIdColumn_(sheet, cols);
+  cols = getBookingColumns_(sheet);
+
+  // 3) Riserva 8 colonne vuote dopo l'ultima colonna usata.
+  var startReserved = sheet.getLastColumn() + 1;
+  sheet.getRange(1, startReserved, 1, 8).setBackground('#d9e8e6');
+
+  SpreadsheetApp.getUi().alert(
+    'Foglio Booking aggiornato.\n\n' +
+    'Aggiunta la colonna "Piattaforma" e riservate 8 colonne vuote.\n' +
+    'Premi "Aggiorna" nella dashboard per popolare la Piattaforma.'
+  );
 }
 
 

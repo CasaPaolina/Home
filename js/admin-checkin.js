@@ -193,6 +193,9 @@ function renderBookings(aptFilter) {
         const guestName = [booking.nome, booking.cognome].filter(Boolean).join(' ') || booking.ospite || '—';
         const ospitiLabel = booking.adults_count ? ` · ${booking.adults_count} ospiti` : '';
         const checkinDoneBadge = booking.checkin_done ? '<span class="adm-status" style="background:#dbeafe;color:#1e40af;margin-left:6px">✓ Check-in già fatto</span>' : '';
+        const oraArrivoLabel = booking.checkin_done
+            ? `<span class="adm-status" style="background:#fef3c7;color:#92400e;margin-left:6px">🕒 ${booking.ora_arrivo ? 'Orario arrivo ' + booking.ora_arrivo : 'Nessun orario di arrivo specificato'}</span>`
+            : '';
         
         let buttonHTML = '';
         if (booking.checkin_done) {
@@ -216,6 +219,7 @@ function renderBookings(aptFilter) {
                     <span class="adm-apt-badge" style="${aptStyle}">${booking.appartamento || 'N/D'}</span>
                     <span class="adm-status adm-status--${status}">${STATUS_LABELS[status]}</span>
                     ${checkinDoneBadge}
+                    ${oraArrivoLabel}
                     <div class="adm-booking-name">${guestName}</div>
                     <div class="adm-booking-dates">
                         ${formatAdminDate(booking.checkin)} → ${formatAdminDate(booking.checkout)}
@@ -502,8 +506,9 @@ async function generateConfermaPdf() {
             costTitle:  'Riepilogo costi',
             costTotal:  'Costo totale del soggiorno:',
             acconto:    'Acconto:',
-            accNote:    'Da versare tramite bonifico bancario entro il ' + deadlineStr + ' (3 giorni di calendario).' +
-                        '   IBAN: ' + CASA_PAOLINA.iban + '   Intestatario: ' + CASA_PAOLINA.iban_intestatario,
+            accNote:    'Da versare tramite bonifico bancario entro il ' + deadlineStr + '.',
+            ibanLabel:  'IBAN:',
+            holder:     'Intestatario: ' + CASA_PAOLINA.iban_intestatario,
             restante:   'Saldo restante:',
             resNote:    'Da pagare possibilmente in contanti all\u2019arrivo in struttura.',
             closing:    'La ringraziamo per aver scelto Casa Paolina. Le auguriamo un buon soggiorno!',
@@ -523,8 +528,9 @@ async function generateConfermaPdf() {
             costTitle:  'Cost summary',
             costTotal:  'Total cost of stay:',
             acconto:    'Deposit:',
-            accNote:    'To be paid by bank transfer within ' + deadlineStr + ' (3 calendar days).' +
-                        '   IBAN: ' + CASA_PAOLINA.iban + '   Account holder: ' + CASA_PAOLINA.iban_intestatario,
+            accNote:    'To be paid by bank transfer within ' + deadlineStr + '.',
+            ibanLabel:  'IBAN:',
+            holder:     'Account holder: ' + CASA_PAOLINA.iban_intestatario,
             restante:   'Balance due:',
             resNote:    'Preferably to be paid in cash upon arrival at the property.',
             closing:    'Thank you for choosing Casa Paolina. We wish you a pleasant stay!',
@@ -646,7 +652,18 @@ async function generateConfermaPdf() {
     doc.setTextColor(gray[0], gray[1], gray[2]);
     const accNote = doc.splitTextToSize(t.accNote, contentW);
     doc.text(accNote, margin, y + 2);
-    y += accNote.length * 4.8 + 5;
+    y += accNote.length * 4.8 + 3;
+    // IBAN in evidenza (piu' grande)
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(dark[0], dark[1], dark[2]);
+    doc.text(t.ibanLabel + ' ' + CASA_PAOLINA.iban, margin, y + 3);
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(gray[0], gray[1], gray[2]);
+    doc.text(t.holder, margin, y + 2);
+    y += 8;
 
     // Restante block
     doc.setDrawColor(225, 225, 225);
