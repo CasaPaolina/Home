@@ -144,6 +144,7 @@
                             <li data-translate="room_garden">Accesso al giardino</li>
                             <li data-translate="room_ac">Aria condizionata</li>
                         </ul>
+                        <button class="btn btn-primary room-avail-btn" data-apt="celeste" data-translate="avail_show">Vedi Disponibilità</button>
                     </div>
                 </div>
 
@@ -179,6 +180,7 @@
                             <li data-translate="room_garden">Accesso al giardino</li>
                             <li data-translate="room_ac">Aria condizionata</li>
                         </ul>
+                        <button class="btn btn-primary room-avail-btn" data-apt="verde" data-translate="avail_show">Vedi Disponibilità</button>
                     </div>
                 </div>
 
@@ -214,49 +216,8 @@
                             <li data-translate="room_garden">Accesso al giardino</li>
                             <li data-translate="room_ac">Aria condizionata</li>
                         </ul>
+                        <button class="btn btn-primary room-avail-btn" data-apt="suite" data-translate="avail_show">Vedi Disponibilità</button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Availability Calendars -->
-    <section id="availability" class="availability">
-        <div class="container">
-            <div class="section-header">
-                <h2 data-translate="avail_title">Disponibilità</h2>
-                <div class="divider"></div>
-                <p data-translate="avail_subtitle">Controlla le date libere dei nostri appartamenti</p>
-            </div>
-
-            <div class="avail-toggle-wrap">
-                <button class="btn btn-primary avail-toggle-btn" id="avail-toggle" data-translate="avail_show">Vedi Disponibilità</button>
-            </div>
-
-            <div class="avail-panel" id="avail-panel" hidden>
-                <div class="avail-nav">
-                    <button class="avail-nav-btn" id="avail-prev" aria-label="Mese precedente">&lsaquo;</button>
-                    <span class="avail-month-label" id="avail-month-label"></span>
-                    <button class="avail-nav-btn" id="avail-next" aria-label="Mese successivo">&rsaquo;</button>
-                </div>
-
-                <div class="avail-legend">
-                    <span><i class="avail-dot free"></i> <span data-translate="avail_free">Libero</span></span>
-                    <span><i class="avail-dot booked"></i> <span data-translate="avail_booked">Occupato</span></span>
-                    <span><i class="avail-dot selected"></i> <span data-translate="avail_selected">Selezionato</span></span>
-                </div>
-
-                <p class="avail-hint" id="avail-hint" data-translate="avail_hint">Clicca su una data di arrivo e poi su una di partenza nell'appartamento desiderato.</p>
-
-                <div class="avail-grid" id="avail-grid"></div>
-
-                <p class="avail-status" id="avail-status" data-translate="avail_loading">Caricamento disponibilità…</p>
-
-                <div class="avail-cta" id="avail-cta" hidden>
-                    <p class="avail-cta-summary" id="avail-cta-summary"></p>
-                    <a class="btn btn-primary avail-whatsapp-btn" id="avail-whatsapp" href="#" target="_blank" rel="noopener">
-                        <span data-translate="avail_request_btn">Richiedi prezzi e prenota</span>
-                    </a>
                 </div>
             </div>
         </div>
