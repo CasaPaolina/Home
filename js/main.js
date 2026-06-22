@@ -1297,7 +1297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavbarScroll();
     initImageLightbox();
     initGuestArea();
-    initAvailabilityForms();
+    // Availability now handled by js/availability-calendar.js (inline calendars)
     initGallery();
 
     // Initialize POI map with a slight delay to ensure container is ready
