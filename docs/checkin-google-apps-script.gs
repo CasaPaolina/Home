@@ -1,78 +1,35 @@
-// ═══════════════════════════════════════════════════════════════
-//  CASA PAOLINA — Google Apps Script per Check-in Online
-//
-//  DEPLOY (una volta sola):
-//
-//  1. Apri il Google Sheet → Estensioni → Apps Script
-//  2. Sostituisci tutto con questo file → Salva (Ctrl+S)
-//  3. Imposta NOTIFICATION_EMAIL qui sotto
-//  4. Menu a tendina → scegli "setup" → clicca ▶ Esegui
-//     → accetta TUTTI i permessi (Gmail incluso)
-//     Riceverai una mail di conferma se tutto e' ok.
-//  5. Deploy → Nuova distribuzione → Web App
-//     - Esegui come: Me  |  Chi puo' accedere: Chiunque
-//  6. Copia l'URL e incollalo in js/checkin.js → riga 8
-//
-//  ⚠️  Dopo ogni modifica fai una NUOVA distribuzione:
-//      Deploy → Gestisci distribuzioni → Modifica → Versione: Nuova
-// ═══════════════════════════════════════════════════════════════
+var NOTIFICATION_EMAIL = 'casapaolina23@gmail.com';
 
-
-// ── CONFIGURAZIONE ───────────────────────────────────────────────
-var NOTIFICATION_EMAIL = 'casapaolina23@gmail.com';   
-
-// ── CONFIGURAZIONE PORTAFOGLIO ───────────────────────────────────
-//  Foglio dove vengono inserite le prenotazioni dal calendario.
 var PORTAFOGLIO_SHEET = 'Portafoglio';
-//  Codice appartamento (ultima riga dell'evento) → nome appartamento.
 var APARTMENT_MAP = { '15A': 'celeste', '1': 'suite', '15': 'verde' };
-//  Lettera dopo il nome → canale di prenotazione.
 var CHANNEL_MAP   = { 'B': 'Booking.com', 'A': 'Airbnb' };
-//  Lettera dopo il nome → Piattaforma (colonna del foglio Booking).
-//  B = booking, P = privato, A = airbnb.
 var PLATFORM_MAP  = { 'B': 'booking', 'P': 'privato', 'A': 'airbnb' };
-//  Metti a true per aggiungere una colonna "Canale" in fondo.
 var INCLUDE_CHANNEL_COLUMN = false;
-//  Mesi italiani → indice (0 = gennaio).
 var MESI_IT = {
   gennaio:0, febbraio:1, marzo:2, aprile:3, maggio:4, giugno:5,
   luglio:6, agosto:7, settembre:8, ottobre:9, novembre:10, dicembre:11
 };
-//  Mesi italiani abbreviati (prime 3 lettere) → indice.
 var MESI_ABBR = {
   gen:0, feb:1, mar:2, apr:3, mag:4, giu:5,
   lug:6, ago:7, set:8, ott:9, nov:10, dic:11
 };
-// ────────────────────────────────────────────────────────────────
 
-// ── CONFIGURAZIONE CALENDARIO ────────────────────────────────────
-//  Un calendario Google per appartamento. La chiave e' il NOME del
-//  calendario in Google Calendar, il valore e' il nome appartamento.
-//  ⚠️ Verifica che "17" sia davvero la Suite (in precedenza era "1").
 var CALENDAR_APARTMENT_MAP = {
   '15':  'verde',
   '15A': 'celeste',
   '17':  'suite'
 };
-//  Quanti mesi in avanti scansionare dalla data odierna.
 var CALENDAR_MONTHS_AHEAD = 12;
-// ────────────────────────────────────────────────────────────────
 
-
-// ════════════════════════════════════════════════════════════════
-//  SETUP — esegui una volta sola per autorizzare Gmail
-//
-//  PERCHE': il web app gira come "Me" con scope Gmail, ma Google
-//  richiede che l'utente accetti esplicitamente i permessi almeno
-//  una volta eseguendo manualmente una funzione che usa GmailApp.
-//  Dopo l'accettazione, doPost() puo' chiamare GmailApp liberamente.
-// ════════════════════════════════════════════════════════════════
 
 function setup() {
+  var cals = CalendarApp.getAllCalendars();
+  Logger.log('Calendari trovati: ' + cals.length);
+
   GmailApp.sendEmail(
     NOTIFICATION_EMAIL,
     'Casa Paolina - Sistema notifiche attivo',
-    'Autorizzazione Gmail completata.\n\n' +
+    'Autorizzazione Gmail + Calendar completata.\n\n' +
     'Il sistema di notifica check-in e\' pronto.\n' +
     'Ora fai il Deploy della Web App.'
   );
@@ -84,29 +41,16 @@ function setup() {
 }
 
 
-// ════════════════════════════════════════════════════════════════
-//  WEB APP
-//  La mail viene inviata direttamente qui, senza trigger.
-//
-//  PERCHE' NON USO UN TRIGGER onChange:
-//  I trigger onChange/onEdit non scattano per modifiche fatte
-//  programmaticamente da uno script (come appendRow in doPost).
-//  Scattano solo per azioni umane nell'interfaccia del foglio.
-//  Quindi l'unico modo affidabile e' chiamare GmailApp da doPost.
-// ════════════════════════════════════════════════════════════════
-
 function doPost(e) {
   try {
     var raw  = (e.parameter && e.parameter.data) ? e.parameter.data : e.postData.contents;
     var data = JSON.parse(raw);
     var ss   = SpreadsheetApp.getActiveSpreadsheet();
 
-    // ── Foglio PRENOTAZIONI ──────────────────────────────────────
     var sheet = ss.getSheetByName('Prenotazioni') || ss.insertSheet('Prenotazioni');
     if (sheet.getLastRow() === 0) creaIntestazioni(sheet);
     sheet.appendRow(buildMainRow(data));
 
-    // ── Foglio OSPITI ────────────────────────────────────────────
     if (data.guests && data.guests.length > 0) {
       var guestSheet = ss.getSheetByName('Ospiti') || ss.insertSheet('Ospiti');
       if (guestSheet.getLastRow() === 0) creaIntestazioniOspiti(guestSheet);
@@ -123,11 +67,9 @@ function doPost(e) {
       });
     }
 
-    // ── Notifica email ───────────────────────────────────────────
     try {
       inviaEmail_(data, ss.getUrl());
     } catch (mailErr) {
-      // L'errore mail non blocca il salvataggio dei dati
       Logger.log('Errore invio email: ' + mailErr.toString());
     }
 
@@ -171,58 +113,42 @@ function doGet(e) {
 }
 
 
-// ════════════════════════════════════════════════════════════════
-//  ADMIN: legge il foglio "Booking" e restituisce le prenotazioni
-//
-//  Colonne attese (case-insensitive, varianti accettate):
-//    CHECK-IN  | CHECKIN  | ARRIVO
-//    CHECK-OUT | CHECKOUT | PARTENZA
-//    APPARTAMENTO | APPARTMENT | APT
-//    NOME | FIRST NAME
-//    COGNOME | LAST NAME
-//    OSPITE | GUEST           (usato se Nome/Cognome non presenti)
-//    N° OSPITI | OSPITI | PAX (→ campo Adulti nel form)
-// ════════════════════════════════════════════════════════════════
-
 function getCheckinDetails_(nome, cognome) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName('Prenotazioni');
-    
+
     if (!sheet) {
       return ContentService
         .createTextOutput(JSON.stringify({ status: 'error', error: 'Foglio Prenotazioni non trovato' }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    
+
     var data = sheet.getDataRange().getValues();
     if (data.length < 2) {
       return ContentService
         .createTextOutput(JSON.stringify({ status: 'error', error: 'Nessun dato trovato' }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    
-    // Search for matching nome/cognome — return the most recent (last row)
+
     var lastMatch = null;
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
       var rowNome = String(row[10] || '').trim();
       var rowCognome = String(row[11] || '').trim();
-      
       if (rowNome.toLowerCase() === nome.toLowerCase() && rowCognome.toLowerCase() === cognome.toLowerCase()) {
-        lastMatch = row; // Keep updating to get the last/most recent match
+        lastMatch = row;
       }
     }
-    
+
     if (lastMatch) {
-      // Get guests from Ospiti sheet
       var guestSheet = ss.getSheetByName('Ospiti');
       var guests = [];
-      
+
       if (guestSheet) {
         var guestData = guestSheet.getDataRange().getValues();
         var refName = String(lastMatch[10] || '').trim() + ' ' + String(lastMatch[11] || '').trim();
-        
+
         for (var i = 1; i < guestData.length; i++) {
           if (String(guestData[i][1] || '').trim() === refName.trim()) {
             guests.push({
@@ -239,7 +165,7 @@ function getCheckinDetails_(nome, cognome) {
           }
         }
       }
-      
+
       return ContentService
         .createTextOutput(JSON.stringify({
           status: 'ok',
@@ -276,11 +202,11 @@ function getCheckinDetails_(nome, cognome) {
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
-    
+
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'error', error: 'Check-in non trovato' }))
       .setMimeType(ContentService.MimeType.JSON);
-      
+
   } catch (err) {
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'error', error: err.toString() }))
@@ -289,17 +215,15 @@ function getCheckinDetails_(nome, cognome) {
 }
 
 function getExistingCheckIns_() {
-  // Get all completed check-ins from Prenotazioni sheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('Prenotazioni');
   var existing = {};
-  
+
   if (!sheet) return existing;
-  
+
   var data = sheet.getDataRange().getValues();
   if (data.length < 2) return existing;
-  
-  // Assuming K=Nome (col 11), L=Cognome (col 12), J=Ora Arrivo (col 10)
+
   for (var i = 1; i < data.length; i++) {
     var nome = String(data[i][10] || '').trim().toLowerCase();
     var cognome = String(data[i][11] || '').trim().toLowerCase();
@@ -308,7 +232,7 @@ function getExistingCheckIns_() {
       existing[key] = { oraArrivo: String(data[i][9] || '').trim() };
     }
   }
-  
+
   return existing;
 }
 
@@ -323,7 +247,7 @@ function getBookings_() {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    var data    = sheet.getDataRange().getValues();
+    var data = sheet.getDataRange().getValues();
     if (data.length < 2) {
       return ContentService
         .createTextOutput(JSON.stringify({ status: 'ok', bookings: [] }))
@@ -341,13 +265,11 @@ function getBookings_() {
     var colN      = findCol_(headers, ['n° ospiti', 'n ospiti', 'ospiti', 'num ospiti', 'guests', 'pax', 'persone']);
     var colPiat   = findCol_(headers, ['piattaforma', 'platform', 'canale', 'channel']);
 
-    // Get existing check-ins once
     var existingCheckIns = getExistingCheckIns_();
 
     var bookings = [];
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
-      // Skip fully empty rows
       if (row.every(function(c) { return c === '' || c === null; })) continue;
 
       var nome = colNome >= 0 ? String(row[colNome] || '').trim() : '';
@@ -397,21 +319,12 @@ function formatSheetDate_(val) {
     var d = String(val.getDate()).padStart(2, '0');
     return y + '-' + m + '-' + d;
   }
-  // Already a string — normalise DD/MM/YYYY → YYYY-MM-DD
   var s = String(val).trim();
   var parts = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/);
   if (parts) return parts[3] + '-' + parts[2].padStart(2,'0') + '-' + parts[1].padStart(2,'0');
   return s;
 }
 
-
-// ════════════════════════════════════════════════════════════════
-//  EMAIL
-//  Riceve l'oggetto "data" grezzo dal form (stesse chiavi del JSON).
-//  Solo ASCII puro: niente emoji, niente Unicode speciale.
-//  I trattini usano entita' HTML (&ndash; &mdash;) nell'HTML,
-//  e trattini semplici (-) nel plain text.
-// ════════════════════════════════════════════════════════════════
 
 function inviaEmail_(data, sheetUrl) {
 
@@ -435,7 +348,7 @@ function inviaEmail_(data, sheetUrl) {
   var docTipo   = data.r_doc_tipo               || '-';
   var docNum    = data.r_doc_numero             || '-';
   var docRilSt  = data.r_doc_rilascio_stato     || '-';
-  var docRilCom = data.r_doc_rilascio_comune || '-';
+  var docRilCom = data.r_doc_rilascio_comune    || '-';
   var email     = data.r_email             || '-';
   var telefono  = data.r_telefono          || '-';
   var note      = data.note               || '';
@@ -444,11 +357,9 @@ function inviaEmail_(data, sheetUrl) {
                     : new Date().toLocaleString('it-IT');
   var ospiti    = data.guests || [];
 
-  // Oggetto: solo ASCII
   var subject = 'Casa Paolina - Nuovo Check-in: ' + nome +
                 ' > ' + appart + ' (' + arrivo + ' / ' + partenza + ')';
 
-  // ── PLAIN TEXT ───────────────────────────────────────────────
   var txt =
     '================================\n' +
     ' NUOVO CHECK-IN - CASA PAOLINA \n' +
@@ -486,7 +397,6 @@ function inviaEmail_(data, sheetUrl) {
   if (note) txt += '\n-- NOTE ------------------------\n' + note + '\n';
   txt += '\nFoglio Google: ' + sheetUrl + '\n';
 
-  // ── HTML ─────────────────────────────────────────────────────
   function tr(label, val) {
     return '<tr>' +
       '<td style="padding:5px 14px;color:#666;font-size:13px;white-space:nowrap;vertical-align:top;">' + label + '</td>' +
@@ -574,47 +484,39 @@ function inviaEmail_(data, sheetUrl) {
 }
 
 
-// ════════════════════════════════════════════════════════════════
-//  RIGA PRINCIPALE
-// ════════════════════════════════════════════════════════════════
-
 function buildMainRow(d) {
   var totOspiti = (parseInt(d.adults_count) || 0) + (parseInt(d.children_count) || 0);
   return [
-    new Date(d.timestamp),       // A: Data/ora ricezione
-    d.appartamento,              // B: Appartamento
-    d.checkin_date,              // C: Data arrivo
-    d.checkout_date,             // D: Data partenza
-    d.permanenza_notti,          // E: Notti
-    d.adults_count,              // F: N. adulti
-    d.children_count,            // G: N. bambini
-    totOspiti,                   // H: Totale ospiti
-    d.trip_type,                 // I: Tipo soggiorno
-    d.ora_arrivo,                // J: Ora arrivo prevista
-    d.r_nome,                    // K: Nome
-    d.r_cognome,                 // L: Cognome
-    d.r_sesso,                   // M: Sesso
-    d.r_nascita_data,            // N: Data di nascita
-    d.r_nascita_comune   || null, // O: Comune di nascita (null se non italiano)
-    d.r_nascita_stato    || null, // P: Stato di nascita
-    d.r_cittadinanza     || null, // Q: Cittadinanza
-    d.r_comune           || null, // R: Comune di residenza (null se non italiano)
-    d.r_paese            || null, // S: Paese di residenza
-    d.r_doc_tipo         || null, // T: Tipo documento
-    d.r_doc_numero       || null, // U: Numero documento
-    d.r_doc_rilascio_stato  || null, // V: Stato rilascio
-    d.r_doc_rilascio_comune || null, // W: Comune rilascio (null se non italiano)
-    d.r_email,                   // X: Email
-    d.r_telefono,                // Y: Telefono
-    d.guests_count,              // Z: N. accompagnatori
-    d.note                       // AA: Note
+    new Date(d.timestamp),            // A: Data/ora ricezione
+    d.appartamento,                   // B: Appartamento
+    d.checkin_date,                   // C: Data arrivo
+    d.checkout_date,                  // D: Data partenza
+    d.permanenza_notti,               // E: Notti
+    d.adults_count,                   // F: N. adulti
+    d.children_count,                 // G: N. bambini
+    totOspiti,                        // H: Totale ospiti
+    d.trip_type,                      // I: Tipo soggiorno
+    d.ora_arrivo,                     // J: Ora arrivo prevista
+    d.r_nome,                         // K: Nome
+    d.r_cognome,                      // L: Cognome
+    d.r_sesso,                        // M: Sesso
+    d.r_nascita_data,                 // N: Data di nascita
+    d.r_nascita_comune   || null,     // O: Comune di nascita
+    d.r_nascita_stato    || null,     // P: Stato di nascita
+    d.r_cittadinanza     || null,     // Q: Cittadinanza
+    d.r_comune           || null,     // R: Comune di residenza
+    d.r_paese            || null,     // S: Paese di residenza
+    d.r_doc_tipo         || null,     // T: Tipo documento
+    d.r_doc_numero       || null,     // U: Numero documento
+    d.r_doc_rilascio_stato  || null,  // V: Stato rilascio
+    d.r_doc_rilascio_comune || null,  // W: Comune rilascio
+    d.r_email,                        // X: Email
+    d.r_telefono,                     // Y: Telefono
+    d.guests_count,                   // Z: N. accompagnatori
+    d.note                            // AA: Note
   ];
 }
 
-
-// ════════════════════════════════════════════════════════════════
-//  INTESTAZIONI
-// ════════════════════════════════════════════════════════════════
 
 function creaIntestazioni(sheet) {
   var headers = [
@@ -657,19 +559,9 @@ function creaIntestazioniOspiti(sheet) {
 }
 
 
-// ════════════════════════════════════════════════════════════════
-//  AGGIORNA INTESTAZIONI — esegui UNA VOLTA per correggere
-//  le intestazioni di un foglio gia' esistente creato con
-//  una versione precedente dello script.
-//
-//  Seleziona "aggiornaIntestazioni" dal menu a tendina e clicca
-//  ▶ Esegui. Non cancella i dati, sovrascrive solo la riga 1.
-// ════════════════════════════════════════════════════════════════
-
 function aggiornaIntestazioni() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // ── Foglio Prenotazioni ──────────────────────────────────────
   var sheet = ss.getSheetByName('Prenotazioni');
   if (sheet) {
     var headers = [
@@ -687,14 +579,11 @@ function aggiornaIntestazioni() {
       'N. Accompagnatori',
       'Note'
     ];
-    // Sovrascrive solo la riga 1
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    // Cancella eventuali colonne extra a destra (vecchie colonne eliminate)
     var lastCol = sheet.getLastColumn();
     if (lastCol > headers.length) {
       sheet.deleteColumns(headers.length + 1, lastCol - headers.length);
     }
-    // Stile
     var r = sheet.getRange(1, 1, 1, headers.length);
     r.setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
     Logger.log('Intestazioni Prenotazioni aggiornate: ' + headers.length + ' colonne.');
@@ -702,7 +591,6 @@ function aggiornaIntestazioni() {
     Logger.log('Foglio "Prenotazioni" non trovato.');
   }
 
-  // ── Foglio Ospiti ────────────────────────────────────────────
   var guestSheet = ss.getSheetByName('Ospiti');
   if (guestSheet) {
     var gHeaders = [
@@ -729,25 +617,6 @@ function aggiornaIntestazioni() {
 }
 
 
-// ════════════════════════════════════════════════════════════════
-//  PORTAFOGLIO — importa prenotazioni dal testo del calendario
-//
-//  Formato evento (3 righe):
-//     👤👤(Franca Scaravaggi)B
-//     8 – 27 giugno 2026
-//     15A
-//
-//  - numero di 👤  → N° Ospiti
-//  - (Nome Cognome) → Nome / Cognome ospite
-//  - lettera finale → canale (B = Booking.com, A = Airbnb)
-//  - riga date      → CHECK-IN / CHECK-OUT (anche a cavallo di mesi/anni)
-//  - codice apt     → 15A=Celeste, 1=Suite, 15=Verde
-//
-//  Si possono incollare piu' eventi insieme (uno dopo l'altro).
-//  Apri la pagina:  <URL_WEB_APP>?action=portafoglio
-// ════════════════════════════════════════════════════════════════
-
-// Chiamata dal pulsante della pagina web (google.script.run).
 function importPortafoglioFromText(text) {
   try {
     var records = parsePortafoglioText_(text);
@@ -778,7 +647,6 @@ function importPortafoglioFromText(text) {
   }
 }
 
-// Parsing del testo grezzo → array di record.
 function parsePortafoglioText_(text) {
   var lines = String(text || '').split(/\r?\n/);
   var records = [];
@@ -799,7 +667,6 @@ function parsePortafoglioText_(text) {
     var aptName = mapAppartamento_(line);
 
     if (nameMatch) {
-      // Nuova prenotazione (la riga con il nome apre sempre un record)
       pushCurrent();
       current = { raw: line, persone: countPersone_(line), nameRaw: nameMatch[1].trim() };
       var chMatch = line.match(/\)\s*([A-Za-z]+)/);
@@ -817,7 +684,6 @@ function parsePortafoglioText_(text) {
   return records;
 }
 
-// Completa il record: nome/cognome, date, validazione.
 function finalizeRecord_(rec) {
   var out = {
     raw: rec.raw || '',
@@ -853,39 +719,29 @@ function finalizeRecord_(rec) {
   return out;
 }
 
-// Conta le icone persona 👤 nella riga.
 function countPersone_(line) {
   var m = String(line).match(/👤/g);
   return m ? m.length : 0;
 }
 
-// Stacca le parole "attaccate" da una maiuscola: "MariaSabina" -> "Maria Sabina".
-// Inserisce uno spazio tra una lettera minuscola e la maiuscola che segue.
 function splitCamelCase_(s) {
   if (!s) return s;
   return String(s).replace(/([a-zà-ÿ])([A-ZÀ-Þ])/g, '$1 $2');
 }
 
-// Mappa il codice appartamento → nome (null se non riconosciuto).
 function mapAppartamento_(line) {
   var code = String(line || '').trim().toUpperCase().replace(/\s+/g, '');
   return APARTMENT_MAP[code] || null;
 }
 
-// Interpreta "8 – 27 giugno 2026", "28 giugno – 3 luglio 2026",
-// "28 dicembre – 3 gennaio 2026", "28 dicembre 2025 – 3 gennaio 2026",
-// e il formato abbreviato "19-Ago", "19-Ago – 25-Ago",
-// "19-Ago - 25-Ago 2026". Mesi anche abbreviati (gen, feb, mar, ...).
 function parseDateRange_(line) {
   if (!line) return null;
   var s = String(line).replace(/\s+/g, ' ').trim();
 
-  // Normalizza i separatori di INTERVALLO in "|", mantenendo i trattini
-  // "interni" dei token tipo 19-Ago (trattino tra cifra e lettera).
-  s = s.replace(/\s*[–—→]\s*/g, '|')        // en/em dash, freccia
-       .replace(/\s+-\s+/g, '|')             // trattino tra spazi
-       .replace(/(\d)\s*-\s*(?=\d)/g, '$1|') // trattino tra due cifre (es. 8-27)
-       .replace(/\s+(?:al|a)\s+/gi, '|');    // " al " / " a "
+  s = s.replace(/\s*[–—→]\s*/g, '|')
+       .replace(/\s+-\s+/g, '|')
+       .replace(/(\d)\s*-\s*(?=\d)/g, '$1|')
+       .replace(/\s+(?:al|a)\s+/gi, '|');
 
   var parts = s.split('|');
   if (parts.length < 2) return null;
@@ -894,7 +750,6 @@ function parseDateRange_(line) {
   var right = parseDateToken_(parts[parts.length - 1]);
   if (!left || !right) return null;
 
-  // Mese mancante su un lato → eredita dall'altro
   if (left.month === null)  left.month  = right.month;
   if (right.month === null) right.month = left.month;
   if (left.month === null || right.month === null) return null;
@@ -904,7 +759,6 @@ function parseDateRange_(line) {
   if (endYear === null)   endYear   = (startYear !== null) ? startYear : new Date().getFullYear();
   if (startYear === null) {
     startYear = endYear;
-    // A cavallo di anno: se il mese d'inizio viene dopo quello di fine
     if (left.month > right.month) startYear = endYear - 1;
   }
 
@@ -914,7 +768,6 @@ function parseDateRange_(line) {
   return { start: start, end: end };
 }
 
-// Risolve un nome di mese italiano (completo o abbreviato) → indice 0-11.
 function resolveMese_(name) {
   if (name == null) return undefined;
   var key = String(name).toLowerCase().replace(/\./g, '').trim();
@@ -924,15 +777,11 @@ function resolveMese_(name) {
   return undefined;
 }
 
-// Interpreta un singolo estremo di data: "27 giugno 2026", "19-Ago",
-// "19 ago 2026", "3 luglio", "12/08/2026", "12/08" o solo "27".
-// Ritorna { day, month (0-11 o null), year (numero o null) } oppure null.
 function parseDateToken_(token) {
   if (!token) return null;
   token = String(token).trim();
   if (!token) return null;
 
-  // DD/MM/YYYY oppure DD/MM (anche con punti)
   var slash = token.match(/^(\d{1,2})[\/\.](\d{1,2})(?:[\/\.](\d{2,4}))?$/);
   if (slash) {
     var yr = slash[3] ? parseInt(slash[3], 10) : null;
@@ -940,7 +789,6 @@ function parseDateToken_(token) {
     return { day: parseInt(slash[1], 10), month: parseInt(slash[2], 10) - 1, year: yr };
   }
 
-  // DD<sep>Mese[ YYYY]  con sep = spazio o trattino (es. "19-Ago", "27 giugno 2026")
   var dm = token.match(/^(\d{1,2})[\s\-]+([A-Za-zÀ-ù]+)\.?(?:[\s\-]+(\d{4}))?$/);
   if (dm) {
     var m = resolveMese_(dm[2]);
@@ -948,28 +796,25 @@ function parseDateToken_(token) {
     return { day: parseInt(dm[1], 10), month: m, year: dm[3] ? parseInt(dm[3], 10) : null };
   }
 
-  // Solo giorno (il mese verra' ereditato dall'altro estremo)
   var d = token.match(/^(\d{1,2})$/);
   if (d) return { day: parseInt(d[1], 10), month: null, year: null };
 
   return null;
 }
 
-// Costruisce la riga nell'ordine delle colonne del foglio.
 function buildPortafoglioRow_(rec) {
   var row = [
-    rec.checkIn,        // CHECK-IN
-    rec.checkOut,       // CHECK-OUT
-    rec.appartamento,   // Appartamento
-    rec.nome,           // Nome Ospite
-    rec.cognome,        // Cognome Ospite
-    rec.persone         // N° Ospiti
+    rec.checkIn,
+    rec.checkOut,
+    rec.appartamento,
+    rec.nome,
+    rec.cognome,
+    rec.persone
   ];
   if (INCLUDE_CHANNEL_COLUMN) row.push(rec.canale);
   return row;
 }
 
-// Chiave anti-duplicato: data arrivo + appartamento + cognome.
 function portafoglioKey_(rec) {
   return [
     rec.checkIn ? rec.checkIn.getTime() : '',
@@ -1015,7 +860,6 @@ function formatRecForClient_(rec) {
   };
 }
 
-// Pagina web (textarea + pulsante) servita da doGet?action=portafoglio.
 function getPortafoglioFormHtml_() {
   return '' +
 '<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">' +
@@ -1062,7 +906,6 @@ function getPortafoglioFormHtml_() {
 '</script></body></html>';
 }
 
-// Test manuale: seleziona "testPortafoglio" e clicca ▶ Esegui.
 function testPortafoglio() {
   var sample =
     '👤👤(Franca Scaravaggi)B\n' +
@@ -1080,18 +923,6 @@ function testPortafoglio() {
 }
 
 
-// ════════════════════════════════════════════════════════════════
-//  SYNC CALENDARIO → FOGLIO BOOKING
-//
-//  Legge gli eventi dei calendari per appartamento (15, 15A, 17),
-//  li interpreta nel formato Casa Paolina e inserisce una riga nel
-//  foglio "Booking" se non gia' presente. Usato dal pulsante
-//  "Aggiorna" della dashboard admin (?action=sync-calendar).
-//
-//  ⚠️ Richiede l'autorizzazione a Google Calendar: la prima volta
-//     esegui manualmente "syncCalendarManuale" e accetta i permessi.
-// ════════════════════════════════════════════════════════════════
-
 function syncCalendarToBooking_() {
   try {
     var result = doCalendarSync_();
@@ -1105,7 +936,6 @@ function syncCalendarToBooking_() {
   }
 }
 
-// Esecuzione manuale dall'editor (per autorizzare Calendar e testare).
 function syncCalendarManuale() {
   var res = doCalendarSync_();
   Logger.log(JSON.stringify(res, null, 2));
@@ -1118,8 +948,8 @@ function doCalendarSync_() {
   if (sheet.getLastRow() === 0) creaIntestazioniBooking_(sheet);
 
   var cols = getBookingColumns_(sheet);
-  ensureEventIdColumn_(sheet, cols);          // garantisce la colonna EventId
-  var index = getBookingIndex_(sheet, cols);  // righe esistenti per eventId / chiave
+  ensureEventIdColumn_(sheet, cols);
+  var index = getBookingIndex_(sheet, cols);
 
   var now   = new Date();
   var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -1139,13 +969,9 @@ function doCalendarSync_() {
       events.forEach(function(ev) {
         var rec = parseCalendarEvent_(ev, aptName);
         rec.eventId = (ev && ev.getId) ? ev.getId() : '';
-        // Segna l'evento come "visto" SEMPRE (anche se in errore), cosi'
-        // un evento esistente non viene mai cancellato per sbaglio.
         if (rec.eventId) seenEventIds[rec.eventId] = true;
         if (rec.error) { errors.push({ raw: rec.raw, error: rec.error }); return; }
 
-        // 1) Match per eventId. 2) In fallback adotta una riga legacy
-        //    (senza eventId) che combacia per data+appartamento+cognome.
         var existingRow = (rec.eventId && index.byEvent[rec.eventId])
                             ? index.byEvent[rec.eventId].row : null;
         if (existingRow == null) {
@@ -1166,28 +992,20 @@ function doCalendarSync_() {
     });
   });
 
-  // ── CANCELLAZIONI ────────────────────────────────────────────
-  //  Righe gestite dal sync (con EventId) il cui evento non esiste piu'
-  //  nel calendario. Tocchiamo SOLO i soggiorni futuri nella finestra
-  //  scansionata: le prenotazioni passate restano intatte.
   var toDelete = [];
   index.managed.forEach(function(m) {
-    if (seenEventIds[m.eventId]) return;            // ancora presente
-    if (!m.ciTime) return;                          // senza data: non toccare
-    if (m.ciTime < start.getTime()) return;         // passato: non toccare
-    if (m.ciTime > end.getTime())  return;          // fuori finestra
+    if (seenEventIds[m.eventId]) return;
+    if (!m.ciTime) return;
+    if (m.ciTime < start.getTime()) return;
+    if (m.ciTime > end.getTime())  return;
     toDelete.push(m);
   });
-  // Elimina dal basso verso l'alto per non sfalsare i numeri di riga.
   toDelete.sort(function(a, b) { return b.row - a.row; });
   toDelete.forEach(function(m) {
     cancelled.push({ nome: m.nome, cognome: m.cogn, appartamento: m.apt, checkIn: m.ciStr });
     sheet.deleteRow(m.row);
   });
 
-  // NB: sorting reintrodotto piu' in basso.
-
-  // Ordina le prenotazioni per CHECK-IN crescente (le piu' future in fondo).
   sortBookingByCheckin_(sheet, cols);
 
   return {
@@ -1201,17 +1019,14 @@ function doCalendarSync_() {
   };
 }
 
-// Interpreta un evento del calendario → record prenotazione.
 function parseCalendarEvent_(ev, calApt) {
   var title = ev.getTitle ? (ev.getTitle() || '') : '';
   var descr = ev.getDescription ? (ev.getDescription() || '') : '';
   var text  = (title + '\n' + descr).trim();
   var rec   = { raw: title, appartamento: calApt || '' };
 
-  // N° ospiti = numero di icone 👤
   rec.persone = (text.match(/👤/g) || []).length;
 
-  // Nome ospite = contenuto tra parentesi ( )
   var nameMatch = text.match(/\(([^)]+)\)/);
   if (nameMatch) {
     var parts = nameMatch[1].trim().split(/\s+/);
@@ -1219,7 +1034,6 @@ function parseCalendarEvent_(ev, calApt) {
     rec.cognome = splitCamelCase_(parts.join(' '));
     if (!rec.persone) rec.persone = 1;
 
-    // Canale = lettera subito dopo la parentesi chiusa
     var after = text.slice(text.indexOf(nameMatch[0]) + nameMatch[0].length);
     var chM = after.match(/^\s*([A-Za-z]+)/);
     rec.canaleCode = chM ? chM[1].toUpperCase() : '';
@@ -1230,14 +1044,10 @@ function parseCalendarEvent_(ev, calApt) {
     rec.cognome = '';
   }
 
-  // Date dal CALENDARIO.
-  //   check-in  = giorno di inizio evento
-  //   check-out = giorno di fine evento
   if (ev.getStartTime) {
     rec.checkIn  = stripTime_(ev.getStartTime());
     rec.checkOut = stripTime_(ev.getEndTime());
   } else {
-    // Fallback: eventuali date scritte nel testo dell'evento.
     var dates = parseDateRange_(text.replace(/\n/g, ' '));
     if (dates) {
       rec.checkIn  = stripTime_(dates.start);
@@ -1245,12 +1055,10 @@ function parseCalendarEvent_(ev, calApt) {
     }
   }
 
-  // Garantisce almeno 1 notte: il check-out e' sempre dopo il check-in.
   if (rec.checkIn && rec.checkOut && rec.checkOut.getTime() <= rec.checkIn.getTime()) {
     rec.checkOut = new Date(rec.checkIn.getTime() + 86400000);
   }
 
-  // Appartamento: usa il calendario; in fallback il codice nel testo.
   if (!rec.appartamento) {
     var aptLine = text.split(/\r?\n/).map(function(l){ return mapAppartamento_(l); }).filter(Boolean)[0];
     if (aptLine) rec.appartamento = aptLine;
@@ -1265,9 +1073,6 @@ function parseCalendarEvent_(ev, calApt) {
   return rec;
 }
 
-// ── Foglio Booking: utilità colonne / chiavi / righe ─────────────
-
-// Azzera l'orario di una data → mezzanotte (solo giorno).
 function stripTime_(date) {
   if (!(date instanceof Date)) return date;
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -1335,11 +1140,9 @@ function getBookingKeys_(sheet, cols) {
   return keys;
 }
 
-// Garantisce la colonna "EventId" (id evento Google Calendar). Se manca la
-// aggiunge in fondo e aggiorna cols.width / cols.evid.
 function ensureEventIdColumn_(sheet, cols) {
   if (cols.evid >= 0) return cols.evid;
-  var newColIdx0 = cols.width;          // 0-based: nuova colonna
+  var newColIdx0 = cols.width;
   sheet.getRange(1, cols.width + 1).setValue('EventId')
     .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
   cols.width = cols.width + 1;
@@ -1347,10 +1150,6 @@ function ensureEventIdColumn_(sheet, cols) {
   return cols.evid;
 }
 
-// Indicizza le righe del foglio Booking:
-//   byEvent : eventId  -> { row }
-//   byKey   : data|apt|cognome (solo righe SENZA eventId, legacy)
-//   managed : righe con eventId (candidate a update/cancellazione)
 function getBookingIndex_(sheet, cols) {
   var idx = { byEvent: {}, byKey: {}, managed: [] };
   var last = sheet.getLastRow();
@@ -1383,9 +1182,6 @@ function getBookingIndex_(sheet, cols) {
   return idx;
 }
 
-// Aggiorna una riga esistente solo se i dati gestiti sono cambiati.
-// Scrive comunque l'eventId mancante (adozione righe legacy) ma in quel
-// caso NON conta come "modifica". Ritorna true se i dati sono cambiati.
 function updateBookingRowIfChanged_(sheet, rowNum, rec, cols) {
   var range = sheet.getRange(rowNum, 1, 1, cols.width);
   var row = range.getValues()[0];
@@ -1407,7 +1203,6 @@ function updateBookingRowIfChanged_(sheet, rowNum, rec, cols) {
   setData(cols.n, rec.persone);
   setData(cols.piat, rec.piattaforma || '');
 
-  // EventId: tagga senza contare come modifica dati.
   if (cols.evid >= 0) {
     var newEv = rec.eventId || row[cols.evid] || '';
     if (!bookingValuesEqual_(row[cols.evid], newEv)) { row[cols.evid] = newEv; anyChange = true; }
@@ -1417,7 +1212,6 @@ function updateBookingRowIfChanged_(sheet, rowNum, rec, cols) {
   return dataChanged;
 }
 
-// Confronto tollerante: date per giorno, resto come stringa trimmata.
 function bookingValuesEqual_(a, b) {
   if (a instanceof Date || b instanceof Date) {
     var da = (a instanceof Date) ? stripTime_(a) : (a ? new Date(formatSheetDate_(a)) : null);
@@ -1428,12 +1222,10 @@ function bookingValuesEqual_(a, b) {
   return String(a == null ? '' : a).trim() === String(b == null ? '' : b).trim();
 }
 
-// Ordina le righe dati per CHECK-IN crescente (A->Z, le piu' future in fondo).
-// Le righe senza data valida vengono messe in coda.
 function sortBookingByCheckin_(sheet, cols) {
   if (cols.cin < 0) return;
   var last = sheet.getLastRow();
-  if (last < 3) return; // 0/1 riga dati: niente da ordinare
+  if (last < 3) return;
   var range = sheet.getRange(2, 1, last - 1, cols.width);
   var rows = range.getValues();
 
@@ -1441,7 +1233,7 @@ function sortBookingByCheckin_(sheet, cols) {
     var v = r[cols.cin];
     var t = (v instanceof Date) ? stripTime_(v).getTime()
           : (v ? new Date(formatSheetDate_(v)).getTime() : NaN);
-    return isNaN(t) ? Infinity : t; // senza data -> in fondo
+    return isNaN(t) ? Infinity : t;
   }
 
   rows.sort(function(a, b) { return ciTime_(a) - ciTime_(b); });
@@ -1453,18 +1245,10 @@ function creaIntestazioniBooking_(sheet) {
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   sheet.getRange(1, 1, 1, headers.length)
     .setFontWeight('bold').setBackground('#2c7873').setFontColor('#ffffff').setFontSize(10);
-  // 8 colonne vuote riservate dopo EventId (per IMPORTRANGE verso il 2° foglio).
   sheet.getRange(1, headers.length + 1, 1, 8).setBackground('#d9e8e6');
   sheet.setFrozenRows(1);
 }
 
-// ════════════════════════════════════════════════════════════════
-//  AGGIORNA COLONNE BOOKING — esegui UNA VOLTA per adeguare un foglio
-//  "Booking" gia' esistente: aggiunge la colonna "Piattaforma" dopo
-//  "N° Ospiti", garantisce "EventId" e riserva 8 colonne vuote in fondo.
-//  Non cancella dati. La colonna Piattaforma viene poi popolata al
-//  prossimo "Aggiorna" (sync) per le prenotazioni nella finestra.
-// ════════════════════════════════════════════════════════════════
 function aggiornaIntestazioniBooking() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = getBookingSheet_(ss);
@@ -1472,7 +1256,6 @@ function aggiornaIntestazioniBooking() {
 
   var cols = getBookingColumns_(sheet);
 
-  // 1) Colonna "Piattaforma" subito dopo "N° Ospiti" (o in fondo ai dati).
   if (cols.piat < 0) {
     var afterCol = (cols.n >= 0) ? cols.n + 1 : sheet.getLastColumn();
     sheet.insertColumnAfter(afterCol);
@@ -1481,11 +1264,9 @@ function aggiornaIntestazioniBooking() {
     cols = getBookingColumns_(sheet);
   }
 
-  // 2) Garantisci la colonna tecnica EventId.
   ensureEventIdColumn_(sheet, cols);
   cols = getBookingColumns_(sheet);
 
-  // 3) Riserva 8 colonne vuote dopo l'ultima colonna usata.
   var startReserved = sheet.getLastColumn() + 1;
   sheet.getRange(1, startReserved, 1, 8).setBackground('#d9e8e6');
 
@@ -1496,10 +1277,6 @@ function aggiornaIntestazioniBooking() {
   );
 }
 
-
-// ════════════════════════════════════════════════════════════════
-//  TEST — seleziona "testEmail" e clicca ▶ Esegui
-// ════════════════════════════════════════════════════════════════
 
 function testEmail() {
   var fakeData = {
