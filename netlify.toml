@@ -1,0 +1,6 @@
+[build]
+  publish = "."
+  command = "echo 'No static injection needed — secrets are validated server-side via Netlify Functions.'"
+
+[functions]
+  directory = "netlify/functions"

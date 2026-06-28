@@ -1,0 +1,1284 @@
+/* ===================================================
+   CASA PAOLINA — GUEST PAGE CSS
+   Mobile-first, fully responsive
+   =================================================== */
+
+/* ── Base ── */
+.guest-page {
+    background: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Header ── */
+.guest-header {
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    color: white;
+    padding: 16px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.back-link {
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.12);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+.back-link:hover { background: rgba(255,255,255,0.22); }
+
+.guest-header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    text-align: center;
+    flex: 1;
+}
+
+.language-flags { display: flex; gap: 6px; }
+
+.flag-btn {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 7px 10px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: all 0.2s;
+    line-height: 1;
+}
+.flag-btn:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.5); }
+.flag-btn.active { border-color: white; background: rgba(255,255,255,0.25); }
+
+/* ── Hero Welcome Banner ── */
+.guest-hero {
+    position: relative;
+    background: linear-gradient(160deg, #1e5f5a 0%, #2c7873 40%, #3a9e97 100%);
+    padding: 60px 20px 50px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.guest-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.04)" d="M0,160L60,138.7C120,117,240,75,360,74.7C480,75,600,117,720,144C840,171,960,181,1080,165.3C1200,149,1320,107,1380,85.3L1440,64L1440,320L0,320Z"/></svg>') bottom/cover no-repeat;
+}
+
+.guest-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.2) 100%);
+}
+
+.guest-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.guest-hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    backdrop-filter: blur(4px);
+}
+
+.guest-hero-content h2 {
+    color: white;
+    font-size: clamp(1.5rem, 5vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 12px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.guest-hero-content p {
+    color: rgba(255,255,255,0.88);
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    margin: 0 0 28px;
+}
+
+.guest-hero-pills {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-pill {
+    background: rgba(255,255,255,0.18);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.hero-pill:hover {
+    background: rgba(255,255,255,0.32);
+    transform: translateY(-2px);
+    color: white;
+}
+
+/* ── Section Header ── */
+.section-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.section-tag {
+    display: inline-block;
+    background: rgba(44,120,115,0.1);
+    color: #2c7873;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.section-header h2 {
+    color: #1e293b;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ── Essential Info ── */
+.essential-info {
+    padding: 52px 0 40px;
+    background: white;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.info-card {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.info-card:hover {
+    border-color: #2c7873;
+    box-shadow: 0 4px 20px rgba(44,120,115,0.1);
+}
+
+.info-card-icon {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(44,120,115,0.1);
+    border-radius: 10px;
+}
+
+.info-card-body h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.info-card-body p {
+    margin: 4px 0;
+    font-size: 0.875rem;
+    color: #475569;
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    flex-wrap: wrap;
+}
+
+.info-label {
+    color: #94a3b8;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.info-card-body strong {
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 0.88rem;
+}
+
+.info-hours {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.copyable {
+    cursor: pointer;
+    user-select: all;
+}
+.copyable:active { opacity: 0.7; }
+
+/* ── House Rules ── */
+.house-rules {
+    padding: 48px 0;
+    background: linear-gradient(180deg, #f8fafc 0%, #f0f9f8 100%);
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.rule-item {
+    background: white;
+    padding: 16px 18px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1.5px solid #e2e8f0;
+    transition: all 0.2s;
+}
+.rule-item:hover {
+    border-color: #2c7873;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(44,120,115,0.1);
+}
+
+.rule-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+}
+
+.rule-item p {
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* ── Weather & Beaches ── */
+.weather-beaches {
+    padding: 52px 0 40px;
+    background: white;
+}
+
+/* 3-day forecast */
+.daily-forecast {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.forecast-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f9f8 100%);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 16px;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    flex: 1;
+    max-width: 170px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.forecast-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(44,120,115,0.12);
+    border-color: #2c7873;
+}
+
+.forecast-card.skeleton {
+    background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    min-height: 130px;
+    border: none;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.forecast-day {
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.forecast-relative {
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #2c7873;
+}
+.forecast-date {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+.forecast-icon { font-size: 2rem; line-height: 1; margin-bottom: 4px; }
+.forecast-label { font-size: 0.75rem; color: #64748b; margin-bottom: 6px; }
+.forecast-temps { font-size: 0.88rem; font-weight: 700; }
+.temp-max { color: #e25822; }
+.temp-min { color: #3b82f6; margin-left: 4px; }
+.forecast-wind { margin-top: 6px; font-size: 0.72rem; color: #94a3b8; font-weight: 600; }
+
+/* Wind info bar */
+.beach-filters-modern {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.current-wind-info {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    border: 1.5px solid #7dd3fc;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #0c4a6e;
+    text-align: center;
+    margin: 0;
+    font-weight: 600;
+}
+
+.beach-filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.recommendation-status {
+    font-size: 0.82rem;
+    color: #64748b;
+    text-align: center;
+    margin: 0;
+    min-height: 1.2em;
+}
+
+/* Filter buttons */
+.poi-filter-btn,
+.beach-filter-btn {
+    padding: 10px 20px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #475569;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.poi-filter-btn:hover,
+.beach-filter-btn:hover,
+.poi-filter-btn.active,
+.beach-filter-btn.active {
+    background: #2c7873;
+    color: white;
+    border-color: #2c7873;
+    box-shadow: 0 4px 14px rgba(44,120,115,0.25);
+}
+
+/* Beach map + list */
+.beach-recommendations {
+    background: #f8fafc;
+    padding: 28px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Mobile map/list tab toggle — hidden on desktop */
+.beach-view-tabs {
+    display: none;
+}
+
+.beach-map-list-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    height: 540px;
+}
+
+.map-container-modern {
+    height: 100%;
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+    border: 1px solid #e2e8f0;
+}
+
+/* Strip Leaflet's default divIcon border/bg */
+.custom-beach-marker,
+.custom-home-marker {
+    background: none !important;
+    border: none !important;
+}
+
+/* Leaflet map specific styles */
+.map-container-modern .leaflet-container {
+    background: linear-gradient(135deg, #e8f0f7 0%, #ffffff 100%);
+    border-radius: 14px;
+}
+
+/* ── Map badge markers ── */
+.map-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 2.5px solid white;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+                box-shadow 0.18s ease;
+    position: relative;
+}
+
+/* Pointer triangle at bottom */
+.map-badge::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid currentColor;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+}
+
+.map-badge:hover {
+    transform: scale(1.2) translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.map-badge-emoji {
+    font-size: 16px;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Sand beaches — warm amber */
+.map-badge--sand {
+    background: linear-gradient(145deg, #fde68a, #f59e0b);
+    color: #f59e0b;
+}
+
+/* Rocky beaches — teal */
+.map-badge--rock {
+    background: linear-gradient(145deg, #5eead4, #0d9488);
+    color: #0d9488;
+}
+
+/* Casa Paolina — red */
+.map-badge--home {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(145deg, #fca5a5, #dc2626);
+    color: #dc2626;
+}
+.map-badge--home .map-badge-emoji { font-size: 18px; }
+
+/* POI category badges */
+.map-badge--attraction { background: linear-gradient(145deg, #c4b5fd, #7c3aed); color: #7c3aed; }
+.map-badge--nightlife  { background: linear-gradient(145deg, #fcd34d, #d97706); color: #d97706; }
+.map-badge--service    { background: linear-gradient(145deg, #86efac, #16a34a); color: #16a34a; }
+.map-badge--restaurant { background: linear-gradient(145deg, #fca5a5, #dc2626); color: #dc2626; }
+
+/* Leaflet controls styling */
+.map-container-modern .leaflet-control-zoom,
+.map-container-modern .leaflet-fullscreen-button {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.map-container-modern .leaflet-center-home {
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-container-modern .leaflet-center-home:hover {
+    background: linear-gradient(135deg, #1e5f5a 0%, #144d48 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Beach popup styling */
+.beach-popup {
+    font-size: 0.9rem;
+}
+
+.beach-popup h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #1e293b;
+}
+
+.beach-popup p {
+    margin: 4px 0;
+    color: #475569;
+}
+
+.beaches-list-modern {
+    height: 100%;
+    overflow-y: auto;
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    scrollbar-width: thin;
+    scrollbar-color: #2c7873 #f0f4f8;
+}
+.beaches-list-modern::-webkit-scrollbar { width: 5px; }
+.beaches-list-modern::-webkit-scrollbar-track { background: #f0f4f8; border-radius: 4px; }
+.beaches-list-modern::-webkit-scrollbar-thumb { background: #2c7873; border-radius: 4px; }
+
+/* Beach list items */
+.beach-list-item {
+    background: #f8fafc;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border-left: 4px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.beach-list-item:hover {
+    border-left-color: #2c7873;
+    background: white;
+    box-shadow: 0 2px 10px rgba(44,120,115,0.12);
+    transform: translateX(2px);
+}
+
+.beach-list-item.selected {
+    border-left-color: #2c7873;
+    background: linear-gradient(135deg, rgba(44,120,115,0.06) 0%, white 100%);
+    box-shadow: 0 2px 14px rgba(44,120,115,0.18);
+}
+
+/* Beach list item image thumbnail */
+.beach-list-thumb {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #e0f2f1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Beach list content wrapper */
+.beach-list-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.beach-list-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Row: small round thumb + meta (legacy, kept for compatibility) */
+.beach-list-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.beach-list-thumb-placeholder {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #e0f2f1 0%, #d1f4f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    border: 2px solid #a8d5d1;
+    color: #2c7873;
+}
+
+.beach-list-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.beach-list-distance {
+    font-size: 0.78rem;
+    color: #64748b;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.beach-list-type {
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    background: #e0f2f1;
+    color: #2c7873;
+    border-radius: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.beach-list-book-btn {
+    padding: 3px 10px;
+    background: #2c7873;
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    margin-left: auto;
+}
+.beach-list-book-btn:hover { background: #1e5f5a; }
+
+.beach-list-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ── POI Quick Section ── */
+.poi-quick-section {
+    padding: 52px 0 40px;
+    background: #f0f9f8;
+}
+
+.poi-quick-filters {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+
+.poi-quick-btn {
+    padding: 9px 18px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #475569;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.poi-quick-btn:hover,
+.poi-quick-btn.active {
+    background: #2c7873;
+    color: white;
+    border-color: #2c7873;
+    box-shadow: 0 4px 14px rgba(44,120,115,0.25);
+}
+
+.poi-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.poi-quick-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 1.5px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.22s;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+.poi-quick-card::after {
+    content: '→';
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    font-size: 0.75rem;
+    color: #2c7873;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    transform: translateX(-4px);
+}
+.poi-quick-card:hover {
+    border-color: #2c7873;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(44,120,115,0.13);
+}
+.poi-quick-card:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.poi-quick-card-icon {
+    font-size: 1.45rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(44,120,115,0.08);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.poi-quick-card-body { flex: 1; min-width: 0; }
+.poi-quick-card-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #1e293b;
+    margin: 0 0 3px;
+    white-space: normal;
+    word-break: break-word;
+}
+.poi-quick-card-desc {
+    font-size: 0.76rem;
+    color: #64748b;
+    margin: 0 0 5px;
+    line-height: 1.4;
+    white-space: normal;
+    word-break: break-word;
+}
+.poi-quick-card-dist {
+    font-size: 0.73rem;
+    color: #2c7873;
+    font-weight: 700;
+}
+
+/* ── Excursions ── */
+.excursions {
+    padding: 48px 0;
+    background: white;
+}
+
+.excursion-card-new {
+    background: linear-gradient(135deg, rgba(44,120,115,0.06) 0%, rgba(44,120,115,0.02) 100%);
+    border: 2px solid rgba(44,120,115,0.2);
+    border-radius: 20px;
+    padding: 30px 28px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    max-width: 760px;
+    margin: 0 auto;
+    box-shadow: 0 6px 24px rgba(44,120,115,0.08);
+}
+
+.excursion-card-emoji {
+    font-size: 3rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    background: rgba(44,120,115,0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.excursion-card-body p {
+    margin: 6px 0;
+    color: #475569;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+.excursion-card-body p strong { color: #1e293b; }
+
+.btn-excursion {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    color: white !important;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none !important;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(44,120,115,0.3);
+}
+.btn-excursion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(44,120,115,0.38);
+}
+
+/* ── Reviews ── */
+.reviews { padding: 40px 0; }
+
+.review-section {
+    background: linear-gradient(135deg, #2c7873 0%, #1e5f5a 100%);
+    padding: 40px 28px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 30px rgba(44,120,115,0.3);
+}
+.review-icon { font-size: 2.8rem; margin-bottom: 12px; }
+.review-section h3 {
+    margin: 0 0 10px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+}
+.review-subtext { color: rgba(255,255,255,0.85); font-size: 0.95rem; margin: 0 0 22px; }
+.review-btn {
+    display: inline-block;
+    background: white;
+    color: #2c7873 !important;
+    padding: 13px 28px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none !important;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+.review-btn:hover {
+    background: #f0f9f8;
+    transform: scale(1.04);
+}
+
+/* ── Footer ── */
+.guest-footer {
+    background: #1e293b;
+    color: rgba(255,255,255,0.8);
+    padding: 28px 0;
+    text-align: center;
+}
+.guest-footer p { margin: 7px 0; font-size: 0.9rem; }
+.guest-footer a { color: #7dd3c9; text-decoration: none; font-weight: 600; }
+.guest-footer a:hover { color: white; }
+.footer-copy { color: rgba(255,255,255,0.4); font-size: 0.78rem; margin-top: 14px !important; }
+.footer-follow-us { margin-top: 14px !important; font-size: 0.88rem; color: rgba(255,255,255,0.6); }
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #7dd3c9 !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.footer-social-link:hover { color: white !important; }
+.footer-social-link svg { vertical-align: middle; }
+
+/* ── Inline map button ── */
+.inline-map-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 14px;
+    background: #2c7873;
+    color: white !important;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    transition: background 0.2s;
+}
+.inline-map-btn:hover { background: #1e5f5a; }
+
+/* ── Beach Popup ── */
+.beach-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 16px;
+    backdrop-filter: blur(3px);
+}
+.beach-popup-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 860px;
+    width: 100%;
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.popup-image img {
+    width: 240px;
+    min-height: 200px;
+    object-fit: cover;
+}
+.popup-body { padding: 22px; flex: 1; }
+.popup-body h3 { margin-top: 0; font-size: 1.25rem; color: #1e293b; }
+.popup-type { color: #2c7873; font-weight: 700; margin: 6px 0; }
+.popup-distance { color: #64748b; font-size: 0.88rem; }
+.popup-description { color: #475569; margin: 8px 0 14px; font-size: 0.9rem; line-height: 1.5; }
+.popup-facilities { font-size: 0.85rem; color: #64748b; margin-bottom: 14px; }
+.popup-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.popup-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+.popup-btn-primary { background: #2c7873; color: white; }
+.popup-btn-primary:hover { background: #1e5f5a; }
+.popup-btn-secondary { background: transparent; color: #2c7873; border: 2px solid #2c7873; }
+.popup-btn-secondary:hover { background: rgba(44,120,115,0.08); }
+.popup-close {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #94a3b8;
+    z-index: 1;
+}
+
+/* Leaflet popup grid */
+.beach-leaflet-popup .leaflet-popup-content-wrapper {
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.beach-leaflet-popup .leaflet-popup-content {
+    margin: 0;
+    width: auto !important;
+}
+.beach-popup.inline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 280px;
+}
+.beach-popup.inline .popup-image img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 0;
+    display: block;
+}
+.beach-popup.inline .popup-image.placeholder {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e6f6f5;
+}
+.beach-popup.inline .popup-body {
+    padding: 10px 12px;
+}
+.beach-popup.inline .popup-body h3 {
+    font-size: 0.95rem;
+    margin: 0 0 5px;
+}
+.beach-popup.inline .popup-type,
+.beach-popup.inline .popup-distance {
+    font-size: 0.78rem;
+    margin: 2px 0;
+}
+.beach-popup.inline .popup-description {
+    font-size: 0.76rem;
+    margin: 5px 0;
+    color: #475569;
+    line-height: 1.4;
+}
+.beach-popup.inline .popup-facilities {
+    font-size: 0.72rem;
+    margin-bottom: 8px;
+}
+.beach-popup.inline .popup-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.beach-popup.inline .popup-btn {
+    padding: 6px 10px;
+    font-size: 0.76rem;
+}
+
+/* Leaflet popup grid (full overlay version) */
+.beach-popup.popup-grid { display: flex; gap: 14px; }
+.popup-image { flex-shrink: 0; }
+.popup-image img { width: 180px; height: 140px; object-fit: cover; border-radius: 8px; }
+
+/* Beach compact */
+.beach-compact-item { padding: 8px 0; border-bottom: 1px dashed rgba(0,0,0,0.07); }
+.beach-compact-item .beach-name-link { color: #2c7873; font-weight: 700; cursor: pointer; }
+.beach-thumbnail { width: 64px; height: 44px; object-fit: cover; border-radius: 6px; }
+
+/* POI map section (legacy) */
+.poi-map-section { padding: 60px 0; background: white; }
+.map-container { height: 480px; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+/* Waste */
+.waste-item { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.05); }
+.waste-item .waste-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; flex-shrink: 0; }
+.waste-item .waste-title { font-weight: 700; color: #1e293b; }
+.waste-item .waste-sub { font-size: 0.88rem; color: #64748b; }
+.waste-item.plastic .waste-icon { background: #f4a261; }
+.waste-item.paper .waste-icon { background: #2c7873; }
+.waste-item.indiff .waste-icon { background: #6b7280; }
+.waste-item.glass .waste-icon { background: #10b981; }
+.waste-item.organic .waste-icon { background: #16a34a; }
+
+/* ── RESPONSIVE ── */
+
+/* Tablet */
+@media (max-width: 900px) {
+    .beach-map-list-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    .map-container-modern {
+        height: 440px;
+    }
+    .beaches-list-modern {
+        height: 320px;
+        order: 2;
+    }
+    .excursion-card-new {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .excursion-card-emoji { margin: 0 auto; }
+    .poi-quick-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    .guest-header h1 { font-size: 1.15rem; }
+    .back-link { font-size: 0.82rem; padding: 6px 12px; }
+    .flag-btn { padding: 6px 8px; font-size: 1.1rem; }
+
+    .guest-hero { padding: 44px 16px 40px; }
+    .guest-hero-pills { gap: 8px; }
+    .hero-pill { padding: 8px 14px; font-size: 0.82rem; }
+
+    .info-grid { grid-template-columns: 1fr; gap: 12px; }
+    .info-card { padding: 16px; }
+
+    .rules-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .rule-item { padding: 12px 14px; }
+    .rule-icon { font-size: 1.3rem; width: 28px; }
+    .rule-item p { font-size: 0.82rem; }
+
+    .daily-forecast { gap: 10px; }
+    .forecast-card { min-width: 90px; padding: 14px 10px; max-width: 140px; }
+    .forecast-icon { font-size: 1.6rem; }
+
+    /* Horizontally-scrollable filter pills — no wrapping */
+    .beach-filter-buttons {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+    }
+    .beach-filter-buttons::-webkit-scrollbar { display: none; }
+    .beach-filter-btn { flex-shrink: 0; padding: 9px 14px; font-size: 0.82rem; }
+
+    .beach-recommendations { padding: 16px 12px; }
+
+    /* Mobile tab toggle */
+    .beach-view-tabs {
+        display: flex;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #e2e8f0;
+        margin-bottom: 14px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .beach-view-tab {
+        flex: 1;
+        padding: 11px 10px;
+        background: white;
+        border: none;
+        font-weight: 600;
+        font-size: 0.88rem;
+        cursor: pointer;
+        color: #64748b;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    .beach-view-tab.active {
+        background: #2c7873;
+        color: white;
+    }
+
+    /* Container becomes block on mobile — tabs control visibility */
+    .beach-map-list-container {
+        display: block;
+        height: auto;
+    }
+    .beach-map-list-container .map-container-modern,
+    .beach-map-list-container .beaches-list-modern {
+        display: none;
+    }
+    .beach-map-list-container.tab-map .map-container-modern {
+        display: block;
+        height: 390px;
+    }
+    .beach-map-list-container.tab-list .beaches-list-modern {
+        display: flex;
+        height: 420px;
+    }
+
+    /* Beach list items on mobile */
+    .beach-list-item { padding: 9px 10px; gap: 10px; }
+    .beach-list-thumb { width: 40px; height: 40px; min-width: 40px; }
+    .beach-list-thumb-placeholder { width: 40px; height: 40px; min-width: 40px; font-size: 1.2rem; }
+    .beach-list-name { font-size: 0.83rem; }
+    .beach-list-type { font-size: 0.68rem; }
+    .beach-list-distance { font-size: 0.75rem; }
+
+    /* POI grid: 2 columns on mobile */
+    .poi-quick-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+    .poi-quick-card { padding: 11px 12px; gap: 9px; }
+    .poi-quick-card-icon { width: 34px; height: 34px; font-size: 1.2rem; border-radius: 8px; }
+    .poi-quick-card-name { font-size: 0.8rem; }
+    .poi-quick-card-desc { font-size: 0.7rem; }
+    .poi-quick-card-dist { font-size: 0.68rem; }
+    .poi-quick-card::after { display: none; }
+
+    .excursion-card-new { padding: 22px 18px; gap: 16px; }
+    .excursion-card-emoji { font-size: 2rem; width: 52px; height: 52px; }
+
+    .review-section { padding: 28px 18px; }
+    .review-section h3 { font-size: 1.15rem; }
+    .review-btn { padding: 11px 22px; font-size: 0.9rem; }
+
+    .beach-popup-content { flex-direction: column; }
+    .popup-image img { width: 100%; height: 200px; }
+
+    /* Map container on small screens (non-tab context) */
+    .map-container { height: 300px; }
+}
+
+/* Very small */
+@media (max-width: 380px) {
+    .rules-grid { grid-template-columns: 1fr; }
+    .poi-quick-grid { grid-template-columns: 1fr; }
+    .daily-forecast { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 6px; }
+    .forecast-card { flex-shrink: 0; }
+}

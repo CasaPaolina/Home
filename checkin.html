@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in Online — Casa Paolina, Salento</title>
+    <meta name="description" content="Registrazione ospiti — Casa Paolina, Uggiano la Chiesa">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.ico" sizes="32x32 64x64" type="image/x-icon">
+    <link rel="stylesheet" href="css/checkin.css">
+</head>
+<body>
+
+<!-- ─── HEADER ─────────────────────────────────────────── -->
+<header class="ci-header">
+    <a href="index.html" class="ci-logo">
+        <span class="ci-logo-icon">🏠</span>
+        <span class="ci-logo-text">Casa Paolina</span>
+    </a>
+    <div class="ci-header-right">
+        <span class="ci-header-badge" data-i18n="header_badge">Check-in Online</span>
+        <div class="ci-lang-switcher">
+            <button class="ci-lang-btn active" data-lang="it" onclick="applyLang('it')"><span class="ci-flag">🇮🇹</span> IT</button>
+            <button class="ci-lang-btn" data-lang="en" onclick="applyLang('en')"><span class="ci-flag">🇬🇧</span> EN</button>
+        </div>
+    </div>
+</header>
+
+<!-- ─── HERO BANNER ────────────────────────────────────── -->
+<div class="ci-hero">
+    <div class="ci-hero-inner">
+        <h1 data-i18n="hero_title">Benvenuto!</h1>
+        <p data-i18n="hero_p">Completa il check-in online per rendere il tuo arrivo ancora più semplice. Il modulo richiede circa 5 minuti.</p>
+    </div>
+</div>
+
+<!-- ─── STEP INDICATOR ─────────────────────────────────── -->
+<div class="ci-steps-bar">
+    <div class="ci-steps">
+        <div class="ci-step active" data-step="1">
+            <span class="ci-step-dot">1</span>
+            <span class="ci-step-label" data-i18n="step1">Soggiorno</span>
+        </div>
+        <div class="ci-step-line"></div>
+        <div class="ci-step" data-step="2">
+            <span class="ci-step-dot">2</span>
+            <span class="ci-step-label" data-i18n="step2">Referente</span>
+        </div>
+        <div class="ci-step-line"></div>
+        <div class="ci-step" data-step="3">
+            <span class="ci-step-dot">3</span>
+            <span class="ci-step-label" data-i18n="step3">Accompagnatori</span>
+        </div>
+        <div class="ci-step-line"></div>
+        <div class="ci-step" data-step="4">
+            <span class="ci-step-dot">4</span>
+            <span class="ci-step-label" data-i18n="step4">Conferma</span>
+        </div>
+    </div>
+</div>
+
+<!-- ─── MAIN FORM ───────────────────────────────────────── -->
+<main class="ci-main">
+<form id="checkin-form" novalidate>
+
+    <!-- ══ STEP 1 — SOGGIORNO ══════════════════════════════ -->
+    <section class="ci-section active" id="step-1">
+        <div class="ci-section-header">
+            <span class="ci-section-icon">📅</span>
+            <div>
+                <h2 data-i18n="s1_title">Dettagli del soggiorno</h2>
+                <p data-i18n="s1_sub">Date di arrivo, partenza e composizione del gruppo</p>
+            </div>
+        </div>
+
+        <div class="ci-card">
+            <div class="ci-row ci-row--3">
+                <div class="ci-field">
+                    <label for="checkin-date"><span data-i18n="lbl_checkin">Data di arrivo</span> <span class="req">*</span></label>
+                    <input type="date" id="checkin-date" name="checkin_date" required>
+                </div>
+                <div class="ci-field">
+                    <label for="checkout-date"><span data-i18n="lbl_checkout">Data di partenza</span> <span class="req">*</span></label>
+                    <input type="date" id="checkout-date" name="checkout_date" required>
+                </div>
+                <div class="ci-field">
+                    <label><span data-i18n="lbl_permanenza">Permanenza</span></label>
+                    <div class="ci-permanenza" id="permanenza-display">—</div>
+                </div>
+            </div>
+
+            <div class="ci-row ci-row--3">
+                <div class="ci-field">
+                    <label for="adults-count"><span data-i18n="lbl_adults">Adulti</span> <span class="req">*</span></label>
+                    <input type="number" id="adults-count" name="adults_count" min="1" max="12" value="2" required>
+                </div>
+                <div class="ci-field">
+                    <label for="children-count" data-i18n="lbl_children">Bambini</label>
+                    <input type="number" id="children-count" name="children_count" min="0" max="8" value="0">
+                </div>
+                <div class="ci-field">
+                    <label for="appartamento" data-i18n="lbl_apt">Appartamento</label>
+                    <select id="appartamento" name="appartamento">
+                        <option value="" data-i18n="opt_choose">— Scegli —</option>
+                        <option value="Verde">Verde</option>
+                        <option value="Celeste">Celeste</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="ci-field">
+                <label><span data-i18n="lbl_trip_type">Tipo di soggiorno</span> <span class="req">*</span></label>
+                <div class="ci-chips" id="trip-type-chips">
+                    <button type="button" class="ci-chip active" data-value="coppia" data-i18n="chip_coppia">💑 Coppia</button>
+                    <button type="button" class="ci-chip" data-value="famiglia" data-i18n="chip_famiglia">👨‍👩‍👧 Famiglia</button>
+                    <button type="button" class="ci-chip" data-value="gruppo_amici" data-i18n="chip_gruppo">🎉 Gruppo amici</button>
+                    <button type="button" class="ci-chip" data-value="singolo" data-i18n="chip_singolo">🧍 Singolo</button>
+                    <button type="button" class="ci-chip" data-value="altro" data-i18n="chip_altro">✨ Altro</button>
+                </div>
+                <input type="hidden" id="trip-type" name="trip_type" value="coppia">
+            </div>
+
+            <div class="ci-field">
+                <label for="ora-arrivo" data-i18n="lbl_ora">Ora di arrivo prevista</label>
+                <select id="ora-arrivo" name="ora_arrivo">
+                    <option value="" data-i18n="opt_no_time">— Non so ancora —</option>
+                    <option value="Prima di mezzogiorno" data-i18n="ora_before_noon">Prima di mezzogiorno</option>
+                    <option value="12:00–14:00">12:00 – 14:00</option>
+                    <option value="14:00–16:00">14:00 – 16:00</option>
+                    <option value="16:00–18:00">16:00 – 18:00</option>
+                    <option value="18:00–20:00">18:00 – 20:00</option>
+                    <option value="20:00–22:00">20:00 – 22:00</option>
+                    <option value="Dopo le 22:00" data-i18n="ora_after_10pm">Dopo le 22:00</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="ci-nav">
+            <span></span>
+            <button type="button" class="ci-btn ci-btn--next" onclick="ciNextStep(1)">
+                <span data-i18n="btn_next">Avanti</span> <span>→</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ══ STEP 2 — REFERENTE PRINCIPALE ════════════════════ -->
+    <section class="ci-section" id="step-2">
+        <div class="ci-section-header">
+            <span class="ci-section-icon">👤</span>
+            <div>
+                <h2 data-i18n="s2_title">Ospite referente</h2>
+                <p data-i18n="s2_sub">Dati dell'intestatario della prenotazione</p>
+            </div>
+        </div>
+
+        <!-- Dati anagrafici -->
+        <div class="ci-card">
+            <h3 class="ci-card-title" data-i18n="card_anagrafica">Dati anagrafici</h3>
+
+            <div class="ci-row ci-row--2">
+                <div class="ci-field">
+                    <label for="r-nome"><span data-i18n="lbl_nome">Nome</span> <span class="req">*</span></label>
+                    <input type="text" id="r-nome" name="r_nome" required autocomplete="given-name">
+                </div>
+                <div class="ci-field">
+                    <label for="r-cognome"><span data-i18n="lbl_cognome">Cognome</span> <span class="req">*</span></label>
+                    <input type="text" id="r-cognome" name="r_cognome" required autocomplete="family-name">
+                </div>
+            </div>
+
+            <div class="ci-row ci-row--3">
+                <div class="ci-field">
+                    <label for="r-sesso"><span data-i18n="lbl_sesso">Sesso</span> <span class="req">*</span></label>
+                    <select id="r-sesso" name="r_sesso" required>
+                        <option value="">—</option>
+                        <option value="M" data-i18n="opt_sesso_m">Maschio</option>
+                        <option value="F" data-i18n="opt_sesso_f">Femmina</option>
+                    </select>
+                </div>
+                <div class="ci-field">
+                    <label for="r-nascita-data"><span data-i18n="lbl_nascita_data">Data di nascita</span> <span class="req">*</span></label>
+                    <input type="date" id="r-nascita-data" name="r_nascita_data" required autocomplete="bday">
+                </div>
+                <div class="ci-field">
+                    <label for="r-cittadinanza"><span data-i18n="lbl_cittadinanza">Cittadinanza</span> <span class="req">*</span></label>
+                    <input type="text" id="r-cittadinanza" name="r_cittadinanza" value="Italiana" data-i18n-value="default_cit" required>
+                </div>
+            </div>
+
+            <div class="ci-row ci-row--2">
+                <div class="ci-field ci-comune-field">
+                    <label for="r-nascita-comune"><span data-i18n="lbl_nascita_comune">Comune di nascita</span> <span class="req">*</span></label>
+                    <input type="text" id="r-nascita-comune" name="r_nascita_comune" required>
+                </div>
+                <div class="ci-field">
+                    <label for="r-nascita-stato"><span data-i18n="lbl_nascita_stato">Stato di nascita</span> <span class="req">*</span></label>
+                    <input type="text" id="r-nascita-stato" name="r_nascita_stato" value="Italia" data-i18n-value="default_country" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Residenza -->
+        <div class="ci-card">
+            <h3 class="ci-card-title" data-i18n="card_residenza">Residenza</h3>
+
+            <div class="ci-row ci-row--2">
+                <div class="ci-field ci-comune-field">
+                    <label for="r-comune"><span data-i18n="lbl_comune">Comune di residenza</span> <span class="req">*</span></label>
+                    <input type="text" id="r-comune" name="r_comune" required autocomplete="address-level2">
+                </div>
+                <div class="ci-field">
+                    <label for="r-paese"><span data-i18n="lbl_paese">Stato di residenza</span> <span class="req">*</span></label>
+                    <input type="text" id="r-paese" name="r_paese" value="Italia" data-i18n-value="default_country" required autocomplete="country-name">
+                </div>
+            </div>
+        </div>
+
+        <!-- Documento -->
+        <div class="ci-card">
+            <h3 class="ci-card-title" data-i18n="card_documento">Documento d'identità</h3>
+
+            <div class="ci-row ci-row--2">
+                <div class="ci-field">
+                    <label for="r-doc-tipo"><span data-i18n="lbl_doc_tipo">Tipo documento</span> <span class="req">*</span></label>
+                    <select id="r-doc-tipo" name="r_doc_tipo" required>
+                        <option value="" data-i18n="opt_choose">— Scegli —</option>
+                        <option value="Carta d'identità" data-i18n="opt_doc_ci">Carta d'identità</option>
+                        <option value="Passaporto" data-i18n="opt_doc_pass">Passaporto</option>
+                        <option value="Patente di guida" data-i18n="opt_doc_pat">Patente di guida</option>
+                    </select>
+                </div>
+                <div class="ci-field">
+                    <label for="r-doc-numero"><span data-i18n="lbl_doc_numero">Numero documento</span> <span class="req">*</span></label>
+                    <input type="text" id="r-doc-numero" name="r_doc_numero" required style="text-transform:uppercase">
+                </div>
+            </div>
+
+            <div class="ci-row ci-row--2">
+                <div class="ci-field">
+                    <label for="r-doc-rilascio-stato"><span data-i18n="lbl_doc_rilascio_stato">Stato di rilascio</span> <span class="req">*</span></label>
+                    <input type="text" id="r-doc-rilascio-stato" name="r_doc_rilascio_stato" value="Italia" data-i18n-value="default_country" required>
+                </div>
+                <div class="ci-field ci-comune-field">
+                    <label for="r-doc-rilascio-comune"><span data-i18n="lbl_doc_rilascio_comune">Comune di rilascio</span> <span class="req">*</span></label>
+                    <input type="text" id="r-doc-rilascio-comune" name="r_doc_rilascio_comune" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contatti -->
+        <div class="ci-card">
+            <h3 class="ci-card-title" data-i18n="card_contatti">Contatti</h3>
+            <div class="ci-row ci-row--2">
+                <div class="ci-field">
+                    <label for="r-email"><span data-i18n="lbl_email">Email</span></label>
+                    <input type="email" id="r-email" name="r_email" autocomplete="email">
+                </div>
+                <div class="ci-field">
+                    <label for="r-telefono"><span data-i18n="lbl_telefono">Telefono</span></label>
+                    <input type="tel" id="r-telefono" name="r_telefono" autocomplete="tel">
+                </div>
+            </div>
+        </div>
+
+        <div class="ci-nav">
+            <button type="button" class="ci-btn ci-btn--back" onclick="ciPrevStep(2)">
+                <span>←</span> <span data-i18n="btn_back">Indietro</span>
+            </button>
+            <button type="button" class="ci-btn ci-btn--next" onclick="ciNextStep(2)">
+                <span data-i18n="btn_next">Avanti</span> <span>→</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ══ STEP 3 — ACCOMPAGNATORI ══════════════════════════ -->
+    <section class="ci-section" id="step-3">
+        <div class="ci-section-header">
+            <span class="ci-section-icon">👥</span>
+            <div>
+                <h2 data-i18n="s3_title">Accompagnatori</h2>
+                <p data-i18n="s3_sub">Aggiungi i dati degli altri ospiti (se presenti)</p>
+            </div>
+        </div>
+
+        <div id="guests-container"></div>
+
+        <button type="button" class="ci-btn-add-guest" id="add-guest-btn" onclick="ciAddGuest()">
+            <span>＋</span> <span data-i18n="btn_add_guest">Aggiungi ospite</span>
+        </button>
+
+        <p class="ci-hint" data-i18n="hint_guests">Se siete solo voi due (o solo il referente), potete passare direttamente al passo successivo.</p>
+
+        <div class="ci-nav">
+            <button type="button" class="ci-btn ci-btn--back" onclick="ciPrevStep(3)">
+                <span>←</span> <span data-i18n="btn_back">Indietro</span>
+            </button>
+            <button type="button" class="ci-btn ci-btn--next" onclick="ciNextStep(3)">
+                <span data-i18n="btn_next">Avanti</span> <span>→</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ══ STEP 4 — RIEPILOGO & CONFERMA ════════════════════ -->
+    <section class="ci-section" id="step-4">
+        <div class="ci-section-header">
+            <span class="ci-section-icon">✅</span>
+            <div>
+                <h2 data-i18n="s4_title">Riepilogo e conferma</h2>
+                <p data-i18n="s4_sub">Controlla i dati prima di inviare</p>
+            </div>
+        </div>
+
+        <div class="ci-card" id="summary-card"></div>
+
+        <div class="ci-card ci-card--privacy">
+            <h3 class="ci-card-title" data-i18n="privacy_title">Privacy e trattamento dati</h3>
+            <p class="ci-privacy-text" data-i18n="privacy_text">I dati forniti saranno trattati esclusivamente per finalità di registrazione degli alloggiati ai sensi del D.Lgs. 30 giugno 2003 n. 196 (Codice Privacy) e del GDPR UE 2016/679. I dati non saranno ceduti a terzi né utilizzati per finalità commerciali.</p>
+            <label class="ci-checkbox-label">
+                <input type="checkbox" id="privacy-consent" name="privacy_consent" required>
+                <span class="ci-checkbox-custom"></span>
+                <span data-i18n="privacy_check1">Dichiaro di aver letto l'informativa sulla privacy e acconsento al trattamento dei dati personali per la registrazione del soggiorno. <span class="req">*</span></span>
+            </label>
+            <label class="ci-checkbox-label" style="margin-top:12px">
+                <input type="checkbox" id="verita-consent" name="verita_consent" required>
+                <span class="ci-checkbox-custom"></span>
+                <span data-i18n="privacy_check2">Dichiaro che i dati forniti sono veritieri e corrispondono alle generalità degli ospiti presenti. <span class="req">*</span></span>
+            </label>
+        </div>
+
+        <div class="ci-note-box">
+            <label for="note" data-i18n="lbl_note">Note aggiuntive (richieste speciali, allergie, orario di arrivo più preciso…)</label>
+            <textarea id="note" name="note" rows="3"></textarea>
+        </div>
+
+        <div id="form-error" class="ci-error-box" style="display:none"></div>
+
+        <div class="ci-nav">
+            <button type="button" class="ci-btn ci-btn--back" onclick="ciPrevStep(4)">
+                <span>←</span> <span data-i18n="btn_back">Indietro</span>
+            </button>
+            <button type="submit" class="ci-btn ci-btn--submit" id="submit-btn">
+                <span class="submit-icon">✉️</span>
+                <span data-i18n="btn_submit">Invia Check-in</span>
+            </button>
+        </div>
+    </section>
+
+</form>
+
+<!-- ─── SUCCESS SCREEN ─────────────────────────────────── -->
+<div id="success-screen" style="display:none">
+    <div class="ci-success">
+        <div class="ci-success-icon">🎉</div>
+        <h2 data-i18n="success_title">Check-in completato!</h2>
+        <p id="success-greeting"></p>
+        <p data-i18n="success_p2">Ti aspettiamo a Casa Paolina. Per qualsiasi necessità contattaci via WhatsApp.</p>
+        <div class="ci-success-info" id="success-summary"></div>
+        <a href="https://wa.me/393475583697" target="_blank" class="ci-btn ci-btn--whatsapp" data-i18n="btn_whatsapp">
+            💬 Scrivici su WhatsApp
+        </a>
+        <a href="guest-info.html" class="ci-btn ci-btn--secondary" style="margin-top:10px" data-i18n="btn_guest_area">
+            Vai all'Area Ospiti
+        </a>
+    </div>
+</div>
+
+</main>
+
+<!-- ─── FOOTER ──────────────────────────────────────────── -->
+<footer class="ci-footer">
+    <p data-i18n="footer">© 2026 Casa Paolina · Via Dante De Blasi, 15 · Uggiano la Chiesa (LE)</p>
+</footer>
+
+<script src="js/checkin.js" defer></script>
+</body>
+</html>
