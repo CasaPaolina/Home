@@ -101,15 +101,6 @@
                     <label for="children-count" data-i18n="lbl_children">Bambini</label>
                     <input type="number" id="children-count" name="children_count" min="0" max="8" value="0">
                 </div>
-                <div class="ci-field">
-                    <label for="appartamento" data-i18n="lbl_apt">Appartamento</label>
-                    <select id="appartamento" name="appartamento">
-                        <option value="" data-i18n="opt_choose">— Scegli —</option>
-                        <option value="Verde">Verde</option>
-                        <option value="Celeste">Celeste</option>
-                        <option value="Suite">Suite</option>
-                    </select>
-                </div>
             </div>
 
             <div class="ci-field">
@@ -125,8 +116,8 @@
             </div>
 
             <div class="ci-field">
-                <label for="ora-arrivo" data-i18n="lbl_ora">Ora di arrivo prevista</label>
-                <select id="ora-arrivo" name="ora_arrivo">
+                <label for="ora-arrivo"><span data-i18n="lbl_ora">Ora di arrivo prevista</span> <span class="req">*</span></label>
+                <select id="ora-arrivo" name="ora_arrivo" required>
                     <option value="" data-i18n="opt_no_time">— Non so ancora —</option>
                     <option value="Prima di mezzogiorno" data-i18n="ora_before_noon">Prima di mezzogiorno</option>
                     <option value="12:00–14:00">12:00 – 14:00</option>
