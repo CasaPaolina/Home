@@ -1287,65 +1287,44 @@
    MARECALMO-STYLE BEACH SECTION
    ══════════════════════════════════════════════════════════ */
 
-/* ── Marecalmo map markers ── */
-.mc-marker {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 10px 5px 8px;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.22);
-    cursor: pointer;
-    transition: transform 0.15s;
-    line-height: 1.2;
+/* ── Marecalmo-style map tooltips (beach name labels) ── */
+.mc-tooltip {
+    background: rgba(255,255,255,0.96) !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.20) !important;
+    border-radius: 4px !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    padding: 2px 7px !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
 }
-.mc-marker:hover { transform: scale(1.06); }
+.mc-tooltip::before { display: none !important; }
 
-.mc-marker--home {
-    background: #264653;
-    color: #fff;
-    border: 2px solid #fff;
-}
-
-.mc-marker--beach {
-    background: #fff;
-    color: var(--pin-color, #1a94c4);
-    border: 2px solid var(--pin-color, #1a94c4);
+.mc-tooltip--home {
+    background: rgba(244,162,97,0.95) !important;
+    color: #fff !important;
+    font-size: 0.72rem !important;
+    padding: 3px 9px !important;
+    border-radius: 999px !important;
 }
 
-.mc-marker-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: inherit;
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.mc-marker-dist {
-    font-size: 0.65rem;
-    font-weight: 600;
-    opacity: 0.7;
-    border-left: 1px solid currentColor;
-    padding-left: 5px;
-    margin-left: 2px;
-}
-
-/* Leaflet popup reset for mc style */
+/* Leaflet popup — mc style */
 .mc-leaflet-popup .leaflet-popup-content-wrapper {
     border-radius: 12px;
     padding: 0;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.20);
+    border: none;
 }
 .mc-leaflet-popup .leaflet-popup-content {
     margin: 0;
-    width: 260px !important;
+    width: 270px !important;
 }
-.mc-leaflet-popup .leaflet-popup-tip-container { display: none; }
+.mc-leaflet-popup .leaflet-popup-tip-container {
+    display: none;
+}
 
 /* Activity filter pills bar */
 .mc-filters-row {
@@ -1414,12 +1393,12 @@
 
 .mc-map-side {
     position: relative;
+    height: 560px;
 }
 
 .mc-map {
     width: 100%;
-    height: 100%;
-    min-height: 560px;
+    height: 560px;
 }
 
 .mc-list-side {

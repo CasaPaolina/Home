@@ -32,27 +32,25 @@ class LeafletBeachMap {
         if (!mapElement) return;
 
         this.map = L.map('beaches-map', {
-            fullscreenControl: true,
-            fullscreenControlOptions: { position: 'topleft' },
-            zoomControl: false
+            zoomControl: false,
+            attributionControl: true
         }).setView([40.12, 18.28], 10);
 
-        // Zoom control bottom-right
         L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
-        // ESRI Ocean Base — depth shading, coastal detail, nautical look
+        // ESRI World Imagery — satellite tiles (same provider as marecalmo)
         L.tileLayer(
-            'https://services.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}',
+            'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
             {
-                attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, National Geographic and other contributors',
-                maxZoom: 18
+                attribution: 'Imagery &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community',
+                maxZoom: 19
             }
         ).addTo(this.map);
 
-        // ESRI Ocean Reference — place names, coastal labels on top
+        // ESRI World Boundaries and Places — labels/names overlay on satellite
         L.tileLayer(
-            'https://services.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}',
-            { maxZoom: 18, opacity: 0.85 }
+            'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+            { maxZoom: 19, pane: 'overlayPane' }
         ).addTo(this.map);
 
         // Add Center on Casa Paolina button
@@ -70,27 +68,35 @@ class LeafletBeachMap {
         });
         this.map.addControl(new L.Control.CenterHome({ position: 'topleft' }));
 
-        // Add Casa Paolina marker
         this.addHomeMarker();
-
-        // Add beach markers
         this.addBeachMarkers();
+
+        // Force Leaflet to recalculate container size after CSS paint
+        setTimeout(() => this.map && this.map.invalidateSize(), 300);
     }
 
     addHomeMarker() {
-        const homeIcon = L.divIcon({
-            className: '',
-            html: `<div class="mc-marker mc-marker--home">
-                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                     <span class="mc-marker-label">Casa Paolina</span>
-                   </div>`,
-            iconSize: [120, 40],
-            iconAnchor: [60, 40]
-        });
-
-        L.marker([this.casaPaolina.lat, this.casaPaolina.lng], { icon: homeIcon, zIndexOffset: 1000 })
-            .addTo(this.map)
-            .bindPopup(`<div style="font-weight:700;font-size:0.9rem">🏠 Casa Paolina</div><div style="font-size:0.8rem;color:#64748b">${this.casaPaolina.address}</div>`, { maxWidth: 220 });
+        L.circleMarker([this.casaPaolina.lat, this.casaPaolina.lng], {
+            radius: 10,
+            fillColor: '#f4a261',
+            color: '#fff',
+            weight: 3,
+            opacity: 1,
+            fillOpacity: 1,
+            zIndexOffset: 1000
+        })
+        .addTo(this.map)
+        .bindTooltip('🏠 Casa Paolina', {
+            permanent: true,
+            direction: 'top',
+            offset: [0, -14],
+            className: 'mc-tooltip mc-tooltip--home'
+        })
+        .bindPopup(
+            `<div style="font-weight:700;font-size:0.9rem">🏠 Casa Paolina</div>
+             <div style="font-size:0.8rem;color:#64748b;margin-top:3px">${this.casaPaolina.address}</div>`,
+            { maxWidth: 220, className: 'mc-leaflet-popup' }
+        );
     }
 
     addBeachMarkers(filter = 'all') {
@@ -100,29 +106,33 @@ class LeafletBeachMap {
         const filteredBeaches = this.filterBeaches(filter);
 
         filteredBeaches.forEach(beach => {
-            const isSand = (beach.sandType || '').toLowerCase().includes('sand');
-            const isIonic = beach.sea === 'ionico';
-            const pinColor = isIonic ? '#0d6e8e' : '#1a94c4';
-            const dotSvg = isSand
-                ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="${pinColor}"><path d="M2 20h20v-2H2v2zm2-4h16l-8-14-8 14z"/></svg>`
-                : `<svg width="12" height="12" viewBox="0 0 24 24" fill="${pinColor}"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>`;
-            const shortName = beach.name.length > 18 ? beach.name.slice(0, 16) + '…' : beach.name;
+            const isIonic   = beach.sea === 'ionico';
+            const isClosest = (beach.distanceNum || 999) <= 5;
+            const color     = isClosest ? '#e76f51'
+                            : isIonic   ? '#0d6e8e'
+                            :             '#2c7873';
 
-            const beachIcon = L.divIcon({
-                className: '',
-                html: `<div class="mc-marker mc-marker--beach" style="--pin-color:${pinColor}">
-                         ${dotSvg}
-                         <span class="mc-marker-label">${shortName}</span>
-                         <span class="mc-marker-dist">${beach.distance || ''}</span>
-                       </div>`,
-                iconSize: [130, 36],
-                iconAnchor: [14, 18]
+            const marker = L.circleMarker([beach.lat, beach.lng], {
+                radius: isClosest ? 9 : 7,
+                fillColor: color,
+                color: '#fff',
+                weight: 2.5,
+                opacity: 1,
+                fillOpacity: 1
+            })
+            .addTo(this.map)
+            .bindTooltip(beach.name, {
+                permanent: true,
+                direction: 'top',
+                offset: [0, -11],
+                className: 'mc-tooltip mc-tooltip--beach'
+            })
+            .bindPopup(this.createPopupContent(beach), {
+                maxWidth: 280,
+                className: 'mc-leaflet-popup'
             });
 
-            const marker = L.marker([beach.lat, beach.lng], { icon: beachIcon })
-                .addTo(this.map)
-                .bindPopup(this.createPopupContent(beach), { maxWidth: 300, className: 'mc-leaflet-popup' });
-
+            marker._mcColor = color;
             marker.on('click', () => this.selectBeach(beach.id));
             this.markers.push({ marker, beach });
         });
@@ -280,23 +290,27 @@ class LeafletBeachMap {
     }
 
     selectBeach(beachId) {
-        // Remove previous selection
         document.querySelectorAll('.beach-list-item').forEach(c => c.classList.remove('selected'));
 
-        // Add selection
         const item = document.querySelector(`[data-beach-id="${beachId}"]`);
         if (item) {
             item.classList.add('selected');
             item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // Find beach and marker
+        // Reset all circle markers to original color/size
+        this.markers.forEach(({ marker }) => {
+            marker.setStyle({ color: '#fff', weight: 2.5, radius: marker._mcColor ? 7 : 7 });
+        });
+
         const selectedBeachId = String(beachId);
         const beach = this.beaches.find(b => String(b.id) === selectedBeachId);
         if (beach) {
             const markerData = this.markers.find(m => String(m.beach.id) === selectedBeachId);
             if (markerData) {
-                this.map.setView([beach.lat, beach.lng], 13);
+                // Highlight selected: larger radius + gold ring
+                markerData.marker.setStyle({ color: '#f4a261', weight: 3.5, radius: 11 });
+                this.map.setView([beach.lat, beach.lng], 13, { animate: true });
                 markerData.marker.openPopup();
             }
         }
