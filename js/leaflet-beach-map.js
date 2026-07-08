@@ -212,10 +212,11 @@ class LeafletBeachMap {
             })
             .addTo(this.map)
             .bindTooltip(beach.name, {
-                permanent: true,
+                permanent: false,
                 direction: 'top',
                 offset: [0, -11],
-                className: 'mc-tooltip mc-tooltip--beach'
+                className: 'mc-tooltip mc-tooltip--beach',
+                sticky: false
             });
 
             marker._mcColor  = color;
@@ -271,10 +272,10 @@ class LeafletBeachMap {
     }
 
     _selectCard(id) {
-        document.querySelectorAll('.beach-list-item').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('.beach-list-item').forEach(c => c.classList.remove('selected', 'mc-row--selected'));
         const item = document.querySelector(`[data-beach-id="${id}"]`);
         if (!item) return;
-        item.classList.add('selected');
+        item.classList.add('selected', 'mc-row--selected');
 
         // Scroll the card panel to the selected card (desktop side panel)
         const panel = document.getElementById('beaches-list');
@@ -341,50 +342,65 @@ class LeafletBeachMap {
     }
 
     _cardHTML(beach) {
-        const ACTIVITY_LABELS = {
-            swim:'🏊 Nuoto', snorkel:'🤿 Snorkeling', dive:'🧜 Immersioni',
-            family:'👨‍👩‍👧 Famiglie', nature:'🌿 Natura', hidden:'💎 Cala',
-            sup:'🏄 SUP', nightlife:'🎶 Movida', thermal:'🌡️ Terme'
+        // Activity emojis only (no text) for compact view
+        const ACT_EMOJI = {
+            swim:'🏊', snorkel:'🤿', dive:'🧜', family:'👨‍👩‍👧',
+            nature:'🌿', hidden:'💎', sup:'🏄', nightlife:'🎶', thermal:'🌡️'
         };
-        const SAND_LABELS = {
-            fine_sand:'🏖️ Sabbia fine', golden_sand:'🏖️ Sabbia dorata',
-            white_sand:'🏖️ Sabbia bianca', pebbles:'🪨 Ghiaia', rocks:'🪨 Scogliera'
+        // Placeholder gradient based on sea + sand type
+        const GRADIENTS = {
+            fine_sand_adriatico:   'linear-gradient(135deg,#60b8d4,#1a94c4)',
+            golden_sand_adriatico: 'linear-gradient(135deg,#f59e0b,#fb923c)',
+            white_sand_adriatico:  'linear-gradient(135deg,#93c5fd,#38bdf8)',
+            rocks_adriatico:       'linear-gradient(135deg,#2c7873,#1a6b55)',
+            pebbles_adriatico:     'linear-gradient(135deg,#4aadc7,#2c7873)',
+            fine_sand_ionico:      'linear-gradient(135deg,#06b6d4,#0891b2)',
+            golden_sand_ionico:    'linear-gradient(135deg,#fbbf24,#06b6d4)',
+            white_sand_ionico:     'linear-gradient(135deg,#a5f3fc,#0ea5e9)',
+            rocks_ionico:          'linear-gradient(135deg,#0d6e8e,#06b6d4)',
+            pebbles_ionico:        'linear-gradient(135deg,#0ea5e9,#0d6e8e)'
+        };
+        const SAND_EMOJI = {
+            fine_sand:'🏖️', golden_sand:'🏖️', white_sand:'🏖️',
+            pebbles:'🪨', rocks:'🪨'
         };
 
-        const imageSrc   = (beach.images && beach.images[0]) || beach.image || '';
-        const seaLabel   = beach.sea === 'ionico' ? 'Ionico' : 'Adriatico';
-        const seaClass   = beach.sea === 'ionico' ? 'mc-card__badge--ionico' : 'mc-card__badge--adriatico';
-        const sandLabel  = SAND_LABELS[beach.sandType] || '';
-        const desc       = beach.description_it || beach.description || '';
-        const isClosest  = (beach.distanceNum || 999) <= 5;
-        const casaLat    = 40.102558, casaLng = 18.446024;
-        const mapsUrl    = `https://www.google.com/maps/dir/?api=1&origin=${casaLat},${casaLng}&destination=${beach.lat},${beach.lng}`;
+        const imageSrc  = (beach.images && beach.images[0]) || beach.image || '';
+        const seaKey    = beach.sea === 'ionico' ? 'ionico' : 'adriatico';
+        const gradKey   = (beach.sandType || 'rocks') + '_' + seaKey;
+        const gradient  = GRADIENTS[gradKey] || GRADIENTS['rocks_adriatico'];
+        const sandEmoji = SAND_EMOJI[beach.sandType] || '🌊';
+        const seaLabel  = beach.sea === 'ionico' ? 'Ion.' : 'Adr.';
+        const isClosest = (beach.distanceNum || 999) <= 5;
+        const casaLat   = 40.102558, casaLng = 18.446024;
+        const mapsUrl   = `https://www.google.com/maps/dir/?api=1&origin=${casaLat},${casaLng}&destination=${beach.lat},${beach.lng}`;
 
-        const activities = (beach.activities || []).slice(0, 3)
-            .map(a => `<span class="mc-card__activity">${ACTIVITY_LABELS[a] || a}</span>`).join('');
+        const actEmojis = (beach.activities || []).slice(0, 4)
+            .map(a => ACT_EMOJI[a] || '').filter(Boolean).join(' ');
 
-        const bookBtn = beach.bookingLink
-            ? `<a href="${beach.bookingLink}" target="_blank" class="mc-card__btn mc-card__btn--sec" onclick="event.stopPropagation()">🎫 Prenota</a>`
+        const bookLink = beach.bookingLink
+            ? `<a href="${beach.bookingLink}" target="_blank" class="mc-row__link mc-row__link--book" onclick="event.stopPropagation()" title="Prenota">🎫</a>`
             : '';
 
-        return `<div class="mc-beach-card beach-list-item" data-beach-id="${beach.id}">
-            <div class="mc-card__photo-wrap">
+        return `<div class="mc-beach-row beach-list-item" data-beach-id="${beach.id}">
+            <div class="mc-row__thumb">
                 ${imageSrc
-                    ? `<img src="images/${imageSrc}" alt="${beach.name}" loading="lazy" onerror="this.style.display='none'">`
-                    : `<div class="mc-card__photo-placeholder">🌊</div>`}
-                <span class="mc-card__badge mc-card__badge--dist">${beach.distance || ''}</span>
-                <span class="mc-card__badge mc-card__badge--sea ${seaClass}">${seaLabel}</span>
-                ${isClosest ? `<span class="mc-card__badge mc-card__badge--closest">⭐ Più vicina</span>` : ''}
+                    ? `<img src="images/${imageSrc}" alt="${beach.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'mc-row__ph\\' style=\\'${gradient}\\'>${sandEmoji}</div>'">`
+                    : `<div class="mc-row__ph" style="${gradient}">${sandEmoji}</div>`}
             </div>
-            <div class="mc-card__body">
-                <div class="mc-card__name">${beach.name}</div>
-                ${sandLabel ? `<div class="mc-card__type">${sandLabel}</div>` : ''}
-                ${desc ? `<p class="mc-card__desc">${desc}</p>` : ''}
-                ${activities ? `<div class="mc-card__activities">${activities}</div>` : ''}
-                <div class="mc-card__actions">
-                    <a href="${mapsUrl}" target="_blank" class="mc-card__btn mc-card__btn--pri" onclick="event.stopPropagation()">🧭 Portami qui</a>
-                    ${bookBtn}
+            <div class="mc-row__body">
+                <div class="mc-row__name">${beach.name}${isClosest ? ' <span class="mc-row__star">⭐</span>' : ''}</div>
+                <div class="mc-row__meta">
+                    <span class="mc-row__sea ${beach.sea === 'ionico' ? 'mc-row__sea--ion' : ''}">${seaLabel}</span>
+                    <span class="mc-row__dist">${beach.distance || ''}</span>
+                    ${actEmojis ? `<span class="mc-row__acts">${actEmojis}</span>` : ''}
                 </div>
+            </div>
+            <div class="mc-row__actions">
+                <a href="${mapsUrl}" target="_blank" class="mc-row__link" onclick="event.stopPropagation()" title="Portami qui">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                </a>
+                ${bookLink}
             </div>
         </div>`;
     }

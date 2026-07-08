@@ -1474,142 +1474,134 @@
 .mc-ctrl--fullscreen { color: #1e293b; }
 .mc-ctrl--home svg, .mc-ctrl--fullscreen svg { display: block; }
 
-/* Beach cards in the side list */
-.mc-beach-card {
-    background: #fff;
+/* ── Compact beach row (side list) ── */
+.mc-beach-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
     border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
-    transition: background 0.15s, box-shadow 0.15s;
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    transition: background 0.15s;
+    min-height: 62px;
+    background: #fff;
 }
-.mc-beach-card:last-child { border-bottom: none; }
-.mc-beach-card:hover { background: #f4fbfa; }
-.mc-beach-card.selected {
+.mc-beach-row:last-child { border-bottom: none; }
+.mc-beach-row:hover { background: #f4fbfa; }
+.mc-beach-row.mc-row--selected,
+.mc-beach-row.selected {
     background: #edf7f6;
     box-shadow: inset 3px 0 0 #2c7873;
 }
-.mc-beach-card.selected .mc-card__name { color: #2c7873; }
+.mc-beach-row.mc-row--selected .mc-row__name,
+.mc-beach-row.selected .mc-row__name { color: #2c7873; }
 
-.mc-card__photo-wrap {
-    position: relative;
-    height: 140px;
+/* Thumbnail */
+.mc-row__thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
+    background: #e8f5f3;
 }
-.mc-card__photo-wrap img {
+.mc-row__thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s;
+    display: block;
 }
-.mc-beach-card:hover .mc-card__photo-wrap img { transform: scale(1.04); }
-.mc-card__photo-placeholder {
+.mc-row__ph {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #2c7873, #1a6b55);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
+    font-size: 1.2rem;
+    line-height: 1;
 }
 
-.mc-card__badge {
-    position: absolute;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 999px;
-    backdrop-filter: blur(4px);
-    line-height: 1.4;
-}
-.mc-card__badge--dist {
-    top: 8px;
-    right: 8px;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-}
-.mc-card__badge--sea {
-    top: 8px;
-    left: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-.mc-card__badge--adriatico { background: rgba(26,148,196,0.85); color: #fff; }
-.mc-card__badge--ionico    { background: rgba(13,110,142,0.85);  color: #fff; }
-.mc-card__badge--closest {
-    bottom: 8px;
-    left: 8px;
-    background: rgba(244,162,97,0.9);
-    color: #fff;
-}
-
-.mc-card__body {
-    padding: 12px 14px 14px;
+/* Body */
+.mc-row__body {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 3px;
 }
-.mc-card__name {
-    font-size: 0.95rem;
+.mc-row__name {
+    font-size: 0.85rem;
     font-weight: 700;
     color: #1e293b;
     line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s;
 }
-.mc-card__type {
-    font-size: 0.75rem;
-    color: #64748b;
-}
-.mc-card__desc {
-    font-size: 0.8rem;
-    color: #64748b;
-    line-height: 1.5;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+.mc-row__star { font-size: 0.7rem; }
+.mc-row__meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: nowrap;
     overflow: hidden;
 }
-.mc-card__activities {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
+.mc-row__sea {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: #dbeafe;
+    color: #1a94c4;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
-.mc-card__activity {
-    font-size: 0.7rem;
+.mc-row__sea--ion {
+    background: #cffafe;
+    color: #0d6e8e;
+}
+.mc-row__dist {
+    font-size: 0.72rem;
+    color: #64748b;
     font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: #e8f5f3;
-    color: #1a6b55;
-    border: 1px solid #c2dedd;
+    flex-shrink: 0;
 }
-.mc-card__actions {
+.mc-row__acts {
+    font-size: 0.78rem;
+    flex-shrink: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    letter-spacing: 1px;
+    color: #64748b;
+}
+
+/* Action icons (maps + book) */
+.mc-row__actions {
     display: flex;
-    gap: 6px;
-    margin-top: 4px;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
 }
-.mc-card__btn {
-    flex: 1;
-    padding: 7px 8px;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
+.mc-row__link {
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #f4f7f6;
+    color: #2c7873;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: background 0.15s;
+    border: 1px solid #e2e8f0;
 }
-.mc-card__btn--pri { background: #2c7873; color: #fff; }
-.mc-card__btn--pri:hover { background: #1e5450; color: #fff; }
-.mc-card__btn--sec { background: #f4f7f6; color: #1e293b; border: 1px solid #e2e8f0; }
-.mc-card__btn--sec:hover { background: #e2e8f0; }
+.mc-row__link:hover { background: #e8f5f3; color: #1a6b55; }
+.mc-row__link--book { color: #f4a261; }
+.mc-row__link--book:hover { background: #fff3e8; }
 
 /* Mobile */
 @media (max-width: 900px) {
@@ -1629,10 +1621,10 @@
     .mc-filters-row { flex-wrap: wrap; }
     .mc-wind-badge { order: -1; width: 100%; min-width: unset; }
 
-    /* Compact cards on mobile */
-    .mc-card__photo-wrap { height: 120px; }
-    .mc-card__body { padding: 10px 12px 12px; gap: 5px; }
-    .mc-card__desc { -webkit-line-clamp: 2; }
+    /* Compact rows on mobile */
+    .mc-beach-row { padding: 8px 10px; min-height: 56px; }
+    .mc-row__thumb { width: 40px; height: 40px; }
+    .mc-row__name { font-size: 0.82rem; }
 }
 
 /* ══════════════════════════════════════════════════════════
