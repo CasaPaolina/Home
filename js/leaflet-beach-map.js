@@ -184,6 +184,41 @@ class LeafletBeachMap {
         return                                    { color: '#ef4444', state: 'rough' };
     }
 
+    _miniPopupHTML(beach) {
+        const ACT_EMOJI = {
+            swim:'🏊', snorkel:'🤿', dive:'🧜', family:'👨‍👩‍👧',
+            nature:'🌿', hidden:'💎', sup:'🏄', nightlife:'🎶', thermal:'🌡️'
+        };
+        const STATE_LABELS  = { calm:'Piatto o calmo', light:'Poco mosso', rough:'Mosso', default:'' };
+        const STATE_BG      = { calm:'#22c55e', light:'#f59e0b', rough:'#ef4444', default:'#94a3b8' };
+        const { state } = this._seaState(beach);
+        const stateLabel = STATE_LABELS[state] || '';
+        const actEmojis  = (beach.activities || []).slice(0, 5).map(a => ACT_EMOJI[a] || '').filter(Boolean).join(' ');
+        const seaLabel   = beach.sea === 'ionico' ? '🌊 Ionico' : '🌊 Adriatico';
+        const casaLat    = 40.102558, casaLng = 18.446024;
+        const mapsUrl    = `https://www.google.com/maps/dir/?api=1&origin=${casaLat},${casaLng}&destination=${beach.lat},${beach.lng}`;
+        const windDir    = window.currentWindCardinal || '';
+        const windSpeed  = window.currentWindSpeedKmh != null ? Math.round(window.currentWindSpeedKmh) + ' km/h' : '';
+        const windInfo   = windDir && windSpeed ? `💨 ${windDir} ${windSpeed}` : '';
+
+        return `<div class="mc-mini-popup-inner">
+            <div class="mc-mini-name">${beach.name}</div>
+            <div class="mc-mini-meta">
+                <span class="mc-mini-sea">${seaLabel} · ${beach.distance || ''}</span>
+            </div>
+            ${stateLabel ? `<div class="mc-mini-state">
+                <span class="mc-mini-dot" style="background:${STATE_BG[state]}"></span>
+                <span>${stateLabel}</span>
+                ${windInfo ? `<span class="mc-mini-wind">${windInfo}</span>` : ''}
+            </div>` : ''}
+            ${actEmojis ? `<div class="mc-mini-acts">${actEmojis}</div>` : ''}
+            <a href="${mapsUrl}" target="_blank" class="mc-mini-nav" onclick="event.stopPropagation()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                Portami qui
+            </a>
+        </div>`;
+    }
+
     _updateLegend() {
         const el = document.getElementById('mc-sea-legend');
         if (!el) return;
@@ -222,8 +257,18 @@ class LeafletBeachMap {
             marker._mcColor  = color;
             marker._mcRadius = radius;
 
-            // Click on pin → highlight card, keep map roughly in place
-            marker.on('click', () => this.selectBeach(beach.id, { fromMap: true }));
+            marker.bindPopup(this._miniPopupHTML(beach), {
+                maxWidth: 220,
+                className: 'mc-mini-popup',
+                closeButton: true,
+                autoClose: true
+            });
+
+            // Click on pin → highlight card + open mini popup
+            marker.on('click', () => {
+                this.selectBeach(beach.id, { fromMap: true });
+                marker.openPopup();
+            });
 
             this.markers.push({ marker, beach });
         });

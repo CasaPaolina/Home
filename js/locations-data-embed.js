@@ -32,7 +32,10 @@ const LOCATIONS_DATA = {
       "distance": "19 km",
       "sea": "adriatico",
       "distanceNum": 19,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Spiaggia sabbiosa con le celebri due sorelle. Ideale per famiglie con servizi completi.",
       "facilities": [
         "parking",
@@ -67,7 +70,10 @@ const LOCATIONS_DATA = {
       "distance": "18 km",
       "sea": "adriatico",
       "distanceNum": 18,
-      "activities": ["snorkel", "nature"],
+      "activities": [
+        "snorkel",
+        "nature"
+      ],
       "description_it": "Formazioni rocciose spettacolari con acque limpide, perfette per lo snorkeling tra scogli.",
       "facilities": [
         "parking"
@@ -99,7 +105,11 @@ const LOCATIONS_DATA = {
       "distance": "10 km",
       "sea": "adriatico",
       "distanceNum": 10,
-      "activities": ["swim", "family", "nature"],
+      "activities": [
+        "swim",
+        "family",
+        "nature"
+      ],
       "description_it": "Spiaggia di sabbia bianca circondata da pineta. Protetta come riserva naturale.",
       "facilities": [
         "parking",
@@ -133,7 +143,11 @@ const LOCATIONS_DATA = {
       "distance": "11 km",
       "sea": "adriatico",
       "distanceNum": 11,
-      "activities": ["swim", "family", "sup"],
+      "activities": [
+        "swim",
+        "family",
+        "sup"
+      ],
       "description_it": "Lunga distesa di sabbia dorata con laghi naturali alle spalle. Ideale per lo sport acquatico.",
       "facilities": [
         "parking",
@@ -168,7 +182,11 @@ const LOCATIONS_DATA = {
       "distance": "3 km",
       "sea": "adriatico",
       "distanceNum": 3,
-      "activities": ["snorkel", "hidden", "swim"],
+      "activities": [
+        "snorkel",
+        "hidden",
+        "swim"
+      ],
       "description_it": "La cala più vicina a Casa Paolina. Acque cristalline ideali per lo snorkeling tra rocce e storia millenaria.",
       "facilities": [
         "parking",
@@ -201,7 +219,10 @@ const LOCATIONS_DATA = {
       "distance": "12 km",
       "sea": "adriatico",
       "distanceNum": 12,
-      "activities": ["snorkel", "dive"],
+      "activities": [
+        "snorkel",
+        "dive"
+      ],
       "description_it": "Porto pittoresco con grotte marine e acque cristalline, ideale per immersioni e snorkeling.",
       "facilities": [
         "parking",
@@ -236,7 +257,11 @@ const LOCATIONS_DATA = {
       "distance": "9 km",
       "sea": "adriatico",
       "distanceNum": 9,
-      "activities": ["snorkel", "hidden", "swim"],
+      "activities": [
+        "snorkel",
+        "hidden",
+        "swim"
+      ],
       "description_it": "Insenatura naturale con acque color turchese, perfetta per lo snorkeling.",
       "facilities": [
         "parking"
@@ -268,7 +293,11 @@ const LOCATIONS_DATA = {
       "distance": "22 km",
       "sea": "adriatico",
       "distanceNum": 22,
-      "activities": ["snorkel", "hidden", "nature"],
+      "activities": [
+        "snorkel",
+        "hidden",
+        "nature"
+      ],
       "description_it": "Piscina naturale tra le rocce con acque trasparenti. Un angolo di paradiso selvaggio.",
       "facilities": [
         "parking",
@@ -301,7 +330,11 @@ const LOCATIONS_DATA = {
       "distance": "14 km",
       "sea": "adriatico",
       "distanceNum": 14,
-      "activities": ["snorkel", "hidden", "nature"],
+      "activities": [
+        "snorkel",
+        "hidden",
+        "nature"
+      ],
       "description_it": "Insenatura nascosta con acque verde smeraldo. Un gioiello selvaggio raggiungibile a piedi.",
       "facilities": [],
       "images": [
@@ -331,7 +364,10 @@ const LOCATIONS_DATA = {
       "distance": "20 km",
       "sea": "adriatico",
       "distanceNum": 20,
-      "activities": ["nature", "hidden"],
+      "activities": [
+        "nature",
+        "hidden"
+      ],
       "description_it": "Grotta preistorica con piscina naturale. Uno dei siti archeologici marini più importanti del Salento.",
       "facilities": [
         "parking"
@@ -363,7 +399,10 @@ const LOCATIONS_DATA = {
       "distance": "17 km",
       "sea": "adriatico",
       "distanceNum": 17,
-      "activities": ["nature", "hidden"],
+      "activities": [
+        "nature",
+        "hidden"
+      ],
       "description_it": "Grotta marina con fenomeno di luminescenza verde. Accessibile solo via mare.",
       "facilities": [
         "boat_access"
@@ -395,7 +434,10 @@ const LOCATIONS_DATA = {
       "distance": "11 km",
       "sea": "adriatico",
       "distanceNum": 11,
-      "activities": ["thermal", "snorkel"],
+      "activities": [
+        "thermal",
+        "snorkel"
+      ],
       "description_it": "Cittadina termale con acque curative e panorami mozzafiato sulla costa adriatica.",
       "facilities": [
         "parking",
@@ -429,7 +471,10 @@ const LOCATIONS_DATA = {
       "distance": "5 km",
       "sea": "adriatico",
       "distanceNum": 5,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Spiaggia cittadina di Otranto con accesso comodo, ideale per le famiglie con bambini.",
       "facilities": [
         "parking",
@@ -466,7 +511,11 @@ const LOCATIONS_DATA = {
       "distance": "45 km",
       "sea": "ionico",
       "distanceNum": 45,
-      "activities": ["nature", "hidden", "snorkel"],
+      "activities": [
+        "nature",
+        "hidden",
+        "snorkel"
+      ],
       "description_it": "Riserva naturale incontaminata raggiungibile solo a piedi. Costa selvaggia di rara bellezza.",
       "facilities": [
         "hiking",
@@ -479,8 +528,8 @@ const LOCATIONS_DATA = {
     {
       "id": "baia-verde",
       "name": "Gallipoli - Baia Verde",
-      "lat": 40.05,
-      "lng": 17.9833,
+      "lat": 40.025,
+      "lng": 17.972,
       "type": "beach",
       "sandType": "fine_sand",
       "protectedFrom": [
@@ -501,7 +550,11 @@ const LOCATIONS_DATA = {
       "distance": "55 km",
       "sea": "ionico",
       "distanceNum": 55,
-      "activities": ["swim", "family", "nightlife"],
+      "activities": [
+        "swim",
+        "family",
+        "nightlife"
+      ],
       "description_it": "La spiaggia più animata del Salento. Lidi attrezzati, vita notturna e acque ioniche.",
       "facilities": [
         "parking",
@@ -538,7 +591,10 @@ const LOCATIONS_DATA = {
       "distance": "58 km",
       "sea": "ionico",
       "distanceNum": 58,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Sabbia dorata finissima sulla costa ionica di Gallipoli. Ideale per lunghe giornate al mare.",
       "facilities": [
         "parking",
@@ -574,7 +630,12 @@ const LOCATIONS_DATA = {
       "distance": "40 km",
       "sea": "ionico",
       "distanceNum": 40,
-      "activities": ["swim", "snorkel", "dive", "nature"],
+      "activities": [
+        "swim",
+        "snorkel",
+        "dive",
+        "nature"
+      ],
       "description_it": "Area marina protetta con fondale cristallino. Paradiso del diving e dello snorkeling ionico.",
       "facilities": [
         "parking",
@@ -611,7 +672,10 @@ const LOCATIONS_DATA = {
       "distance": "48 km",
       "sea": "ionico",
       "distanceNum": 48,
-      "activities": ["snorkel", "nature"],
+      "activities": [
+        "snorkel",
+        "nature"
+      ],
       "description_it": "Scogliere naturali con piscine di roccia e acque calme, perfette per il relax.",
       "facilities": [
         "parking",
@@ -624,8 +688,8 @@ const LOCATIONS_DATA = {
     {
       "id": "santa-caterina",
       "name": "Santa Caterina",
-      "lat": 40.0667,
-      "lng": 18.0333,
+      "lat": 40.107,
+      "lng": 17.994,
       "type": "beach",
       "sandType": "rocks",
       "protectedFrom": [
@@ -643,10 +707,14 @@ const LOCATIONS_DATA = {
       "description": "Spectacular caves and rocky cliffs",
       "translationKey": "beach_santa_caterina",
       "bookingLink": null,
-      "distance": "52 km",
+      "distance": "50 km",
       "sea": "ionico",
-      "distanceNum": 52,
-      "activities": ["snorkel", "dive", "nature"],
+      "distanceNum": 50,
+      "activities": [
+        "snorkel",
+        "dive",
+        "nature"
+      ],
       "description_it": "Grotte e scogliere spettacolari sulla costa ionica. Meta ideale per i subacquei.",
       "facilities": [
         "parking",
@@ -681,7 +749,10 @@ const LOCATIONS_DATA = {
       "distance": "65 km",
       "sea": "ionico",
       "distanceNum": 65,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Spiaggia sabbiosa a bassa profondità, perfetta per famiglie con bambini piccoli.",
       "facilities": [
         "parking",
@@ -700,17 +771,32 @@ const LOCATIONS_DATA = {
       "lng": 18.333,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["W", "SW", "NW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "SW",
+        "NW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "Long sandy beach near Lecce, popular with locals",
       "translationKey": "beach_san_cataldo",
       "bookingLink": null,
       "distance": "31 km",
-      "facilities": ["parking", "restaurants", "umbrellas"],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "umbrellas"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 31,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Lunga spiaggia sabbiosa vicino a Lecce, la più frequentata dai residenti della città barocca."
     },
     {
@@ -720,17 +806,32 @@ const LOCATIONS_DATA = {
       "lng": 18.376,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["W", "SW", "NW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "SW",
+        "NW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "Wide sandy beach with beach clubs and shallow water",
       "translationKey": "beach_torre_rinaldo",
       "bookingLink": null,
       "distance": "28 km",
-      "facilities": ["parking", "umbrellas", "beach_clubs"],
+      "facilities": [
+        "parking",
+        "umbrellas",
+        "beach_clubs"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 28,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Spiaggia sabbiosa con stabilimenti balneari e acque poco profonde, ideale per le famiglie."
     },
     {
@@ -740,17 +841,31 @@ const LOCATIONS_DATA = {
       "lng": 18.434,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["W", "SW", "NW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "SW",
+        "NW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "Ancient Bronze Age site with spectacular sea cave and crystal waters",
       "translationKey": "beach_roca_vecchia",
       "bookingLink": null,
       "distance": "18 km",
-      "facilities": ["parking"],
+      "facilities": [
+        "parking"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 18,
-      "activities": ["snorkel", "nature", "hidden"],
+      "activities": [
+        "snorkel",
+        "nature",
+        "hidden"
+      ],
       "description_it": "Sito preistorico dell'Età del Bronzo con una spettacolare grotta sul mare. Acque turchesi per lo snorkeling."
     },
     {
@@ -760,37 +875,66 @@ const LOCATIONS_DATA = {
       "lng": 18.493,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["W", "SW", "NW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "SW",
+        "NW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "City beach of Otranto, the jewel of Salento, with clear water and historic old town backdrop",
       "translationKey": "beach_otranto_spiaggia",
       "bookingLink": null,
       "distance": "9 km",
-      "facilities": ["parking", "restaurants", "umbrellas", "showers"],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "umbrellas",
+        "showers"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 9,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Spiaggia cittadina di Otranto. Acque cristalline con vista sul castello aragonese e la splendida città vecchia."
     },
     {
       "id": "punta-palascia",
       "name": "Punta Palascia",
-      "lat": 40.047,
-      "lng": 18.519,
+      "lat": 40.095,
+      "lng": 18.521,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Easternmost point of Italy with dramatic lighthouse and crystal clear water",
       "translationKey": "beach_punta_palascia",
       "bookingLink": null,
-      "distance": "8 km",
-      "facilities": ["parking"],
+      "distance": "9 km",
+      "facilities": [
+        "parking"
+      ],
       "images": [],
       "sea": "adriatico",
-      "distanceNum": 8,
-      "activities": ["snorkel", "nature"],
+      "distanceNum": 9,
+      "activities": [
+        "snorkel",
+        "nature"
+      ],
       "description_it": "Il punto più orientale d'Italia. Un faro panoramico su scogliere mozzafiato con acque straordinariamente limpide."
     },
     {
@@ -800,37 +944,66 @@ const LOCATIONS_DATA = {
       "lng": 18.473,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Small rocky cove with emerald clear water, accessible by steps",
       "translationKey": "beach_andrano",
       "bookingLink": null,
       "distance": "9 km",
-      "facilities": ["parking", "bar"],
+      "facilities": [
+        "parking",
+        "bar"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 9,
-      "activities": ["snorkel", "hidden"],
+      "activities": [
+        "snorkel",
+        "hidden"
+      ],
       "description_it": "Piccola caletta rocciosa con acqua verde smeraldo. Si raggiunge scendendo una gradinata panoramica sul mare."
     },
     {
       "id": "tricase-porto",
       "name": "Tricase Porto",
       "lat": 39.934,
-      "lng": 18.420,
+      "lng": 18.42,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "W"],
-      "exposed": ["E", "SE", "S"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "W"
+      ],
+      "exposed": [
+        "E",
+        "SE",
+        "S"
+      ],
       "description": "Charming fishing port with clear waters and rocky coastline",
       "translationKey": "beach_tricase_porto",
       "bookingLink": null,
       "distance": "19 km",
-      "facilities": ["parking", "restaurants", "bar"],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "bar"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 19,
-      "activities": ["snorkel", "swim"],
+      "activities": [
+        "snorkel",
+        "swim"
+      ],
       "description_it": "Pittoresco porto peschereccio con acque limpide e scogliere. Ottimo per lo snorkeling tra i pesci colorati."
     },
     {
@@ -840,57 +1013,104 @@ const LOCATIONS_DATA = {
       "lng": 18.351,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["N", "NW", "NE"],
-      "exposed": ["S", "SW", "SE"],
+      "protectedFrom": [
+        "N",
+        "NW",
+        "NE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "SE"
+      ],
       "description": "Where the Adriatic meets the Ionian — the southernmost tip of Salento with spectacular views",
       "translationKey": "beach_marina_di_leuca",
       "bookingLink": null,
       "distance": "34 km",
-      "facilities": ["parking", "restaurants", "boat_tours"],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "boat_tours"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 34,
-      "activities": ["swim", "nature"],
+      "activities": [
+        "swim",
+        "nature"
+      ],
       "description_it": "Il punto dove si incontrano Adriatico e Ionio. La punta estrema del tacco d'Italia, con acque di due mari."
     },
     {
       "id": "pescoluse",
       "name": "Pescoluse — Le Maldive del Salento",
-      "lat": 39.870,
-      "lng": 18.154,
+      "lat": 39.847,
+      "lng": 18.126,
       "type": "beach",
       "sandType": "white_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W", "NW"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
       "description": "Spectacular white sand and turquoise water — the 'Maldives of Salento', most famous beach in Puglia",
       "translationKey": "beach_pescoluse",
       "bookingLink": null,
-      "distance": "39 km",
-      "facilities": ["parking", "umbrellas", "beach_bar"],
+      "distance": "42 km",
+      "facilities": [
+        "parking",
+        "umbrellas",
+        "beach_bar"
+      ],
       "images": [],
       "sea": "ionico",
-      "distanceNum": 39,
-      "activities": ["swim", "family"],
+      "distanceNum": 42,
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Sabbia bianchissima e acque color turchese. Le spiagge più fotografate del Salento: le Maldive del Salento a Pescoluse."
     },
     {
       "id": "torre-vado",
       "name": "Torre Vado",
-      "lat": 39.857,
-      "lng": 18.178,
+      "lat": 39.855,
+      "lng": 18.116,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Fine sandy beach with shallow clear water, great for families",
       "translationKey": "beach_torre_vado",
       "bookingLink": null,
-      "distance": "37 km",
-      "facilities": ["parking", "umbrellas", "restaurants"],
+      "distance": "38 km",
+      "facilities": [
+        "parking",
+        "umbrellas",
+        "restaurants"
+      ],
       "images": [],
       "sea": "ionico",
-      "distanceNum": 37,
-      "activities": ["swim", "family"],
+      "distanceNum": 38,
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Spiaggia di sabbia fine con acqua bassa e limpida, perfetta per le famiglie con bambini piccoli."
     },
     {
@@ -900,37 +1120,69 @@ const LOCATIONS_DATA = {
       "lng": 18.084,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Long sandy beach with beach clubs, popular with families",
       "translationKey": "beach_mancaversa",
       "bookingLink": null,
       "distance": "43 km",
-      "facilities": ["parking", "umbrellas", "restaurants"],
+      "facilities": [
+        "parking",
+        "umbrellas",
+        "restaurants"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 43,
-      "activities": ["swim", "family"],
+      "activities": [
+        "swim",
+        "family"
+      ],
       "description_it": "Lunga spiaggia con stabilimenti balneari e fondale sabbioso degradante. Acqua calda e poco profonda."
     },
     {
       "id": "torre-suda",
       "name": "Torre Suda",
-      "lat": 39.952,
-      "lng": 18.056,
+      "lat": 39.953,
+      "lng": 18.015,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Quiet sandy beach with a watchtower, good for water sports",
       "translationKey": "beach_torre_suda",
       "bookingLink": null,
-      "distance": "46 km",
-      "facilities": ["parking", "restaurants"],
+      "distance": "47 km",
+      "facilities": [
+        "parking",
+        "restaurants"
+      ],
       "images": [],
       "sea": "ionico",
-      "distanceNum": 46,
-      "activities": ["swim", "family", "sup"],
+      "distanceNum": 47,
+      "activities": [
+        "swim",
+        "family",
+        "sup"
+      ],
       "description_it": "Spiaggia sabbiosa tranquilla con torre di avvistamento. Buone condizioni per SUP e windsurf."
     },
     {
@@ -940,17 +1192,35 @@ const LOCATIONS_DATA = {
       "lng": 17.993,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Beautiful sandy beach near Gallipoli old town, with lively beach clubs",
       "translationKey": "beach_lido_san_giovanni",
       "bookingLink": null,
       "distance": "54 km",
-      "facilities": ["parking", "beach_clubs", "restaurants", "umbrellas"],
+      "facilities": [
+        "parking",
+        "beach_clubs",
+        "restaurants",
+        "umbrellas"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 54,
-      "activities": ["swim", "family", "nightlife"],
+      "activities": [
+        "swim",
+        "family",
+        "nightlife"
+      ],
       "description_it": "Splendida spiaggia sabbiosa vicino alla città vecchia di Gallipoli. Stabilimenti animati e notti da ricordare."
     },
     {
@@ -960,57 +1230,106 @@ const LOCATIONS_DATA = {
       "lng": 17.934,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Quiet sandy beach in a natural setting between Porto Cesareo and Gallipoli",
       "translationKey": "beach_santisidoro",
       "bookingLink": null,
       "distance": "57 km",
-      "facilities": ["parking", "restaurants"],
+      "facilities": [
+        "parking",
+        "restaurants"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 57,
-      "activities": ["swim", "family", "nature"],
+      "activities": [
+        "swim",
+        "family",
+        "nature"
+      ],
       "description_it": "Spiaggia sabbiosa tranquilla immersa nella natura, tra Porto Cesareo e Gallipoli. Acque calme e poco profonde."
     },
     {
       "id": "torre-lapillo",
       "name": "Torre Lapillo",
-      "lat": 40.240,
-      "lng": 17.870,
+      "lat": 40.24,
+      "lng": 17.87,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Sandy beach with a natural lagoon, beautiful shallow water perfect for children",
       "translationKey": "beach_torre_lapillo",
       "bookingLink": null,
       "distance": "63 km",
-      "facilities": ["parking", "umbrellas", "restaurants"],
+      "facilities": [
+        "parking",
+        "umbrellas",
+        "restaurants"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 63,
-      "activities": ["swim", "family", "nature"],
+      "activities": [
+        "swim",
+        "family",
+        "nature"
+      ],
       "description_it": "Spiaggia con laguna naturale e acque basse cristalline. Perfetta per i bambini grazie ai bassi fondali."
     },
     {
       "id": "punta-prosciutto",
       "name": "Punta Prosciutto",
       "lat": 40.279,
-      "lng": 17.830,
+      "lng": 17.83,
       "type": "beach",
       "sandType": "white_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Breathtaking white sand dunes and turquoise water — one of the most beautiful beaches in Italy",
       "translationKey": "beach_punta_prosciutto",
       "bookingLink": null,
       "distance": "68 km",
-      "facilities": ["parking", "beach_bar"],
+      "facilities": [
+        "parking",
+        "beach_bar"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 68,
-      "activities": ["swim", "family", "nature"],
+      "activities": [
+        "swim",
+        "family",
+        "nature"
+      ],
       "description_it": "Dune di sabbia bianca e acque turchesi. Una delle spiagge più belle d'Italia, un paesaggio da sogno."
     },
     {
@@ -1020,17 +1339,33 @@ const LOCATIONS_DATA = {
       "lng": 17.691,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Long unspoiled sandy beach in a natural protected area",
       "translationKey": "beach_san_pietro_in_bevagna",
       "bookingLink": null,
       "distance": "78 km",
-      "facilities": ["parking", "restaurants"],
+      "facilities": [
+        "parking",
+        "restaurants"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 78,
-      "activities": ["swim", "family", "nature"],
+      "activities": [
+        "swim",
+        "family",
+        "nature"
+      ],
       "description_it": "Lunga spiaggia incontaminata in area protetta. Sabbia dorata e natura selvaggia lontana dal turismo di massa."
     },
     {
@@ -1040,17 +1375,34 @@ const LOCATIONS_DATA = {
       "lng": 17.735,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Scenic sandy beach with Aragonese tower, great sunsets",
       "translationKey": "beach_torre_colimena",
       "bookingLink": null,
       "distance": "72 km",
-      "facilities": ["parking", "restaurants", "bar"],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "bar"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 72,
-      "activities": ["swim", "nature", "hidden"],
+      "activities": [
+        "swim",
+        "nature",
+        "hidden"
+      ],
       "description_it": "Spiaggia sabbiosa con torre aragonese, famosa per i tramonti spettacolari sul mar Ionio."
     },
     {
@@ -1060,17 +1412,34 @@ const LOCATIONS_DATA = {
       "lng": 17.606,
       "type": "beach",
       "sandType": "fine_sand",
-      "protectedFrom": ["N", "NE", "E", "SE"],
-      "exposed": ["S", "SW", "W"],
+      "protectedFrom": [
+        "N",
+        "NE",
+        "E",
+        "SE"
+      ],
+      "exposed": [
+        "S",
+        "SW",
+        "W"
+      ],
       "description": "Wide sandy beach popular for its lively atmosphere and water sports",
       "translationKey": "beach_campomarino",
       "bookingLink": null,
       "distance": "82 km",
-      "facilities": ["parking", "restaurants", "beach_clubs"],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "beach_clubs"
+      ],
       "images": [],
       "sea": "ionico",
       "distanceNum": 82,
-      "activities": ["swim", "family", "sup"],
+      "activities": [
+        "swim",
+        "family",
+        "sup"
+      ],
       "description_it": "Ampia spiaggia sabbiosa con lidi attrezzati e sport acquatici. Meta apprezzata per famiglie e giovani."
     },
     {
@@ -1080,17 +1449,31 @@ const LOCATIONS_DATA = {
       "lng": 18.513,
       "type": "beach",
       "sandType": "rocks",
-      "protectedFrom": ["W", "NW", "SW"],
-      "exposed": ["E", "NE", "SE"],
+      "protectedFrom": [
+        "W",
+        "NW",
+        "SW"
+      ],
+      "exposed": [
+        "E",
+        "NE",
+        "SE"
+      ],
       "description": "Natural rocky inlet with crystal clear water north of Otranto",
       "translationKey": "beach_baia_orte",
       "bookingLink": null,
       "distance": "5 km",
-      "facilities": ["parking"],
+      "facilities": [
+        "parking"
+      ],
       "images": [],
       "sea": "adriatico",
       "distanceNum": 5,
-      "activities": ["snorkel", "swim", "hidden"],
+      "activities": [
+        "snorkel",
+        "swim",
+        "hidden"
+      ],
       "description_it": "Insenatura rocciosa naturale con acque cristalline a nord di Otranto. Meta tranquilla per snorkeling e relax."
     }
   ],
