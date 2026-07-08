@@ -1383,26 +1383,41 @@
 /* Map + cards two-column layout */
 .mc-layout {
     display: grid;
-    grid-template-columns: 1fr 380px;
+    grid-template-columns: 1fr 400px;
     gap: 0;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-    min-height: 560px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    height: 580px;
 }
 
 .mc-map-side {
     position: relative;
-    height: 560px;
+    height: 580px;
+    transition: all 0.25s;
 }
+
+/* Fullscreen state */
+.mc-map-side.mc-map--fullscreen {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    height: 100dvh !important;
+    width: 100vw !important;
+    border-radius: 0 !important;
+}
+.mc-map-side.mc-map--fullscreen .mc-map {
+    height: 100dvh !important;
+}
+.mc-body--noscroll { overflow: hidden; }
 
 .mc-map {
     width: 100%;
-    height: 560px;
+    height: 580px;
 }
 
 .mc-list-side {
-    height: 560px;
+    height: 580px;
     overflow-y: auto;
     background: #f8fafc;
     border-left: 1px solid #e2e8f0;
@@ -1413,18 +1428,44 @@
 .mc-list-side::-webkit-scrollbar-track { background: transparent; }
 .mc-list-side::-webkit-scrollbar-thumb { background: #c2dedd; border-radius: 4px; }
 
+/* Custom Leaflet controls */
+.mc-ctrl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+    color: #1e293b;
+    transition: background 0.15s, color 0.15s;
+    margin-bottom: 4px;
+    line-height: 1;
+}
+.mc-ctrl:hover { background: #f0f9f8; color: #2c7873; }
+.mc-ctrl--fullscreen { color: #1e293b; }
+.mc-ctrl--home svg, .mc-ctrl--fullscreen svg { display: block; }
+
 /* Beach cards in the side list */
 .mc-beach-card {
     background: #fff;
     border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.15s, box-shadow 0.15s;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 .mc-beach-card:last-child { border-bottom: none; }
-.mc-beach-card:hover { background: #f0f9f8; }
-.mc-beach-card.selected { background: #e8f5f3; border-left: 3px solid #2c7873; }
+.mc-beach-card:hover { background: #f4fbfa; }
+.mc-beach-card.selected {
+    background: #edf7f6;
+    box-shadow: inset 3px 0 0 #2c7873;
+}
+.mc-beach-card.selected .mc-card__name { color: #2c7873; }
 
 .mc-card__photo-wrap {
     position: relative;
@@ -1550,17 +1591,23 @@
     .mc-layout {
         grid-template-columns: 1fr;
         border-radius: 14px;
-        min-height: auto;
+        height: auto;
     }
-    .mc-map { min-height: 300px; height: 300px; }
+    .mc-map-side { height: 340px; }
+    .mc-map { height: 340px; }
     .mc-list-side {
         height: auto;
-        max-height: 60vh;
+        max-height: 65vh;
         border-left: none;
         border-top: 1px solid #e2e8f0;
     }
     .mc-filters-row { flex-wrap: wrap; }
     .mc-wind-badge { order: -1; width: 100%; min-width: unset; }
+
+    /* Compact cards on mobile */
+    .mc-card__photo-wrap { height: 120px; }
+    .mc-card__body { padding: 10px 12px 12px; gap: 5px; }
+    .mc-card__desc { -webkit-line-clamp: 2; }
 }
 
 /* ══════════════════════════════════════════════════════════
