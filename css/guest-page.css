@@ -1287,6 +1287,66 @@
    MARECALMO-STYLE BEACH SECTION
    ══════════════════════════════════════════════════════════ */
 
+/* ── Marecalmo map markers ── */
+.mc-marker {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px 5px 8px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+    cursor: pointer;
+    transition: transform 0.15s;
+    line-height: 1.2;
+}
+.mc-marker:hover { transform: scale(1.06); }
+
+.mc-marker--home {
+    background: #264653;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.mc-marker--beach {
+    background: #fff;
+    color: var(--pin-color, #1a94c4);
+    border: 2px solid var(--pin-color, #1a94c4);
+}
+
+.mc-marker-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: inherit;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mc-marker-dist {
+    font-size: 0.65rem;
+    font-weight: 600;
+    opacity: 0.7;
+    border-left: 1px solid currentColor;
+    padding-left: 5px;
+    margin-left: 2px;
+}
+
+/* Leaflet popup reset for mc style */
+.mc-leaflet-popup .leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.mc-leaflet-popup .leaflet-popup-content {
+    margin: 0;
+    width: 260px !important;
+}
+.mc-leaflet-popup .leaflet-popup-tip-container { display: none; }
+
 /* Activity filter pills bar */
 .mc-filters-row {
     display: flex;
