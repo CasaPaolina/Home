@@ -1380,6 +1380,31 @@
     text-align: center;
 }
 
+/* Sea-state legend */
+.mc-sea-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    color: #1e293b;
+}
+.mc-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+}
+.mc-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    flex-shrink: 0;
+}
+
 /* Map + cards two-column layout */
 .mc-layout {
     display: grid;

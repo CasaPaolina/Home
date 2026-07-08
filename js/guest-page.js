@@ -382,6 +382,12 @@ async function fetchWeatherForecast() {
         const slotWindCardinal = getWindDirection(slotWindDirDegrees);
         currentWindCardinal = slotWindCardinal;
         window.currentWindCardinal = slotWindCardinal;
+        window.currentWindSpeedKmh = slotWindSpeed;
+
+        // Notify map to re-colour pins
+        document.dispatchEvent(new CustomEvent('windUpdated', {
+            detail: { cardinal: slotWindCardinal, speed: slotWindSpeed }
+        }));
 
         // Re-apply filter if map is showing "recommended-today"
         if (typeof leafletBeachMap !== 'undefined' && leafletBeachMap && leafletBeachMap.currentFilter === 'recommended-today') {

@@ -157,14 +157,49 @@ class LeafletBeachMap {
         });
     }
 
+    // ── SEA-STATE COLOUR ─────────────────────────────────────────
+    // Returns { color, state } based on current wind and beach exposure.
+    // State: 'calm' | 'light' | 'rough' | 'default'
+    _seaState(beach) {
+        const windDir   = window.currentWindCardinal;
+        const windSpeed = window.currentWindSpeedKmh;
+
+        if (!windDir || windSpeed === undefined) {
+            // No wind data yet — colour by sea / distance
+            const isClosest = (beach.distanceNum || 999) <= 5;
+            const isIonic   = beach.sea === 'ionico';
+            return {
+                color: isClosest ? '#e76f51' : isIonic ? '#0d6e8e' : '#2c7873',
+                state: 'default'
+            };
+        }
+
+        const prot = Array.isArray(beach.protectedFrom) ? beach.protectedFrom : [];
+        const protected_ = prot.includes(windDir);
+
+        if (protected_ && windSpeed <= 15) return { color: '#22c55e', state: 'calm' };
+        if (protected_ && windSpeed <= 30) return { color: '#f59e0b', state: 'light' };
+        if (protected_)                    return { color: '#ef4444', state: 'rough' };
+        if (windSpeed <= 12)               return { color: '#f59e0b', state: 'light' };
+        return                                    { color: '#ef4444', state: 'rough' };
+    }
+
+    _updateLegend() {
+        const el = document.getElementById('mc-sea-legend');
+        if (!el) return;
+        const hasWind = !!window.currentWindCardinal;
+        el.style.display = hasWind ? 'flex' : 'none';
+    }
+
     addBeachMarkers(filter = 'all') {
         this.markers.forEach(({ marker }) => this.map.removeLayer(marker));
         this.markers = [];
 
+        this._updateLegend();
+
         this.filterBeaches(filter).forEach(beach => {
-            const isIonic   = beach.sea === 'ionico';
+            const { color } = this._seaState(beach);
             const isClosest = (beach.distanceNum || 999) <= 5;
-            const color = isClosest ? '#e76f51' : isIonic ? '#0d6e8e' : '#2c7873';
             const radius = isClosest ? 9 : 7;
 
             const marker = L.circleMarker([beach.lat, beach.lng], {
@@ -369,3 +404,10 @@ if (document.readyState === 'loading') {
 } else {
     setTimeout(initLeafletBeachMap, 400);
 }
+
+// Re-colour pins whenever fresh wind data arrives
+document.addEventListener('windUpdated', () => {
+    if (leafletBeachMap) {
+        leafletBeachMap.addBeachMarkers(leafletBeachMap.currentFilter);
+    }
+});
