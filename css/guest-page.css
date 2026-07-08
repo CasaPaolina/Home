@@ -1442,8 +1442,9 @@
     align-items: center;
     gap: 6px;
     padding: 7px 12px;
-    background: #2c7873;
-    color: #fff;
+    background: #fff;
+    color: #2c7873;
+    border: 1.5px solid #2c7873;
     border-radius: 8px;
     text-decoration: none;
     font-size: 0.75rem;
@@ -1451,9 +1452,9 @@
     width: 100%;
     justify-content: center;
     box-sizing: border-box;
-    transition: background 0.15s;
+    transition: background 0.15s, color 0.15s;
 }
-.mc-mini-nav:hover { background: #1e5450; color: #fff; }
+.mc-mini-nav:hover { background: #2c7873; color: #fff; }
 
 /* Sea-state legend */
 .mc-sea-legend {

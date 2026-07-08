@@ -237,8 +237,8 @@ const LOCATIONS_DATA = {
     {
       "id": "porto-miggiano",
       "name": "Porto Miggiano",
-      "lat": 40.032276,
-      "lng": 18.446058,
+      "lat": 40.02,
+      "lng": 18.451,
       "type": "beach",
       "sandType": "rocks",
       "protectedFrom": [
@@ -569,8 +569,8 @@ const LOCATIONS_DATA = {
     {
       "id": "punta-suina",
       "name": "Gallipoli - Punta della Suina",
-      "lat": 40.0167,
-      "lng": 17.95,
+      "lat": 40.018,
+      "lng": 17.963,
       "type": "beach",
       "sandType": "golden_sand",
       "protectedFrom": [
@@ -727,8 +727,8 @@ const LOCATIONS_DATA = {
     {
       "id": "torre-san-giovanni",
       "name": "Torre San Giovanni",
-      "lat": 39.9333,
-      "lng": 18.0833,
+      "lat": 39.93,
+      "lng": 18.094,
       "type": "beach",
       "sandType": "fine_sand",
       "protectedFrom": [
@@ -1116,8 +1116,8 @@ const LOCATIONS_DATA = {
     {
       "id": "mancaversa",
       "name": "Mancaversa",
-      "lat": 39.905,
-      "lng": 18.084,
+      "lat": 39.888,
+      "lng": 18.103,
       "type": "beach",
       "sandType": "fine_sand",
       "protectedFrom": [
@@ -1445,8 +1445,8 @@ const LOCATIONS_DATA = {
     {
       "id": "baia-orte",
       "name": "Baia dell'Orte (Otranto)",
-      "lat": 40.133,
-      "lng": 18.513,
+      "lat": 40.13,
+      "lng": 18.496,
       "type": "beach",
       "sandType": "rocks",
       "protectedFrom": [
