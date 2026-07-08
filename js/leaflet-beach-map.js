@@ -170,7 +170,12 @@ class LeafletBeachMap {
     filterBeaches(filter) {
         if (filter === 'all') return this.beaches;
 
+        const ACTIVITY_CODES = ['swim','snorkel','dive','family','nature','hidden','sup','nightlife','thermal'];
+
         return this.beaches.filter(beach => {
+            if (ACTIVITY_CODES.includes(filter)) {
+                return Array.isArray(beach.activities) && beach.activities.includes(filter);
+            }
             switch (filter) {
                 case 'sand':
                     return beach.sandType && beach.sandType.toLowerCase().includes('sand');
@@ -193,16 +198,13 @@ class LeafletBeachMap {
     }
 
     initFilters() {
-        const filterButtons = document.querySelectorAll('.beach-filter-btn');
+        const allBtns = document.querySelectorAll('.beach-filter-btn, .mc-pill');
 
-        filterButtons.forEach(btn => {
+        allBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Update active state
-                filterButtons.forEach(b => b.classList.remove('active'));
+                allBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
-                // Apply filter
-                const filter = btn.dataset.filter;
+                const filter = btn.dataset.filter || btn.dataset.activity || 'all';
                 this.currentFilter = filter;
                 this.addBeachMarkers(filter);
                 this.renderBeachList(filter);
@@ -228,35 +230,46 @@ class LeafletBeachMap {
     }
 
     createBeachListItem(beach) {
-        const isSand = (beach.sandType || '').toString().toLowerCase().includes('sand');
-        const typeIcon = isSand ? '🏖️' : '🪨';
-        const t = (typeof guestTranslations !== 'undefined' && typeof currentGuestLang !== 'undefined')
-            ? (guestTranslations[currentGuestLang] || guestTranslations.it)
-            : { filter_sand: 'Sabbia', filter_rocks: 'Scogliera', book_beach: 'Prenota' };
-        const typeLabel = isSand ? (t.filter_sand || 'Sabbia') : (t.filter_rocks || 'Scogliera');
+        const ACTIVITY_LABELS = { swim:'🏊 Nuoto', snorkel:'🤿 Snorkeling', dive:'🧜 Immersioni', family:'👨‍👩‍👧 Famiglie', nature:'🌿 Natura', hidden:'💎 Cala', sup:'🏄 SUP', nightlife:'🎶 Movida', thermal:'🌡️ Terme' };
+        const SAND_LABELS = { fine_sand:'🏖️ Sabbia fine', golden_sand:'🏖️ Sabbia dorata', white_sand:'🏖️ Sabbia bianca', pebbles:'🪨 Ghiaia', rocks:'🪨 Scogliera' };
 
-        const bookingBtn = beach.bookingLink
-            ? `<a href="${beach.bookingLink}" target="_blank" class="beach-list-book-btn" onclick="event.stopPropagation()">${t.book_beach || 'Prenota'}</a>`
+        const imageSrc = (beach.images && beach.images[0]) || beach.image || '';
+        const seaLabel = beach.sea === 'ionico' ? 'Ionico' : 'Adriatico';
+        const seaClass = beach.sea === 'ionico' ? 'mc-card__badge--ionico' : 'mc-card__badge--adriatico';
+        const sandLabel = SAND_LABELS[beach.sandType] || '';
+        const desc = beach.description_it || beach.description || '';
+        const isClosest = (beach.distanceNum || 999) <= 5;
+        const casaLat = 40.102558, casaLng = 18.446024;
+        const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${casaLat},${casaLng}&destination=${beach.lat},${beach.lng}`;
+
+        const activityPills = (beach.activities || []).slice(0, 3).map(a =>
+            `<span class="mc-card__activity">${ACTIVITY_LABELS[a] || a}</span>`
+        ).join('');
+
+        const bookBtn = beach.bookingLink
+            ? `<a href="${beach.bookingLink}" target="_blank" class="mc-card__btn mc-card__btn--sec" onclick="event.stopPropagation()">🎫 Prenota</a>`
             : '';
 
-        // Get beach image — prefer images[] array from locations.json
-        const imageSrc = (beach.images && beach.images[0]) || beach.image || beach.photo || '';
-        const imageHTML = imageSrc
-            ? `<img src="images/${imageSrc}" alt="${beach.name}" class="beach-list-thumb" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
-              + `<div class="beach-list-thumb-placeholder" style="display:none">${typeIcon}</div>`
-            : `<div class="beach-list-thumb-placeholder">${typeIcon}</div>`;
-
         return `
-            <div class="beach-list-item" data-beach-id="${beach.id}">
-                ${imageHTML}
-                <div class="beach-list-content">
-                    <span class="beach-list-name">${beach.name}</span>
-                    <div class="beach-list-info">
-                        <span class="beach-list-type">${typeLabel}</span>
-                        <span class="beach-list-distance">📍 ${beach.distance}</span>
+            <div class="mc-beach-card beach-list-item" data-beach-id="${beach.id}">
+                <div class="mc-card__photo-wrap">
+                    ${imageSrc
+                        ? `<img src="images/${imageSrc}" alt="${beach.name}" loading="lazy" onerror="this.style.display='none'">`
+                        : `<div class="mc-card__photo-placeholder">🌊</div>`}
+                    <span class="mc-card__badge mc-card__badge--dist">${beach.distance || ''}</span>
+                    <span class="mc-card__badge mc-card__badge--sea ${seaClass}">${seaLabel}</span>
+                    ${isClosest ? `<span class="mc-card__badge mc-card__badge--closest">⭐ Più vicina</span>` : ''}
+                </div>
+                <div class="mc-card__body">
+                    <div class="mc-card__name">${beach.name}</div>
+                    ${sandLabel ? `<div class="mc-card__type">${sandLabel}</div>` : ''}
+                    ${desc ? `<p class="mc-card__desc">${desc}</p>` : ''}
+                    ${activityPills ? `<div class="mc-card__activities">${activityPills}</div>` : ''}
+                    <div class="mc-card__actions">
+                        <a href="${mapsUrl}" target="_blank" class="mc-card__btn mc-card__btn--pri" onclick="event.stopPropagation()">🧭 Portami qui</a>
+                        ${bookBtn}
                     </div>
                 </div>
-                ${bookingBtn}
             </div>
         `;
     }

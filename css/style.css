@@ -3193,3 +3193,345 @@ section {
     }
 }
 
+
+
+/* ── BEACHES SECTION ────────────────────────────────────────── */
+.beaches-section {
+    background: #f0f7f6;
+    padding-bottom: 72px;
+}
+
+.beaches-header {
+    background: linear-gradient(135deg, #0a4a3a 0%, #1a6b55 50%, #2c7873 100%);
+    padding: 64px 0 80px;
+    margin-bottom: -40px;
+    position: relative;
+}
+
+.beaches-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: #f0f7f6;
+    clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+.beaches-section-header h2 {
+    color: #fff;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.beaches-subtitle {
+    color: rgba(255,255,255,0.82);
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 32px;
+}
+
+.beach-filters-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: nowrap;
+}
+
+.beach-filters-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    flex: 1;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.beach-filters-scroll::-webkit-scrollbar { display: none; }
+
+.bf-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+}
+
+.bf-pill:hover,
+.bf-pill.active {
+    background: #fff;
+    color: #1a6b55;
+    border-color: #fff;
+}
+
+.beach-sort-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.beach-sort-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+}
+
+.beach-sort-select option {
+    background: #1a6b55;
+    color: #fff;
+}
+
+/* Beach Cards Grid */
+.beaches-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding-top: 52px;
+}
+
+.beach-card {
+    background: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.beach-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.beach-card__photo-wrap {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.beach-card__photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+.beach-card:hover .beach-card__photo-wrap img {
+    transform: scale(1.05);
+}
+
+.beach-card__badge-dist {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+}
+
+.beach-card__badge-sea {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.beach-card__badge-sea--adriatico {
+    background: rgba(26, 148, 196, 0.85);
+    color: #fff;
+}
+
+.beach-card__badge-sea--ionico {
+    background: rgba(13, 110, 142, 0.85);
+    color: #fff;
+}
+
+.beach-card__closest {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: var(--secondary-color);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+}
+
+.beach-card__body {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 10px;
+}
+
+.beach-card__name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.3;
+}
+
+.beach-card__type {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.beach-card__desc {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.55;
+    flex: 1;
+}
+
+.beach-card__activities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.bc-activity {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #e8f5f3;
+    color: var(--primary-dark);
+    border: 1px solid #c2dedd;
+}
+
+.beach-card__facilities {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.bc-facility {
+    background: #f4f7f6;
+    padding: 2px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.beach-card__actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.bc-btn {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.bc-btn--primary {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.bc-btn--primary:hover {
+    background: var(--primary-dark);
+    color: #fff;
+}
+
+.bc-btn--secondary {
+    background: #f4f7f6;
+    color: var(--text-dark);
+    border: 1px solid var(--border);
+}
+
+.bc-btn--secondary:hover {
+    background: var(--border);
+}
+
+.beaches-no-results {
+    text-align: center;
+    color: var(--text-light);
+    padding: 48px 0;
+    font-size: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .beaches-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .beaches-header {
+        padding: 48px 0 64px;
+    }
+    .beaches-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding-top: 44px;
+    }
+    .beach-filters-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .beach-sort-wrap {
+        color: rgba(255,255,255,0.8);
+    }
+    .beach-card__photo-wrap {
+        height: 180px;
+    }
+}

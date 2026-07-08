@@ -28,6 +28,10 @@
       "translationKey": "beach_torre_orso",
       "bookingLink": null,
       "distance": "19 km",
+      "sea": "adriatico",
+      "distanceNum": 19,
+      "activities": ["swim", "family"],
+      "description_it": "Spiaggia sabbiosa con le celebri due sorelle. Ideale per famiglie con servizi completi.",
       "facilities": [
         "parking",
         "restaurants",
@@ -59,6 +63,10 @@
       "translationKey": "beach_faraglioni",
       "bookingLink": null,
       "distance": "18 km",
+      "sea": "adriatico",
+      "distanceNum": 18,
+      "activities": ["snorkel", "nature"],
+      "description_it": "Formazioni rocciose spettacolari con acque limpide, perfette per lo snorkeling tra scogli.",
       "facilities": [
         "parking"
       ],
@@ -87,6 +95,10 @@
       "translationKey": "beach_baia_turchi",
       "bookingLink": null,
       "distance": "10 km",
+      "sea": "adriatico",
+      "distanceNum": 10,
+      "activities": ["swim", "family", "nature"],
+      "description_it": "Spiaggia di sabbia bianca circondata da pineta. Protetta come riserva naturale.",
       "facilities": [
         "parking",
         "beach_bar",
@@ -117,6 +129,10 @@
       "translationKey": "beach_alimini",
       "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=d972edd0-f3c7-4b63-8933-25bfc79f0835&&query=alimini",
       "distance": "11 km",
+      "sea": "adriatico",
+      "distanceNum": 11,
+      "activities": ["swim", "family", "sup"],
+      "description_it": "Lunga distesa di sabbia dorata con laghi naturali alle spalle. Ideale per lo sport acquatico.",
       "facilities": [
         "parking",
         "restaurants",
@@ -148,6 +164,10 @@
       "translationKey": "beach_porto_badisco",
       "bookingLink": null,
       "distance": "3 km",
+      "sea": "adriatico",
+      "distanceNum": 3,
+      "activities": ["snorkel", "hidden", "swim"],
+      "description_it": "La cala più vicina a Casa Paolina. Acque cristalline ideali per lo snorkeling tra rocce e storia millenaria.",
       "facilities": [
         "parking",
         "restaurant"
@@ -177,6 +197,10 @@
       "translationKey": "beach_castro",
       "bookingLink": null,
       "distance": "12 km",
+      "sea": "adriatico",
+      "distanceNum": 12,
+      "activities": ["snorkel", "dive"],
+      "description_it": "Porto pittoresco con grotte marine e acque cristalline, ideale per immersioni e snorkeling.",
       "facilities": [
         "parking",
         "restaurants",
@@ -208,6 +232,10 @@
       "translationKey": "beach_porto_miggiano",
       "bookingLink": null,
       "distance": "9 km",
+      "sea": "adriatico",
+      "distanceNum": 9,
+      "activities": ["snorkel", "hidden", "swim"],
+      "description_it": "Insenatura naturale con acque color turchese, perfetta per lo snorkeling.",
       "facilities": [
         "parking"
       ],
@@ -236,6 +264,10 @@
       "translationKey": "beach_marina_serra",
       "bookingLink": null,
       "distance": "22 km",
+      "sea": "adriatico",
+      "distanceNum": 22,
+      "activities": ["snorkel", "hidden", "nature"],
+      "description_it": "Piscina naturale tra le rocce con acque trasparenti. Un angolo di paradiso selvaggio.",
       "facilities": [
         "parking",
         "bar"
@@ -265,6 +297,10 @@
       "translationKey": "beach_acquaviva",
       "bookingLink": null,
       "distance": "14 km",
+      "sea": "adriatico",
+      "distanceNum": 14,
+      "activities": ["snorkel", "hidden", "nature"],
+      "description_it": "Insenatura nascosta con acque verde smeraldo. Un gioiello selvaggio raggiungibile a piedi.",
       "facilities": [],
       "images": [
         "cala-acquaviva.jpg"
@@ -291,6 +327,10 @@
       "translationKey": "beach_grotta_poesia",
       "bookingLink": null,
       "distance": "20 km",
+      "sea": "adriatico",
+      "distanceNum": 20,
+      "activities": ["nature", "hidden"],
+      "description_it": "Grotta preistorica con piscina naturale. Uno dei siti archeologici marini più importanti del Salento.",
       "facilities": [
         "parking"
       ],
@@ -319,6 +359,10 @@
       "translationKey": "beach_grotta_verde",
       "bookingLink": null,
       "distance": "17 km",
+      "sea": "adriatico",
+      "distanceNum": 17,
+      "activities": ["nature", "hidden"],
+      "description_it": "Grotta marina con fenomeno di luminescenza verde. Accessibile solo via mare.",
       "facilities": [
         "boat_access"
       ],
@@ -347,6 +391,10 @@
       "translationKey": "beach_santa_cesarea",
       "bookingLink": null,
       "distance": "11 km",
+      "sea": "adriatico",
+      "distanceNum": 11,
+      "activities": ["thermal", "snorkel"],
+      "description_it": "Cittadina termale con acque curative e panorami mozzafiato sulla costa adriatica.",
       "facilities": [
         "parking",
         "restaurants",
@@ -377,6 +425,10 @@
       "translationKey": "beach_gradoni",
       "bookingLink": null,
       "distance": "5 km",
+      "sea": "adriatico",
+      "distanceNum": 5,
+      "activities": ["swim", "family"],
+      "description_it": "Spiaggia cittadina di Otranto con accesso comodo, ideale per le famiglie con bambini.",
       "facilities": [
         "parking",
         "restaurants",
@@ -410,6 +462,10 @@
       "translationKey": "beach_porto_selvaggio",
       "bookingLink": null,
       "distance": "45 km",
+      "sea": "ionico",
+      "distanceNum": 45,
+      "activities": ["nature", "hidden", "snorkel"],
+      "description_it": "Riserva naturale incontaminata raggiungibile solo a piedi. Costa selvaggia di rara bellezza.",
       "facilities": [
         "hiking",
         "nature_reserve"
@@ -441,6 +497,10 @@
       "translationKey": "beach_baia_verde",
       "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=4aef3697-5276-4e89-beec-6fb808c7f494&&query=gallipoli",
       "distance": "55 km",
+      "sea": "ionico",
+      "distanceNum": 55,
+      "activities": ["swim", "family", "nightlife"],
+      "description_it": "La spiaggia più animata del Salento. Lidi attrezzati, vita notturna e acque ioniche.",
       "facilities": [
         "parking",
         "beach_clubs",
@@ -474,6 +534,10 @@
       "translationKey": "beach_punta_suina",
       "bookingLink": null,
       "distance": "58 km",
+      "sea": "ionico",
+      "distanceNum": 58,
+      "activities": ["swim", "family"],
+      "description_it": "Sabbia dorata finissima sulla costa ionica di Gallipoli. Ideale per lunghe giornate al mare.",
       "facilities": [
         "parking",
         "beach_bar",
@@ -506,6 +570,10 @@
       "translationKey": "beach_porto_cesareo",
       "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=84db2e7a-23cb-4046-94d9-74580ab98ec3&&query=porto+cesareo",
       "distance": "40 km",
+      "sea": "ionico",
+      "distanceNum": 40,
+      "activities": ["swim", "snorkel", "dive", "nature"],
+      "description_it": "Area marina protetta con fondale cristallino. Paradiso del diving e dello snorkeling ionico.",
       "facilities": [
         "parking",
         "restaurants",
@@ -539,6 +607,10 @@
       "translationKey": "beach_santa_maria_bagno",
       "bookingLink": "https://www.bagnomaria.com/",
       "distance": "48 km",
+      "sea": "ionico",
+      "distanceNum": 48,
+      "activities": ["snorkel", "nature"],
+      "description_it": "Scogliere naturali con piscine di roccia e acque calme, perfette per il relax.",
       "facilities": [
         "parking",
         "restaurants"
@@ -570,6 +642,10 @@
       "translationKey": "beach_santa_caterina",
       "bookingLink": null,
       "distance": "52 km",
+      "sea": "ionico",
+      "distanceNum": 52,
+      "activities": ["snorkel", "dive", "nature"],
+      "description_it": "Grotte e scogliere spettacolari sulla costa ionica. Meta ideale per i subacquei.",
       "facilities": [
         "parking",
         "diving"
@@ -601,6 +677,10 @@
       "translationKey": "beach_torre_san_giovanni",
       "bookingLink": "https://www.spiagge.it/stabilimenti-balneari/?se=1&page=1&sid=09fe02aa-8356-48d8-95f7-c8d7073416bc&&query=torre+san+giovanni",
       "distance": "65 km",
+      "sea": "ionico",
+      "distanceNum": 65,
+      "activities": ["swim", "family"],
+      "description_it": "Spiaggia sabbiosa a bassa profondità, perfetta per famiglie con bambini piccoli.",
       "facilities": [
         "parking",
         "restaurants",
