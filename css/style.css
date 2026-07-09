@@ -1144,9 +1144,27 @@ section {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .poi-list-card:hover::after {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
+    opacity: 0; /* suppressed — replaced by poi-list-nav button */
 }
+
+/* Portami qui icon button inside POI card */
+.poi-list-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1.5px solid #2c7873;
+    color: #2c7873;
+    text-decoration: none;
+    flex-shrink: 0;
+    align-self: center;
+    transition: background 0.15s, color 0.15s;
+    margin-left: 4px;
+}
+.poi-list-nav:hover { background: #2c7873; color: #fff; }
 
 .poi-list-item {
     background: white;

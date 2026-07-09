@@ -1229,7 +1229,26 @@ function initMainPOIMap() {
     const markerLayers = {};
     const markerRefs = {};
 
+    function resetAllMarkers() {
+        Object.values(markerRefs).forEach(r => {
+            r.marker.setStyle({ color: '#fff', weight: 2 });
+            r.marker.setRadius(7);
+        });
+    }
+
+    function selectPOICard(poiId) {
+        const list = document.getElementById('poi-interactive-list');
+        if (!list) return;
+        list.querySelectorAll('.poi-list-card').forEach(c => c.classList.remove('selected'));
+        const card = list.querySelector(`[data-poi-id="${poiId}"]`);
+        if (card) {
+            card.classList.add('selected');
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+
     pointsOfInterest.forEach((poi, index) => {
+        const id = `poi-${index}`;
         const marker = L.circleMarker([poi.lat, poi.lng], {
             radius: 7,
             fillColor: catColor[poi.category] || '#2c7873',
@@ -1243,15 +1262,22 @@ function initMainPOIMap() {
             direction: 'top',
             offset: [0, -10],
             className: 'mc-tooltip mc-tooltip--beach'
-        })
-        .bindPopup(`<div style="min-width:160px;font-family:system-ui,sans-serif"><div style="font-weight:700;font-size:0.88rem;margin-bottom:4px">${categoryEmoji[poi.category] || '📍'} ${poi.name}</div><div style="font-size:0.78rem;color:#64748b">${poi.description || poi.address || ''}</div>${poi.distance ? `<div style="font-size:0.72rem;font-weight:600;color:#2c7873;margin-top:4px">📍 ${poi.distance}</div>` : ''}</div>`);
+        });
+
+        // Pin click → highlight card, no popup clutter
+        marker.on('click', () => {
+            resetAllMarkers();
+            marker.setStyle({ color: '#f4a261', weight: 3.5 });
+            marker.setRadius(10);
+            selectPOICard(id);
+        });
 
         if (!markerLayers[poi.category]) markerLayers[poi.category] = L.layerGroup().addTo(map);
         marker.addTo(markerLayers[poi.category]);
-        markerRefs[`poi-${index}`] = { marker, poi };
+        markerRefs[id] = { marker, poi };
     });
 
-    // Render cards matching guest page style
+    // Render cards — div (not <a>) so card click selects, inner link opens maps
     function renderPOIList(filter = 'all') {
         const listContainer = document.getElementById('poi-interactive-list');
         if (!listContainer) return;
@@ -1270,18 +1296,24 @@ function initMainPOIMap() {
             const emoji = categoryEmoji[poi.category] || '📍';
             const desc = poi.description || poi.address || '';
             const dist = poi.distance || '';
-            const mapsUrl = poi.mapsUrl || '#';
+            const mapsUrl = poi.mapsUrl
+                || `https://www.google.com/maps/dir/?api=1&origin=${CASA_PAOLINA.lat},${CASA_PAOLINA.lng}&destination=${poi.lat},${poi.lng}`;
             const tc = thumbColors[poi.category] || { bg: '#e0f2f1', color: '#2c7873', border: '#a8d5d1' };
             return `
-                <a href="${mapsUrl}" target="_blank" rel="noopener"
-                   class="poi-list-card" data-poi-id="poi-${globalIndex}">
+                <div class="poi-list-card" data-poi-id="poi-${globalIndex}">
                     <div class="poi-list-thumb" style="background:${tc.bg};color:${tc.color};border-color:${tc.border}">${emoji}</div>
                     <div class="poi-list-body">
                         <div class="poi-list-name">${poi.name}</div>
                         ${desc ? `<div class="poi-list-desc">${desc}</div>` : ''}
                         ${dist ? `<div class="poi-list-dist">📍 ${dist}</div>` : ''}
                     </div>
-                </a>
+                    <a href="${mapsUrl}" target="_blank" rel="noopener"
+                       class="poi-list-nav" onclick="event.stopPropagation()" title="Portami qui">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                        </svg>
+                    </a>
+                </div>
             `;
         }).join('');
 
@@ -1289,16 +1321,17 @@ function initMainPOIMap() {
         const countEl = document.getElementById('poi-list-count');
         if (countEl) countEl.textContent = filtered.length + (filtered.length === 1 ? ' luogo' : ' luoghi');
 
-        // Click on card → pan map to marker
+        // Card click → fly map to marker, highlight pin + card
         listContainer.querySelectorAll('.poi-list-card').forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', () => {
                 const ref = markerRefs[card.dataset.poiId];
-                if (ref) {
-                    listContainer.querySelectorAll('.poi-list-card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected');
-                    map.setView([ref.poi.lat, ref.poi.lng], 14);
-                    ref.marker.openPopup();
-                }
+                if (!ref) return;
+                resetAllMarkers();
+                ref.marker.setStyle({ color: '#f4a261', weight: 3.5 });
+                ref.marker.setRadius(10);
+                listContainer.querySelectorAll('.poi-list-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                map.flyTo([ref.poi.lat, ref.poi.lng], 14, { duration: 0.8 });
             });
         });
     }

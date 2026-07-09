@@ -1955,14 +1955,14 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    border: 1.5px solid rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.15);
-    color: #fff;
+    border: 1.5px solid #c2dedd;
+    background: #f4f7f6;
+    color: #2c7873;
     cursor: pointer;
     flex-shrink: 0;
-    transition: background 0.15s;
+    transition: background 0.15s, border-color 0.15s;
 }
-.mc-act-info-btn:hover { background: rgba(255,255,255,0.28); }
+.mc-act-info-btn:hover { background: #e8f5f3; border-color: #2c7873; }
 
 /* ── Activity info modal ── */
 .mc-act-modal {
