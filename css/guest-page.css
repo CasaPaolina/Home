@@ -1925,3 +1925,126 @@
     .poi-quick-card { padding: 12px; }
     .poi-quick-card-icon { width: 34px; height: 34px; font-size: 1.3rem; }
 }
+
+/* ── Day selector bar ── */
+.mc-day-bar {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0 8px;
+}
+.mc-day-btn {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+.mc-day-btn:hover { border-color: #2c7873; color: #2c7873; }
+.mc-day-btn.active { background: #2c7873; color: #fff; border-color: #2c7873; }
+
+/* ── Activity info button ── */
+.mc-act-info-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.mc-act-info-btn:hover { background: rgba(255,255,255,0.28); }
+
+/* ── Activity info modal ── */
+.mc-act-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.mc-act-modal[hidden] { display: none; }
+.mc-act-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+}
+.mc-act-modal-sheet {
+    position: relative;
+    background: #fff;
+    border-radius: 18px 18px 0 0;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 0 0 24px;
+}
+.mc-act-modal-handle {
+    width: 36px;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    margin: 10px auto 4px;
+}
+.mc-act-modal-body { padding: 0 20px 20px; }
+.mc-act-modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0 10px;
+}
+.mc-act-modal-head h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+.mc-act-modal-close {
+    border: none;
+    background: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #64748b;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+.mc-act-modal-close:hover { background: #f4f7f6; }
+.mc-act-modal-intro {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0 0 16px;
+    line-height: 1.55;
+}
+.mc-act-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.mc-act-list li {
+    font-size: 0.85rem;
+    color: #1e293b;
+    line-height: 1.5;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #2c7873;
+}
+.mc-act-list li span[data-translate] { color: #64748b; font-size: 0.82rem; }
+
+/* ── Sand/rock tag on row ── */
+.mc-row__sandtag {
+    font-size: 0.72rem;
+    opacity: 0.75;
+    flex-shrink: 0;
+}

@@ -207,42 +207,53 @@
                 <div class="mc-filters-scroll">
                     <button class="mc-pill active" data-activity="all">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M2 17c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/></svg>
-                        Tutte
+                        <span data-translate="filter_all">Tutte</span>
                     </button>
                     <button class="mc-pill" data-activity="swim">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M6 12l3-4 3 2 3-3"/><path d="M2 17c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/></svg>
-                        Nuoto
+                        <span data-translate="filter_swim">Nuoto</span>
                     </button>
                     <button class="mc-pill" data-activity="snorkel">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="10" r="4"/><path d="M16 10h4a2 2 0 0 1 0 4h-4"/><path d="M12 14v4"/></svg>
-                        Snorkeling
+                        <span data-translate="filter_snorkel">Snorkeling</span>
                     </button>
                     <button class="mc-pill" data-activity="dive">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v11"/><path d="M8 8l4 4 4-4"/><path d="M4 19c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2"/></svg>
-                        Immersioni
+                        <span data-translate="filter_dive">Immersioni</span>
                     </button>
                     <button class="mc-pill" data-activity="family">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="5" r="2"/><circle cx="17" cy="6" r="1.5"/><path d="M5 21v-4a4 4 0 0 1 8 0v4"/><path d="M17 21v-3a3 3 0 0 0-3-3"/></svg>
-                        Famiglie
+                        <span data-translate="filter_family">Famiglie</span>
                     </button>
                     <button class="mc-pill" data-activity="nature">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22V12"/><path d="M12 12C12 8 8 5 4 7c4 2 6 5 8 5z"/><path d="M12 12c0-4 4-7 8-5-4 2-6 5-8 5z"/></svg>
-                        Natura
+                        <span data-translate="filter_nature">Natura</span>
                     </button>
                     <button class="mc-pill" data-activity="hidden">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 5C7 5 2.7 8.6 1 12c1.7 3.4 6 7 11 7s9.3-3.6 11-7c-1.7-3.4-6-7-11-7z"/></svg>
-                        Cale
+                        <span data-translate="filter_hidden">Cale</span>
                     </button>
                     <button class="mc-pill" data-activity="sup">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19h16"/><path d="M12 3v12"/><path d="M8 11l4-4 4 4"/></svg>
-                        SUP
+                        <span data-translate="filter_sup">SUP</span>
                     </button>
                     <button class="mc-pill mc-pill--wind" data-activity="recommended-today">
                         <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        Oggi
+                        <span data-translate="filter_today_best">Oggi</span>
                     </button>
                 </div>
+                <!-- ℹ activity info button -->
+                <button id="mc-act-info-btn" class="mc-act-info-btn" type="button" title="Come funzionano i filtri" aria-label="Come funzionano i filtri" data-translate-attr="title:act_info_title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.5" r="0.5" fill="currentColor"/></svg>
+                </button>
                 <p id="current-wind-info" class="mc-wind-badge" aria-live="polite"></p>
+            </div>
+
+            <!-- Day selector -->
+            <div class="mc-day-bar" id="mc-day-bar" role="group" aria-label="Scegli il giorno">
+                <button class="mc-day-btn active" data-day="0" type="button"><span data-translate="day_today">Oggi</span></button>
+                <button class="mc-day-btn" data-day="1" type="button"><span data-translate="day_tomorrow">Domani</span></button>
+                <button class="mc-day-btn" data-day="2" type="button"><span data-translate="day_aftertomorrow">Dopodomani</span></button>
             </div>
 
             <!-- Sea-state legend + sort context -->
@@ -275,6 +286,31 @@
 
             <!-- hidden compat elements used by guest-page.js -->
             <p id="recommendation-status" style="display:none" aria-live="polite"></p>
+
+            <!-- Activity info modal -->
+            <div id="mc-act-modal" class="mc-act-modal" hidden role="dialog" aria-modal="true" aria-labelledby="mc-act-modal-title">
+                <div class="mc-act-modal-backdrop"></div>
+                <div class="mc-act-modal-sheet">
+                    <div class="mc-act-modal-handle"></div>
+                    <div class="mc-act-modal-body">
+                        <div class="mc-act-modal-head">
+                            <h3 id="mc-act-modal-title" data-translate="act_info_title">Come funzionano i filtri</h3>
+                            <button class="mc-act-modal-close" id="mc-act-modal-close" type="button" aria-label="Chiudi">✕</button>
+                        </div>
+                        <p class="mc-act-modal-intro" data-translate="act_info_intro">Ogni filtro riordina le spiagge in base a quanto sono adatte oggi: le migliori salgono in cima (verde 🟢), le meno adatte scendono in fondo (giallo 🟡 o rosso 🔴). Nessuna spiaggia viene nascosta.</p>
+                        <ul class="mc-act-list">
+                            <li><strong>🏊 <span data-translate="filter_swim">Nuoto</span></strong><br><span data-translate="act_info_swim">Mare piatto, acqua tiepida (≥20°C), vento leggero (< 25 km/h).</span></li>
+                            <li><strong>🤿 <span data-translate="filter_snorkel">Snorkeling</span></strong><br><span data-translate="act_info_snorkel">Acqua ferma e limpida, poco vento (< 18 km/h), niente onde dal largo.</span></li>
+                            <li><strong>🧜 <span data-translate="filter_dive">Immersioni</span></strong><br><span data-translate="act_info_dive">Visibilità alta, niente correnti forti, mare calmo.</span></li>
+                            <li><strong>👨‍👩‍👧 <span data-translate="filter_family">Famiglie</span></strong><br><span data-translate="act_info_family">Acque basse e sicure, sabbia o ghiaia fine, servizi (parcheggio, docce).</span></li>
+                            <li><strong>🌿 <span data-translate="filter_nature">Natura</span></strong><br><span data-translate="act_info_nature">Calette protette, area naturale o riserva, scarsa affluenza.</span></li>
+                            <li><strong>👁️ <span data-translate="filter_hidden">Cale</span></strong><br><span data-translate="act_info_hidden">Difficile da raggiungere, ricompensa chi cerca la tranquillità.</span></li>
+                            <li><strong>🏄 <span data-translate="filter_sup">SUP</span></strong><br><span data-translate="act_info_sup">Mare piattissimo, vento minimo (< 12 km/h), niente raffiche.</span></li>
+                            <li><strong>⭐ <span data-translate="filter_today_best">Oggi</span></strong><br><span data-translate="act_info_today">Spiagge protette dal vento attuale, ordinate per condizioni.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

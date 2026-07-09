@@ -384,9 +384,26 @@ async function fetchWeatherForecast() {
         window.currentWindCardinal = slotWindCardinal;
         window.currentWindSpeedKmh = slotWindSpeed;
 
+        // Build 3-day wind data
+        const dayAfterSlots = {
+            morning:   findTimeSlotAverageForDay(hourlyData, 2, 9, 12),
+            noon:      findTimeSlotAverageForDay(hourlyData, 2, 12, 15),
+            afternoon: findTimeSlotAverageForDay(hourlyData, 2, 15, 18)
+        };
+        const avgWindDirDayAfter   = getWindDirection((dayAfterSlots.morning.direction + dayAfterSlots.noon.direction + dayAfterSlots.afternoon.direction) / 3);
+        const avgWindSpeedDayAfter = (dayAfterSlots.morning.speed + dayAfterSlots.noon.speed + dayAfterSlots.afternoon.speed) / 3;
+        const avgWindDirTomorrow   = getWindDirection((tomorrowSlots.morning.direction + tomorrowSlots.noon.direction + tomorrowSlots.afternoon.direction) / 3);
+        const avgWindSpeedTomorrow = (tomorrowSlots.morning.speed + tomorrowSlots.noon.speed + tomorrowSlots.afternoon.speed) / 3;
+
+        window.windDataByDay = [
+            { cardinal: slotWindCardinal, speed: slotWindSpeed },
+            { cardinal: avgWindDirTomorrow, speed: avgWindSpeedTomorrow },
+            { cardinal: avgWindDirDayAfter, speed: avgWindSpeedDayAfter }
+        ];
+
         // Notify map to re-colour pins
         document.dispatchEvent(new CustomEvent('windUpdated', {
-            detail: { cardinal: slotWindCardinal, speed: slotWindSpeed }
+            detail: { cardinal: slotWindCardinal, speed: slotWindSpeed, byDay: window.windDataByDay }
         }));
 
         // Re-apply filter if map is showing "recommended-today"
@@ -429,9 +446,7 @@ async function fetchWeatherForecast() {
         recommendTop3Beaches(slotWindCardinal, slotWindSpeed, 'today');
 
         // Beach recommendations for tomorrow
-        const avgWindDirectionTomorrow = getWindDirection((tomorrowSlots.morning.direction + tomorrowSlots.noon.direction + tomorrowSlots.afternoon.direction) / 3);
-        const avgWindSpeedTomorrow = (tomorrowSlots.morning.speed + tomorrowSlots.noon.speed + tomorrowSlots.afternoon.speed) / 3;
-        recommendTop3Beaches(avgWindDirectionTomorrow, avgWindSpeedTomorrow, 'tomorrow');
+        recommendTop3Beaches(avgWindDirTomorrow, avgWindSpeedTomorrow, 'tomorrow');
 
     } catch (error) {
         console.error('Error fetching weather:', error);

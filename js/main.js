@@ -1176,11 +1176,18 @@ function initMainPOIMap() {
         fullscreenControlOptions: { position: 'topleft' }
     }).setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap contributors © CARTO',
-        maxZoom: 19,
-        subdomains: 'abcd'
-    }).addTo(map);
+    L.tileLayer(
+        'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {
+            attribution: 'Imagery &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community',
+            maxZoom: 19
+        }
+    ).addTo(map);
+
+    L.tileLayer(
+        'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 19 }
+    ).addTo(map);
 
     // Center home button
     L.Control.CenterHomePOI = L.Control.extend({
@@ -1195,32 +1202,49 @@ function initMainPOIMap() {
     map.addControl(new L.Control.CenterHomePOI({ position: 'topleft' }));
 
     // Casa Paolina marker
-    const homeIcon = L.divIcon({
-        className: 'custom-home-marker',
-        html: `<div class="map-badge map-badge--home"><span class="map-badge-emoji">🏠</span></div>`,
-        iconSize: [42, 46], iconAnchor: [21, 46]
+    L.circleMarker([CASA_PAOLINA.lat, CASA_PAOLINA.lng], {
+        radius: 10,
+        fillColor: '#f4a261',
+        color: '#fff',
+        weight: 3,
+        fillOpacity: 1
+    })
+    .addTo(map)
+    .bindTooltip('🏠 Casa Paolina', {
+        permanent: true,
+        direction: 'top',
+        offset: [0, -14],
+        className: 'mc-tooltip mc-tooltip--home'
     });
-    L.marker([CASA_PAOLINA.lat, CASA_PAOLINA.lng], { icon: homeIcon })
-        .bindPopup('<b>Casa Paolina</b><br>Via Dante De Blasi, 15')
-        .addTo(map);
 
     const categoryEmoji = { attractions: '🏛️', nightlife: '🍹', services: '🛒', restaurants: '🍴' };
-    const categoryBadge = { attractions: 'map-badge--attraction', nightlife: 'map-badge--nightlife', services: 'map-badge--service', restaurants: 'map-badge--restaurant' };
+
+    const catColor = {
+        attractions: '#7c3aed',
+        nightlife:   '#d97706',
+        services:    '#16a34a',
+        restaurants: '#dc2626'
+    };
 
     const markerLayers = {};
     const markerRefs = {};
 
     pointsOfInterest.forEach((poi, index) => {
-        const emoji = categoryEmoji[poi.category] || '📍';
-        const badgeClass = categoryBadge[poi.category] || 'map-badge--service';
-        const icon = L.divIcon({
-            className: 'custom-beach-marker',
-            html: `<div class="map-badge ${badgeClass}"><span class="map-badge-emoji">${emoji}</span></div>`,
-            iconSize: [38, 42], iconAnchor: [19, 42]
-        });
-
-        const marker = L.marker([poi.lat, poi.lng], { icon })
-            .bindPopup(`<div style="min-width:180px"><b>${poi.name}</b><br><span style="font-size:0.88rem;color:#64748b">${poi.description || poi.address || ''}</span></div>`);
+        const marker = L.circleMarker([poi.lat, poi.lng], {
+            radius: 7,
+            fillColor: catColor[poi.category] || '#2c7873',
+            color: '#fff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 1
+        })
+        .bindTooltip(poi.name, {
+            permanent: false,
+            direction: 'top',
+            offset: [0, -10],
+            className: 'mc-tooltip mc-tooltip--beach'
+        })
+        .bindPopup(`<div style="min-width:160px;font-family:system-ui,sans-serif"><div style="font-weight:700;font-size:0.88rem;margin-bottom:4px">${categoryEmoji[poi.category] || '📍'} ${poi.name}</div><div style="font-size:0.78rem;color:#64748b">${poi.description || poi.address || ''}</div>${poi.distance ? `<div style="font-size:0.72rem;font-weight:600;color:#2c7873;margin-top:4px">📍 ${poi.distance}</div>` : ''}</div>`);
 
         if (!markerLayers[poi.category]) markerLayers[poi.category] = L.layerGroup().addTo(map);
         marker.addTo(markerLayers[poi.category]);

@@ -12,6 +12,7 @@ class LeafletBeachMap {
         this.currentFilter = 'all';
         this.searchQuery   = '';
         this._fsHandler    = null;
+        this.selectedDay   = 0;
     }
 
     async init() {
@@ -26,6 +27,8 @@ class LeafletBeachMap {
         this.renderBeachList();
         this.initFilters();
         this.initSearch();
+        this.initDaySelector();
+        this.initActInfoModal();
     }
 
     // ── MAP INIT ─────────────────────────────────────────────────
@@ -163,8 +166,15 @@ class LeafletBeachMap {
     // Returns { color, state } based on current wind and beach exposure.
     // State: 'calm' | 'light' | 'rough' | 'default'
     _seaState(beach) {
-        const windDir   = window.currentWindCardinal;
-        const windSpeed = window.currentWindSpeedKmh;
+        let windDir, windSpeed;
+        const byDay = window.windDataByDay;
+        if (byDay && byDay[this.selectedDay]) {
+            windDir   = byDay[this.selectedDay].cardinal;
+            windSpeed = byDay[this.selectedDay].speed;
+        } else {
+            windDir   = window.currentWindCardinal;
+            windSpeed = window.currentWindSpeedKmh;
+        }
 
         if (!windDir || windSpeed === undefined) {
             // No wind data yet — colour by sea / distance
@@ -177,13 +187,13 @@ class LeafletBeachMap {
         }
 
         const prot = Array.isArray(beach.protectedFrom) ? beach.protectedFrom : [];
-        const protected_ = prot.includes(windDir);
+        const isProtected = prot.includes(windDir);
 
-        if (protected_ && windSpeed <= 15) return { color: '#22c55e', state: 'calm' };
-        if (protected_ && windSpeed <= 30) return { color: '#f59e0b', state: 'light' };
-        if (protected_)                    return { color: '#ef4444', state: 'rough' };
-        if (windSpeed <= 12)               return { color: '#f59e0b', state: 'light' };
-        return                                    { color: '#ef4444', state: 'rough' };
+        if (isProtected && windSpeed <= 15) return { color: '#22c55e', state: 'calm' };
+        if (isProtected && windSpeed <= 30) return { color: '#f59e0b', state: 'light' };
+        if (isProtected)                    return { color: '#ef4444', state: 'rough' };
+        if (windSpeed <= 12)                return { color: '#f59e0b', state: 'light' };
+        return                                     { color: '#ef4444', state: 'rough' };
     }
 
     _miniPopupHTML(beach) {
@@ -422,6 +432,34 @@ class LeafletBeachMap {
         });
     }
 
+    initDaySelector() {
+        document.querySelectorAll('.mc-day-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mc-day-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.selectedDay = parseInt(btn.dataset.day) || 0;
+                this.addBeachMarkers(this.currentFilter);
+                this.renderBeachList(this.currentFilter);
+            });
+        });
+    }
+
+    initActInfoModal() {
+        const btn   = document.getElementById('mc-act-info-btn');
+        const modal = document.getElementById('mc-act-modal');
+        const close = document.getElementById('mc-act-modal-close');
+        const bd    = modal?.querySelector('.mc-act-modal-backdrop');
+        if (!btn || !modal) return;
+
+        const open  = () => { modal.hidden = false; document.body.classList.add('mc-body--noscroll'); };
+        const shut  = () => { modal.hidden = true;  document.body.classList.remove('mc-body--noscroll'); };
+
+        btn.addEventListener('click', open);
+        close?.addEventListener('click', shut);
+        bd?.addEventListener('click', shut);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) shut(); });
+    }
+
     initSearch() {
         const input = document.getElementById('mc-search');
         const clear = document.getElementById('mc-search-clear');
@@ -475,6 +513,8 @@ class LeafletBeachMap {
         const sandEmoji = SAND_EMOJI[beach.sandType] || '🌊';
         const seaLabel  = beach.sea === 'ionico' ? 'Ion.' : 'Adr.';
         const isClosest = (beach.distanceNum || 999) <= 5;
+        const sandLabel = { fine_sand:'🏖️', golden_sand:'🏖️', white_sand:'🏖️', pebbles:'🪨', rocks:'🪨' }[beach.sandType] || '';
+        const sandTagKey = (beach.sandType || '').includes('sand') || beach.sandType === 'pebbles' ? 'tag_sand' : 'tag_rock';
         const casaLat   = 40.102558, casaLng = 18.446024;
         const mapsUrl   = `https://www.google.com/maps/dir/?api=1&origin=${casaLat},${casaLng}&destination=${beach.lat},${beach.lng}`;
 
@@ -500,6 +540,7 @@ class LeafletBeachMap {
                 <div class="mc-row__meta">
                     <span class="mc-row__sea ${beach.sea === 'ionico' ? 'mc-row__sea--ion' : ''}">${seaLabel}</span>
                     <span class="mc-row__dist">${beach.distance || ''}</span>
+                    ${sandLabel ? `<span class="mc-row__sandtag">${sandLabel}</span>` : ''}
                     ${actEmojis ? `<span class="mc-row__acts">${actEmojis}</span>` : ''}
                 </div>
             </div>
