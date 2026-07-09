@@ -205,31 +205,70 @@
             <!-- Activity filter pills + wind badge -->
             <div class="mc-filters-row">
                 <div class="mc-filters-scroll">
-                    <button class="mc-pill active" data-activity="all" data-translate="filter_all">Tutte</button>
-                    <button class="mc-pill" data-activity="swim" data-translate="bf_swim">🏊 Nuoto</button>
-                    <button class="mc-pill" data-activity="snorkel" data-translate="bf_snorkel">🤿 Snorkeling</button>
-                    <button class="mc-pill" data-activity="dive" data-translate="bf_dive">🧜 Immersioni</button>
-                    <button class="mc-pill" data-activity="family" data-translate="bf_family">👨‍👩‍👧 Famiglie</button>
-                    <button class="mc-pill" data-activity="nature" data-translate="bf_nature">🌿 Natura</button>
-                    <button class="mc-pill" data-activity="hidden" data-translate="bf_hidden">💎 Cale</button>
-                    <button class="mc-pill mc-pill--wind" data-activity="recommended-today" data-translate="filter_recommended_today">⭐ Oggi Consigliate</button>
+                    <button class="mc-pill active" data-activity="all">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/><path d="M2 17c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/></svg>
+                        Tutte
+                    </button>
+                    <button class="mc-pill" data-activity="swim">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M6 12l3-4 3 2 3-3"/><path d="M2 17c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/></svg>
+                        Nuoto
+                    </button>
+                    <button class="mc-pill" data-activity="snorkel">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="10" r="4"/><path d="M16 10h4a2 2 0 0 1 0 4h-4"/><path d="M12 14v4"/></svg>
+                        Snorkeling
+                    </button>
+                    <button class="mc-pill" data-activity="dive">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v11"/><path d="M8 8l4 4 4-4"/><path d="M4 19c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2"/></svg>
+                        Immersioni
+                    </button>
+                    <button class="mc-pill" data-activity="family">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="5" r="2"/><circle cx="17" cy="6" r="1.5"/><path d="M5 21v-4a4 4 0 0 1 8 0v4"/><path d="M17 21v-3a3 3 0 0 0-3-3"/></svg>
+                        Famiglie
+                    </button>
+                    <button class="mc-pill" data-activity="nature">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22V12"/><path d="M12 12C12 8 8 5 4 7c4 2 6 5 8 5z"/><path d="M12 12c0-4 4-7 8-5-4 2-6 5-8 5z"/></svg>
+                        Natura
+                    </button>
+                    <button class="mc-pill" data-activity="hidden">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 5C7 5 2.7 8.6 1 12c1.7 3.4 6 7 11 7s9.3-3.6 11-7c-1.7-3.4-6-7-11-7z"/></svg>
+                        Cale
+                    </button>
+                    <button class="mc-pill" data-activity="sup">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19h16"/><path d="M12 3v12"/><path d="M8 11l4-4 4 4"/></svg>
+                        SUP
+                    </button>
+                    <button class="mc-pill mc-pill--wind" data-activity="recommended-today">
+                        <svg class="mc-pill-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        Oggi
+                    </button>
                 </div>
                 <p id="current-wind-info" class="mc-wind-badge" aria-live="polite"></p>
             </div>
 
-            <!-- Sea-state legend (shown only when wind data is loaded) -->
-            <div id="mc-sea-legend" class="mc-sea-legend" style="display:none">
-                <span class="mc-legend-item"><span class="mc-legend-dot" style="background:#22c55e"></span> Piatto o calmo</span>
-                <span class="mc-legend-item"><span class="mc-legend-dot" style="background:#f59e0b"></span> Poco mosso</span>
-                <span class="mc-legend-item"><span class="mc-legend-dot" style="background:#ef4444"></span> Mosso</span>
+            <!-- Sea-state legend + sort context -->
+            <div class="mc-context-row">
+                <div id="mc-sea-legend" class="mc-sea-legend" style="display:none">
+                    <span class="mc-legend-item"><span class="mc-legend-dot" style="background:#22c55e"></span> Piatto o calmo</span>
+                    <span class="mc-legend-item"><span class="mc-legend-dot" style="background:#f59e0b"></span> Poco mosso</span>
+                    <span class="mc-legend-item"><span class="mc-legend-dot" style="background:#ef4444"></span> Mosso</span>
+                </div>
             </div>
 
-            <!-- Marecalmo layout: map left + scrollable cards right -->
+            <!-- Marecalmo layout: map left + list right -->
             <div class="mc-layout">
                 <div class="mc-map-side">
                     <div id="beaches-map" class="mc-map"></div>
                 </div>
                 <div class="mc-list-side">
+                    <!-- Sticky list header: count + search -->
+                    <div class="mc-list-header">
+                        <span id="mc-beach-count" class="mc-count">…</span>
+                        <div class="mc-search-wrap">
+                            <svg class="mc-search-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                            <input id="mc-search" type="search" class="mc-search-input" placeholder="Cerca spiaggia…" autocomplete="off" enterkeyhint="search">
+                            <button id="mc-search-clear" class="mc-search-clear" type="button" hidden>✕</button>
+                        </div>
+                    </div>
                     <div id="beaches-list" class="mc-beach-list"></div>
                 </div>
             </div>

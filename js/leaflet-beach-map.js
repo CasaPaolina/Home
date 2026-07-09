@@ -6,11 +6,12 @@
 
 class LeafletBeachMap {
     constructor() {
-        this.map        = null;
-        this.markers    = [];
-        this.beaches    = [];
+        this.map           = null;
+        this.markers       = [];
+        this.beaches       = [];
         this.currentFilter = 'all';
-        this._fsHandler = null;
+        this.searchQuery   = '';
+        this._fsHandler    = null;
     }
 
     async init() {
@@ -24,6 +25,7 @@ class LeafletBeachMap {
         this.initMap();
         this.renderBeachList();
         this.initFilters();
+        this.initSearch();
     }
 
     // ── MAP INIT ─────────────────────────────────────────────────
@@ -226,6 +228,23 @@ class LeafletBeachMap {
         el.style.display = hasWind ? 'flex' : 'none';
     }
 
+    // Lower score = better sea conditions. Used for ranking.
+    _seaScore(beach) {
+        const { state } = this._seaState(beach);
+        return { calm: 0, light: 1, rough: 2, default: 3 }[state] ?? 3;
+    }
+
+    _sortedBeaches(beaches) {
+        const hasWind = !!window.currentWindCardinal;
+        return [...beaches].sort((a, b) => {
+            if (hasWind) {
+                const diff = this._seaScore(a) - this._seaScore(b);
+                if (diff !== 0) return diff;
+            }
+            return (a.distanceNum || 999) - (b.distanceNum || 999);
+        });
+    }
+
     addBeachMarkers(filter = 'all') {
         this.markers.forEach(({ marker }) => this.map.removeLayer(marker));
         this.markers = [];
@@ -378,15 +397,54 @@ class LeafletBeachMap {
         const container = document.getElementById('beaches-list');
         if (!container) return;
 
-        const beaches = this.filterBeaches(filter);
-        container.innerHTML = beaches.map(b => this._cardHTML(b)).join('');
+        let beaches = this._sortedBeaches(this.filterBeaches(filter));
+
+        // Apply search
+        const q = this.searchQuery.toLowerCase().trim();
+        if (q) {
+            beaches = beaches.filter(b => b.name.toLowerCase().includes(q));
+        }
+
+        // Update count
+        const countEl = document.getElementById('mc-beach-count');
+        if (countEl) {
+            const hasWind = !!window.currentWindCardinal;
+            const label = hasWind ? `${beaches.length} spiagge · ordinate per condizioni` : `${beaches.length} spiagge`;
+            countEl.textContent = label;
+        }
+
+        // Render — first item gets "Migliore oggi" badge if wind is known
+        const hasWind = !!window.currentWindCardinal;
+        container.innerHTML = beaches.map((b, i) => this._cardHTML(b, i === 0 && hasWind && !q && beaches.length > 0)).join('');
 
         container.querySelectorAll('.beach-list-item').forEach(item => {
             item.addEventListener('click', () => this.selectBeach(item.dataset.beachId, { fromMap: false }));
         });
     }
 
-    _cardHTML(beach) {
+    initSearch() {
+        const input = document.getElementById('mc-search');
+        const clear = document.getElementById('mc-search-clear');
+        if (!input) return;
+
+        input.addEventListener('input', () => {
+            this.searchQuery = input.value;
+            if (clear) clear.hidden = !input.value;
+            this.renderBeachList(this.currentFilter);
+        });
+
+        if (clear) {
+            clear.addEventListener('click', () => {
+                input.value = '';
+                this.searchQuery = '';
+                clear.hidden = true;
+                this.renderBeachList(this.currentFilter);
+                input.focus();
+            });
+        }
+    }
+
+    _cardHTML(beach, isBest = false) {
         // Activity emojis only (no text) for compact view
         const ACT_EMOJI = {
             swim:'🏊', snorkel:'🤿', dive:'🧜', family:'👨‍👩‍👧',
@@ -427,8 +485,12 @@ class LeafletBeachMap {
             ? `<a href="${beach.bookingLink}" target="_blank" class="mc-row__link mc-row__link--book" onclick="event.stopPropagation()" title="Prenota">🎫</a>`
             : '';
 
-        return `<div class="mc-beach-row beach-list-item" data-beach-id="${beach.id}">
+        const { color: stateColor } = this._seaState(beach);
+
+        return `<div class="mc-beach-row beach-list-item${isBest ? ' mc-row--best' : ''}" data-beach-id="${beach.id}">
+            ${isBest ? `<div class="mc-row__best-bar">🏆 Migliore oggi</div>` : ''}
             <div class="mc-row__thumb">
+                <div class="mc-row__state-dot" style="background:${stateColor}"></div>
                 ${imageSrc
                     ? `<img src="images/${imageSrc}" alt="${beach.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'mc-row__ph\\' style=\\'${gradient}\\'>${sandEmoji}</div>'">`
                     : `<div class="mc-row__ph" style="${gradient}">${sandEmoji}</div>`}
@@ -466,9 +528,10 @@ if (document.readyState === 'loading') {
     setTimeout(initLeafletBeachMap, 400);
 }
 
-// Re-colour pins whenever fresh wind data arrives
+// Re-colour pins and re-sort list whenever fresh wind data arrives
 document.addEventListener('windUpdated', () => {
     if (leafletBeachMap) {
         leafletBeachMap.addBeachMarkers(leafletBeachMap.currentFilter);
+        leafletBeachMap.renderBeachList(leafletBeachMap.currentFilter);
     }
 });
