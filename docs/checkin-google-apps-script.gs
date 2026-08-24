@@ -99,6 +99,12 @@ function doPost(e) {
   try {
     var raw  = (e.parameter && e.parameter.data) ? e.parameter.data : e.postData.contents;
     var data = JSON.parse(raw);
+
+    // ── Azione Alloggiati Web ────────────────────────────────────
+    if (data.action === 'alloggiati-send') {
+      return doPostAlloggiatiSend_(data);
+    }
+
     var ss   = SpreadsheetApp.getActiveSpreadsheet();
 
     // ── Foglio PRENOTAZIONI ──────────────────────────────────────
@@ -165,6 +171,14 @@ function doGet(e) {
     return getCheckinDetails_(nome, cognome);
   }
 
+  if (action === 'alloggiati-due') {
+    return doGetAlloggiatiDue_();
+  }
+
+  if (action === 'alloggiati-preview') {
+    return doGetAlloggiatiPreview_(e);
+  }
+
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'ok', message: 'Casa Paolina Check-in API' }))
     .setMimeType(ContentService.MimeType.JSON);
@@ -229,7 +243,7 @@ function getCheckinDetails_(nome, cognome) {
               nome: guestData[i][5] || '',
               cognome: guestData[i][6] || '',
               sesso: guestData[i][7] || '',
-              data_nascita: guestData[i][8] || '',
+              data_nascita: formatSheetDate_(guestData[i][8]) || '',
               comune_nascita: guestData[i][9] || '',
               stato_nascita: guestData[i][10] || '',
               cittadinanza: guestData[i][11] || '',
@@ -246,8 +260,8 @@ function getCheckinDetails_(nome, cognome) {
           details: {
             data_ricezione: lastMatch[0],
             appartamento: lastMatch[1],
-            data_arrivo: lastMatch[2],
-            data_partenza: lastMatch[3],
+            data_arrivo: formatSheetDate_(lastMatch[2]),
+            data_partenza: formatSheetDate_(lastMatch[3]),
             notti: lastMatch[4],
             adulti: lastMatch[5],
             bambini: lastMatch[6],
@@ -257,7 +271,7 @@ function getCheckinDetails_(nome, cognome) {
             nome: lastMatch[10],
             cognome: lastMatch[11],
             sesso: lastMatch[12],
-            data_nascita: lastMatch[13],
+            data_nascita: formatSheetDate_(lastMatch[13]),
             comune_nascita: lastMatch[14],
             stato_nascita: lastMatch[15],
             cittadinanza: lastMatch[16],
@@ -1539,4 +1553,784 @@ function testEmail() {
 
   inviaEmail_(fakeData, SpreadsheetApp.getActiveSpreadsheet().getUrl());
   Logger.log('Email di test inviata a: ' + NOTIFICATION_EMAIL);
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  ALLOGGIATI WEB — Polizia di Stato
+//
+//  SETUP (una volta sola):
+//  1. In Apps Script → Impostazioni progetto → Proprietà script
+//  2. Aggiungi le seguenti proprietà:
+//       ALLOGGIATI_USER        = il tuo username del portale
+//       ALLOGGIATI_PWD         = la tua password
+//       ALLOGGIATI_WSKEY       = la tua WsKey (fornita dalla questura)
+//       ALLOGGIATI_IDSTRUTTURA = il tuo IdStruttura (numero, uguale a IdUtente)
+//
+//  COME FUNZIONA:
+//  - La dashboard admin mostra i check-in del giorno corrente e precedenti
+//    non ancora inviati (sezione "Schedine Questura")
+//  - L'admin può visualizzare l'anteprima del testo schedina
+//  - Con il tasto "Invia" vengono autenticati e inviati i dati
+//  - Ogni invio viene loggato nel foglio "AlloggiatiLog"
+//
+//  FORMATO SCHEDINA (fixed-width 170 chars per riga):
+//  [2]  Tipo alloggiato (es. "16")
+//  [10] Data arrivo (DD/MM/YYYY)
+//  [3]  Numero notti (right-aligned)
+//  [50] Cognome
+//  [30] Nome
+//  [1]  Sesso (1=M, 2=F)
+//  [10] Data nascita (DD/MM/YYYY)
+//  [9]  Codice stato di nascita (ISTAT, left-aligned)
+//  [6]  Codice comune di nascita (ISTAT 6 cifre, o spazi)
+//  [9]  Codice cittadinanza (ISTAT, left-aligned)
+//  [5]  Codice tipo documento
+//  [20] Numero documento
+//  [9]  Codice stato rilascio
+//  [6]  Codice comune rilascio (o spazi)
+//  = 170 caratteri totali
+// ════════════════════════════════════════════════════════════════
+
+var ALLOGGIATI_API_BASE_ = 'https://alloggiatiweb.poliziadistato.it/service/service.svc/';
+
+// ── Credenziali da Script Properties ────────────────────────────
+function getAlloggiatiConfig_() {
+  var props = PropertiesService.getScriptProperties().getProperties();
+  return {
+    user:        props['ALLOGGIATI_USER']        || '',
+    pwd:         props['ALLOGGIATI_PWD']         || '',
+    wsKey:       props['ALLOGGIATI_WSKEY']       || '',
+    idStruttura: parseInt(props['ALLOGGIATI_IDSTRUTTURA'] || '0', 10)
+  };
+}
+
+// ── Autenticazione → { token, idUtente } ────────────────────────
+function alloggiatiAuthenticate_(cfg) {
+  var resp = UrlFetchApp.fetch(ALLOGGIATI_API_BASE_ + 'authentication', {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify({ Utente: cfg.user, Password: cfg.pwd, WsKey: cfg.wsKey }),
+    muteHttpExceptions: true
+  });
+  var body = JSON.parse(resp.getContentText('UTF-8'));
+  if (!body.Acknowledged) {
+    throw new Error('Autenticazione fallita: ' + (body.GeneralError || JSON.stringify(body)));
+  }
+  return { token: body.Token, idUtente: body.IdUtente };
+}
+
+// ── Invio schedine → risposta API ───────────────────────────────
+function alloggiatiSendRows_(cfg, token, idUtente, rowsText) {
+  var resp = UrlFetchApp.fetch(ALLOGGIATI_API_BASE_ + 'sendschedine', {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify({
+      Utente:       cfg.user,
+      token:        token,
+      WsKey:        cfg.wsKey,
+      IdStruttura:  idUtente || cfg.idStruttura,
+      Rows:         rowsText
+    }),
+    muteHttpExceptions: true
+  });
+  return JSON.parse(resp.getContentText('UTF-8'));
+}
+
+// ── Tabella codici stati ISTAT (usati da Alloggiati Web) ─────────
+//  Fonte: tabella STATI scaricabile dal portale Alloggiati Web.
+//  Codice stato = numero stringa, padded a 9 char (left-aligned + spazi).
+//  Aggiungere paesi mancanti usando la tabella ufficiale.
+var ALLOGGIATI_STATI_ = {
+  'italia':                '100',
+  'italy':                 '100',
+  'italiana':              '100',
+  'italian':               '100',
+  'germania':              '109',
+  'germany':               '109',
+  'tedesca':               '109',
+  'tedesco':               '109',
+  'francia':               '116',
+  'france':                '116',
+  'francese':              '116',
+  'spagna':                '113',
+  'spain':                 '113',
+  'spagnola':              '113',
+  'austria':               '103',
+  'austriaca':             '103',
+  'svizzera':              '167',
+  'switzerland':           '167',
+  'svizzero':              '167',
+  'regno unito':           '219',
+  'united kingdom':        '219',
+  'gran bretagna':         '219',
+  'great britain':         '219',
+  'inglese':               '219',
+  'britannica':            '219',
+  'usa':                   '225',
+  'stati uniti':           '225',
+  'united states':         '225',
+  'americana':             '225',
+  'americano':             '225',
+  'paesi bassi':           '127',
+  'netherlands':           '127',
+  'olanda':                '127',
+  'olandese':              '127',
+  'belgio':                '104',
+  'belgium':               '104',
+  'belga':                 '104',
+  'polonia':               '139',
+  'poland':                '139',
+  'polacca':               '139',
+  'polacco':               '139',
+  'romania':               '141',
+  'romena':                '141',
+  'rumena':                '141',
+  'russia':                '166',
+  'russian federation':    '166',
+  'federazione russa':     '166',
+  'russa':                 '166',
+  'ucraina':               '232',
+  'ukraine':               '232',
+  'ucrainese':             '232',
+  'albania':               '201',
+  'albanese':              '201',
+  'rep. ceca':             '108',
+  'repubblica ceca':       '108',
+  'czech republic':        '108',
+  'ceca':                  '108',
+  'svezia':                '152',
+  'sweden':                '152',
+  'svedese':               '152',
+  'norvegia':              '125',
+  'norway':                '125',
+  'norvegese':             '125',
+  'danimarca':             '107',
+  'denmark':               '107',
+  'danese':                '107',
+  'finlandia':             '115',
+  'finland':               '115',
+  'finlandese':            '115',
+  'portogallo':            '140',
+  'portugal':              '140',
+  'portoghese':            '140',
+  'grecia':                '120',
+  'greece':                '120',
+  'greca':                 '120',
+  'ungheria':              '122',
+  'hungary':               '122',
+  'ungherese':             '122',
+  'slovacchia':            '142',
+  'slovakia':              '142',
+  'slovacca':              '142',
+  'slovenia':              '144',
+  'slovena':               '144',
+  'croazia':               '251',
+  'croatia':               '251',
+  'croata':                '251',
+  'serbia':                '274',
+  'serba':                 '274',
+  'bulgaria':              '105',
+  'bulgara':               '105',
+  'turchia':               '168',
+  'turkey':                '168',
+  'turca':                 '168',
+  'israele':               '321',
+  'israel':                '321',
+  'israeliana':            '321',
+  'cina':                  '304',
+  'china':                 '304',
+  'cinese':                '304',
+  'giappone':              '319',
+  'japan':                 '319',
+  'giapponese':            '319',
+  'india':                 '311',
+  'indiana':               '311',
+  'brasile':               '401',
+  'brazil':                '401',
+  'brasiliana':            '401',
+  'argentina':             '402',
+  'argentina':             '402',
+  'argentina':             '402',
+  'canada':                '404',
+  'canadese':              '404',
+  'australia':             '501',
+  'australiana':           '501',
+  'nuova zelanda':         '503',
+  'new zealand':           '503',
+  'sudafrica':             '345',
+  'south africa':          '345',
+  'marocco':               '339',
+  'morocco':               '339',
+  'egitto':                '327',
+  'egypt':                 '327',
+  'messico':               '416',
+  'mexico':                '416',
+  'colombia':              '406',
+  'peru':                  '420',
+  'perù':                  '420',
+  'venezuela':             '424',
+};
+
+function getStatoCodice_(name) {
+  if (!name) return '100';
+  var key = String(name).toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');  // rimuove accenti
+  var keyOrig = String(name).toLowerCase().trim();
+  if (ALLOGGIATI_STATI_[keyOrig]) return ALLOGGIATI_STATI_[keyOrig];
+  if (ALLOGGIATI_STATI_[key])     return ALLOGGIATI_STATI_[key];
+  // ricerca parziale
+  for (var k in ALLOGGIATI_STATI_) {
+    if (key.indexOf(k) >= 0 || k.indexOf(key) >= 0) return ALLOGGIATI_STATI_[k];
+  }
+  return '100';  // fallback Italia — verificare manualmente
+}
+
+function padStatoCodice_(code) {
+  return String(code || '100').padEnd(9, ' ').substring(0, 9);
+}
+
+// ── Tabella codici tipo documento ────────────────────────────────
+var ALLOGGIATI_DOC_ = {
+  "carta d'identità":   'IDENT',
+  "carta d'identita":   'IDENT',
+  "carta di identita":  'IDENT',
+  "carta di identità":  'IDENT',
+  'identity card':       'IDENT',
+  'ci':                  'IDENT',
+  'passaporto':          'PASSP',
+  'passport':            'PASSP',
+  'patente di guida':    'PATEN',
+  'patente':             'PATEN',
+  'driving license':     'PATEN',
+  "driver's license":    'PATEN',
+  'permesso di soggiorno': 'PERMS',
+  'residence permit':    'PERMS',
+  'visto':               'VISTO',
+  'visa':                'VISTO',
+};
+
+function getDocCodice_(tipo) {
+  if (!tipo) return 'IDENT';
+  var key = String(tipo).toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  var keyOrig = String(tipo).toLowerCase().trim();
+  if (ALLOGGIATI_DOC_[keyOrig]) return ALLOGGIATI_DOC_[keyOrig];
+  if (ALLOGGIATI_DOC_[key])     return ALLOGGIATI_DOC_[key];
+  if (key.indexOf('identit') >= 0) return 'IDENT';
+  if (key.indexOf('passp')   >= 0) return 'PASSP';
+  if (key.indexOf('paten')   >= 0) return 'PATEN';
+  if (key.indexOf('permess') >= 0) return 'PERMS';
+  return 'IDENT';
+}
+
+// ── Tabella codici ISTAT comuni italiani ─────────────────────────
+//  Elenco parziale. Aggiungere comuni mancanti dalla tabella COMUNI
+//  scaricabile da alloggiatiweb.poliziadistato.it/PortaleAlloggiati/Tabelle.aspx
+var ALLOGGIATI_COMUNI_ = {
+  // Lecce e provincia
+  'uggiano la chiesa':   '075091',
+  'lecce':               '075036',
+  'otranto':             '075058',
+  'maglie':              '075041',
+  'tricase':             '075088',
+  'gagliano del capo':   '075028',
+  'poggiardo':           '075063',
+  'minervino di lecce':  '075045',
+  'martano':             '075043',
+  'muro leccese':        '075051',
+  'palmariggi':          '075059',
+  'giurdignano':         '075030',
+  'calimera':            '075012',
+  'carpignano salentino':'075017',
+  'castrignano dei greci':'075020',
+  'melendugno':          '075044',
+  'vernole':             '075093',
+  'alliste':             '075002',
+  'aradeo':              '075004',
+  'campi salentina':     '075013',
+  'carmiano':            '075015',
+  'casarano':            '075019',
+  'cavallino':           '075021',
+  'copertino':           '075024',
+  'corigliano d otranto':'075025',
+  'cursi':               '075026',
+  'cutrofiano':          '075027',
+  'gallipoli':           '075029',
+  'galatina':            '075031',
+  'galatone':            '075032',
+  'lequile':             '075038',
+  'leverano':            '075039',
+  'nardo':               '075053',
+  'nardò':               '075053',
+  'neviano':             '075054',
+  'parabita':            '075060',
+  'presicce':            '075067',
+  'racale':              '075069',
+  'ruffano':             '075074',
+  'salve':               '075075',
+  'sanarica':            '075076',
+  'specchia':            '075083',
+  'sternatia':           '075084',
+  'supersano':           '075085',
+  'surbo':               '075086',
+  'taurisano':           '075087',
+  'tuglie':              '075089',
+  'ugento':              '075090',
+  // Brindisi e provincia
+  'brindisi':            '074002',
+  'fasano':              '074008',
+  'francavilla fontana': '074011',
+  'mesagne':             '074014',
+  'ostuni':              '074018',
+  'san vito dei normanni':'074021',
+  // Taranto e provincia
+  'taranto':             '073027',
+  'grottaglie':          '073010',
+  'manduria':            '073013',
+  'massafra':            '073014',
+  // Bari e provincia
+  'bari':                '072006',
+  'altamura':            '072003',
+  'bitonto':             '072013',
+  'gravina in puglia':   '072022',
+  'molfetta':            '072031',
+  'monopoli':            '072032',
+  'ruvo di puglia':      '072038',
+  'santeramo in colle':  '072043',
+  // Foggia e provincia
+  'foggia':              '071024',
+  'cerignola':           '071015',
+  'lucera':              '071030',
+  'manfredonia':         '071031',
+  'san severo':          '071048',
+  // Altre città principali
+  'roma':                '058091',
+  'milano':              '015146',
+  'napoli':              '063049',
+  'torino':              '001272',
+  'palermo':             '082053',
+  'genova':              '010025',
+  'bologna':             '037006',
+  'firenze':             '048017',
+  'catania':             '087015',
+  'venezia':             '027042',
+  'verona':              '023091',
+  'messina':             '083048',
+  'padova':              '028060',
+  'trieste':             '032006',
+  'brescia':             '017029',
+  'prato':               '100003',
+  'modena':              '036023',
+  'reggio calabria':     '080063',
+  'reggio emilia':       '035033',
+  'perugia':             '054039',
+  'livorno':             '049009',
+  'cagliari':            '092009',
+  'salerno':             '065116',
+  'ferrara':             '038008',
+  'rimini':              '099008',
+  'ravenna':             '039014',
+  'sassari':             '090059',
+  'latina':              '059011',
+  'bergamo':             '016024',
+  'vicenza':             '024116',
+  'trento':              '022205',
+  'bolzano':             '021008',
+  'ancona':              '042002',
+  'pesaro':              '041037',
+  'terni':               '055032',
+  'novara':              '003122',
+  'piacenza':            '033032',
+  'parma':               '034027',
+  'reggio nell emilia':  '035033',
+  'siena':               '052032',
+  'pisa':                '050026',
+  'arezzo':              '051002',
+  'lucca':               '046017',
+  'pistoia':             '047014',
+  'cosenza':             '078040',
+  'catanzaro':           '079024',
+  'potenza':             '076063',
+  'matera':              '077014',
+  'campobasso':          '070006',
+  'isernia':             '094021',
+  'pescara':             '068028',
+  'chieti':              '069024',
+  'teramo':              '067042',
+  "l'aquila":            '066049',
+  'frosinone':           '060050',
+  'viterbo':             '056059',
+  'rieti':               '057059',
+  'avellino':            '064009',
+  'benevento':           '062008',
+  'caserta':             '061027',
+  'ragusa':              '088008',
+  'siracusa':            '089018',
+  'enna':                '086010',
+  'caltanissetta':       '085006',
+  'agrigento':           '084001',
+  'trapani':             '081023',
+  'nuoro':               '091052',
+};
+
+function getComuneCodice_(nome) {
+  if (!nome) return '      ';
+  var key = String(nome).toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  var keyOrig = String(nome).toLowerCase().trim();
+  if (ALLOGGIATI_COMUNI_[keyOrig]) return ALLOGGIATI_COMUNI_[keyOrig];
+  if (ALLOGGIATI_COMUNI_[key])     return ALLOGGIATI_COMUNI_[key];
+  // ricerca parziale
+  for (var k in ALLOGGIATI_COMUNI_) {
+    if (key === k || key.indexOf(k) >= 0 || k.indexOf(key) >= 0) return ALLOGGIATI_COMUNI_[k];
+  }
+  return '      ';  // sconosciuto → 6 spazi — aggiungere alla tabella COMUNI
+}
+
+// ── Costruisce una singola riga schedina (170 chars fixed-width) ──
+function buildSchedinRow_(ospite, dataArrivo, notti) {
+  function padR(s, n) { return String(s == null ? '' : s).padEnd(n, ' ').substring(0, n); }
+  function padL(s, n) { return String(s == null ? '' : s).padStart(n, ' ').substring(0, n); }
+
+  function fmtDate(d) {
+    if (!d) return '          ';
+    var s = String(d).trim();
+    var iso = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (iso) return iso[3] + '/' + iso[2] + '/' + iso[1];
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
+    return '          ';
+  }
+
+  var tipo       = padR(ospite.tipo || '16', 2);
+  var arrivo     = fmtDate(dataArrivo || ospite.data_arrivo);
+  var nottiStr   = padL(String(parseInt(notti || ospite.notti || 1)), 3);
+  var cognome    = padR(ospite.cognome, 50);
+  var nome       = padR(ospite.nome, 30);
+  var sesso      = String(ospite.sesso || '1').trim().toUpperCase();
+  if (sesso === 'M' || sesso === 'MASCHIO' || sesso === 'MALE')   sesso = '1';
+  if (sesso === 'F' || sesso === 'FEMMINA' || sesso === 'FEMALE') sesso = '2';
+  sesso = sesso.charAt(0);
+
+  var nascita    = fmtDate(ospite.data_nascita);
+  var statoNasc  = padStatoCodice_(getStatoCodice_(ospite.stato_nascita || 'Italia'));
+  var comuneNasc = padR(getComuneCodice_(ospite.comune_nascita), 6);
+  var citt       = padStatoCodice_(getStatoCodice_(ospite.cittadinanza || 'Italiana'));
+  var tipoDoc    = padR(getDocCodice_(ospite.tipo_doc), 5);
+  var numDoc     = padR(ospite.num_doc, 20);
+  var statoRil   = padStatoCodice_(getStatoCodice_(ospite.stato_rilascio || 'Italia'));
+  var comuneRil  = padR(getComuneCodice_(ospite.comune_rilascio), 6);
+
+  var row = tipo + arrivo + nottiStr + cognome + nome + sesso + nascita +
+            statoNasc + comuneNasc + citt + tipoDoc + numDoc + statoRil + comuneRil;
+
+  if (row.length !== 170) {
+    Logger.log('ATTENZIONE: riga schedina lunghezza ' + row.length + ' (attesa 170)');
+  }
+  return row;
+}
+
+// ── Recupera check-in con schedina da inviare ────────────────────
+//  Restituisce le prenotazioni con data_arrivo <= oggi non ancora
+//  inviate con successo (non presenti nel foglio AlloggiatiLog).
+function getAlloggiatiDue_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Prenotazioni');
+  if (!sheet || sheet.getLastRow() < 2) return [];
+
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  var sent  = getAlloggiatiSentKeys_();
+
+  var rows = sheet.getDataRange().getValues();
+  var due  = [];
+
+  for (var i = 1; i < rows.length; i++) {
+    var r    = rows[i];
+    var dVal = r[2];  // C = Data Arrivo
+    var d;
+    if (dVal instanceof Date) {
+      d = new Date(dVal.getFullYear(), dVal.getMonth(), dVal.getDate());
+    } else {
+      var ds = formatSheetDate_(dVal);
+      d = ds ? new Date(ds) : null;
+    }
+    if (!d || isNaN(d.getTime())) continue;
+    if (d > today) continue;  // prenotazioni future → skip
+
+    var nome    = String(r[10] || '').trim();
+    var cognome = String(r[11] || '').trim();
+    var apt     = String(r[1]  || '').trim();
+    var key     = formatSheetDate_(d) + '|' + apt.toLowerCase() + '|' +
+                  (nome + ' ' + cognome).toLowerCase().trim();
+
+    due.push({
+      key:            key,
+      data_arrivo:    formatSheetDate_(d),
+      data_partenza:  formatSheetDate_(r[3]),
+      appartamento:   apt,
+      notti:          parseInt(r[4]) || 1,
+      adulti:         parseInt(r[5]) || 1,
+      bambini:        parseInt(r[6]) || 0,
+      nome:           nome,
+      cognome:        cognome,
+      sesso:          String(r[12] || '').trim(),
+      data_nascita:   formatSheetDate_(r[13]),
+      comune_nascita: String(r[14] || '').trim(),
+      stato_nascita:  String(r[15] || '').trim(),
+      cittadinanza:   String(r[16] || '').trim(),
+      comune_res:     String(r[17] || '').trim(),
+      stato_res:      String(r[18] || '').trim(),
+      tipo_doc:       String(r[19] || '').trim(),
+      num_doc:        String(r[20] || '').trim(),
+      stato_rilascio: String(r[21] || '').trim(),
+      comune_rilascio:String(r[22] || '').trim(),
+      email:          String(r[23] || '').trim(),
+      telefono:       String(r[24] || '').trim(),
+      n_acc:          parseInt(r[25]) || 0,
+      already_sent:   !!sent[key]
+    });
+  }
+
+  // Carica i dati degli accompagnatori dal foglio Ospiti
+  var gSheet = ss.getSheetByName('Ospiti');
+  if (gSheet && gSheet.getLastRow() > 1) {
+    var gRows = gSheet.getDataRange().getValues();
+    due.forEach(function(item) {
+      var refName = (item.nome + ' ' + item.cognome).trim();
+      var guests  = [];
+      for (var j = 1; j < gRows.length; j++) {
+        var gr = gRows[j];
+        var checkinArrivo = formatSheetDate_(gr[2]);  // colonna C = Data Arrivo
+        if (String(gr[1] || '').trim() === refName &&
+            checkinArrivo === item.data_arrivo) {
+          guests.push({
+            nome:           String(gr[5]  || '').trim(),
+            cognome:        String(gr[6]  || '').trim(),
+            sesso:          String(gr[7]  || '').trim(),
+            data_nascita:   formatSheetDate_(gr[8]),
+            comune_nascita: String(gr[9]  || '').trim(),
+            stato_nascita:  String(gr[10] || '').trim(),
+            cittadinanza:   String(gr[11] || '').trim(),
+            comune_res:     String(gr[12] || '').trim(),
+            stato_res:      String(gr[13] || '').trim()
+          });
+        }
+      }
+      item.guests = guests;
+    });
+  } else {
+    due.forEach(function(item) { item.guests = []; });
+  }
+
+  return due;
+}
+
+// ── Costruisce il testo schedina completo per una prenotazione ───
+function buildAlloggiatiText_(checkinData) {
+  var lines  = [];
+  var arrivo = checkinData.data_arrivo;
+  var notti  = checkinData.notti || 1;
+
+  // Ospite referente (tipo 16)
+  lines.push(buildSchedinRow_({
+    tipo:           '16',
+    cognome:        checkinData.cognome,
+    nome:           checkinData.nome,
+    sesso:          checkinData.sesso,
+    data_nascita:   checkinData.data_nascita,
+    stato_nascita:  checkinData.stato_nascita,
+    comune_nascita: checkinData.comune_nascita,
+    cittadinanza:   checkinData.cittadinanza,
+    tipo_doc:       checkinData.tipo_doc,
+    num_doc:        checkinData.num_doc,
+    stato_rilascio: checkinData.stato_rilascio,
+    comune_rilascio:checkinData.comune_rilascio
+  }, arrivo, notti));
+
+  // Accompagnatori
+  (checkinData.guests || []).forEach(function(g) {
+    lines.push(buildSchedinRow_({
+      tipo:           '16',
+      cognome:        g.cognome,
+      nome:           g.nome,
+      sesso:          g.sesso,
+      data_nascita:   g.data_nascita,
+      stato_nascita:  g.stato_nascita,
+      comune_nascita: g.comune_nascita,
+      cittadinanza:   g.cittadinanza,
+      tipo_doc:       '',
+      num_doc:        '',
+      stato_rilascio: '',
+      comune_rilascio:''
+    }, arrivo, notti));
+  });
+
+  return lines.join('\r\n');
+}
+
+// ── Foglio log invii ─────────────────────────────────────────────
+function getAlloggiatiLogSheet_() {
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('AlloggiatiLog');
+  if (!sheet) {
+    sheet = ss.insertSheet('AlloggiatiLog');
+    var h = ['Data Invio', 'Appartamento', 'Data Arrivo', 'Ospite', 'Ricevuta', 'Esito', 'Key', 'Dettaglio'];
+    sheet.appendRow(h);
+    sheet.getRange(1, 1, 1, h.length)
+      .setFontWeight('bold').setBackground('#1e3a5f').setFontColor('#ffffff').setFontSize(10);
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidth(1, 160);
+    sheet.setColumnWidth(4, 200);
+    sheet.setColumnWidth(7, 250);
+  }
+  return sheet;
+}
+
+function getAlloggiatiSentKeys_() {
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('AlloggiatiLog');
+  var keys  = {};
+  if (!sheet || sheet.getLastRow() < 2) return keys;
+  var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 8).getValues();
+  data.forEach(function(row) {
+    if (String(row[5] || '').trim() === 'OK') {
+      keys[String(row[6] || '').trim()] = true;  // col G = Key
+    }
+  });
+  return keys;
+}
+
+function logAlloggiatiSend_(checkinData, esito, ricevuta, dettaglio) {
+  var sheet = getAlloggiatiLogSheet_();
+  sheet.appendRow([
+    new Date(),
+    checkinData.appartamento,
+    checkinData.data_arrivo,
+    (checkinData.nome + ' ' + checkinData.cognome).trim(),
+    ricevuta || '',
+    esito,
+    checkinData.key || '',
+    dettaglio || ''
+  ]);
+}
+
+// ── Azione GET: alloggiati-due ───────────────────────────────────
+function doGetAlloggiatiDue_() {
+  try {
+    var due = getAlloggiatiDue_();
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'ok', due: due }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ── Azione GET: alloggiati-preview ───────────────────────────────
+function doGetAlloggiatiPreview_(e) {
+  try {
+    var key = (e && e.parameter && e.parameter.key) ? decodeURIComponent(e.parameter.key) : '';
+    if (!key) throw new Error('Parametro "key" mancante');
+
+    var due   = getAlloggiatiDue_();
+    var found = null;
+    for (var i = 0; i < due.length; i++) {
+      if (due[i].key === key) { found = due[i]; break; }
+    }
+    if (!found) throw new Error('Check-in non trovato per la chiave specificata');
+
+    var rows = buildAlloggiatiText_(found);
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'ok', preview: rows, data: found }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ── Azione POST: alloggiati-send ─────────────────────────────────
+function doPostAlloggiatiSend_(data) {
+  var key = data.key;
+  if (!key) throw new Error('Chiave check-in mancante');
+
+  var due   = getAlloggiatiDue_();
+  var found = null;
+  for (var i = 0; i < due.length; i++) {
+    if (due[i].key === key) { found = due[i]; break; }
+  }
+  if (!found)             throw new Error('Check-in non trovato');
+  if (found.already_sent) throw new Error('Schedina già inviata per questo check-in');
+
+  var cfg = getAlloggiatiConfig_();
+  if (!cfg.user || !cfg.wsKey) {
+    throw new Error(
+      'Credenziali Alloggiati non configurate. ' +
+      'Aggiungi ALLOGGIATI_USER, ALLOGGIATI_PWD, ALLOGGIATI_WSKEY ' +
+      'nelle Script Properties.'
+    );
+  }
+
+  var auth  = alloggiatiAuthenticate_(cfg);
+  var rows  = buildAlloggiatiText_(found);
+  var resp  = alloggiatiSendRows_(cfg, auth.token, auth.idUtente, rows);
+
+  if (!resp.Acknowledged) {
+    var errMsg = resp.GeneralError || JSON.stringify(resp);
+    logAlloggiatiSend_(found, 'ERRORE', '', errMsg);
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', error: 'Invio fallito: ' + errMsg }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  logAlloggiatiSend_(found, 'OK', resp.NumRicevuta || resp.GeneralMessage || '', '');
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      status:   'ok',
+      ricevuta: resp.NumRicevuta || '',
+      message:  resp.GeneralMessage || 'Schedina inviata con successo'
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ── Test manuale da editor ───────────────────────────────────────
+//  Seleziona "testAlloggiatiPreview" e clicca ▶ Esegui per
+//  visualizzare nel log il testo schedina del primo check-in pendente.
+function testAlloggiatiPreview() {
+  var due = getAlloggiatiDue_();
+  if (!due.length) { Logger.log('Nessun check-in in attesa di schedina'); return; }
+  var testo = buildAlloggiatiText_(due[0]);
+  Logger.log('== SCHEDINA PREVIEW ==');
+  Logger.log('Key: ' + due[0].key);
+  Logger.log('Righe:\n' + testo);
+  Logger.log('Lunghezza prima riga: ' + testo.split('\r\n')[0].length);
+}
+
+// ── Setup: configura le Script Properties ───────────────────────
+//  Modifica i valori qui sotto, poi esegui "setupAlloggiatiProperties".
+function setupAlloggiatiProperties() {
+  // ⚠️ COMPILARE prima di eseguire:
+  var USER         = '';  // es. 'casapaolina'
+  var PWD          = '';  // password del portale
+  var WSKEY        = '';  // WsKey fornita dalla questura
+  var ID_STRUTTURA = '';  // IdStruttura numerico
+
+  if (!USER || !PWD || !WSKEY || !ID_STRUTTURA) {
+    SpreadsheetApp.getUi().alert(
+      '⚠️ Compilare prima i valori USER, PWD, WSKEY e ID_STRUTTURA\n' +
+      'nel corpo della funzione setupAlloggiatiProperties().'
+    );
+    return;
+  }
+
+  var props = PropertiesService.getScriptProperties();
+  props.setProperty('ALLOGGIATI_USER',        USER);
+  props.setProperty('ALLOGGIATI_PWD',         PWD);
+  props.setProperty('ALLOGGIATI_WSKEY',       WSKEY);
+  props.setProperty('ALLOGGIATI_IDSTRUTTURA', ID_STRUTTURA);
+
+  SpreadsheetApp.getUi().alert('✅ Credenziali Alloggiati Web salvate nelle Script Properties.');
 }
