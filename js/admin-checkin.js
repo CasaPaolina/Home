@@ -878,19 +878,18 @@ function createSchedinCard(item, alreadySent) {
 function previewSchedina(key) {
     currentSchedina = null;
     const modal    = document.getElementById('schedina-modal');
-    const preText  = document.getElementById('schedina-preview-text');
     const guestDiv = document.getElementById('schedina-guest-info');
     const warnDiv  = document.getElementById('schedina-warnings');
     const errEl    = document.getElementById('schedina-send-error');
     const btn      = document.getElementById('btn-send-schedina');
     const subtitle = document.getElementById('schedina-modal-subtitle');
 
-    preText.textContent  = '⏳ Caricamento…';
-    guestDiv.innerHTML   = '';
+    guestDiv.innerHTML   = '<div style="color:#94a3b8;font-size:0.88rem;padding:8px 0">⏳ Caricamento sommario…</div>';
     warnDiv.style.display = 'none';
     warnDiv.innerHTML    = '';
     errEl.style.display  = 'none';
-    btn.disabled         = true;   // rimane disabilitato fino ad abilitazione manuale
+    btn.style.display    = 'none';   // nascosto finché validate non passa
+    btn.disabled         = true;
     btn.textContent      = '🚔 Invia alla Questura';
     const validateResult = document.getElementById('schedina-validate-result');
     if (validateResult) { validateResult.style.display = 'none'; validateResult.innerHTML = ''; }
@@ -906,33 +905,47 @@ function previewSchedina(key) {
             currentSchedina = json.data;
             const d = json.data;
 
-            subtitle.textContent = `${d.appartamento} · Arrivo ${formatAdminDate(d.data_arrivo)}`;
+            const notti = d.notti || '?';
+            subtitle.textContent = `${d.appartamento} · Arrivo ${formatAdminDate(d.data_arrivo)} · ${notti} nott${notti===1?'e':'i'}`;
 
-            const notti  = d.notti || '?';
-            const guests = (d.adulti || 0) + (d.bambini || 0);
-            const accNr  = d.n_acc || 0;
-            const accHtml = d.guests && d.guests.length > 0
-                ? d.guests.map(g => `<span style="display:block;margin-left:12px;color:#555">↳ ${escHtml(g.cognome)} ${escHtml(g.nome)} · ${escHtml(g.cittadinanza || '-')}</span>`).join('')
-                : (accNr > 0 ? `<span style="display:block;margin-left:12px;color:#999">(${accNr} accompagnator${accNr===1?'e':'i'} — dati non disponibili nel foglio Ospiti)</span>` : '');
+            // ── Sommario strutturato ─────────────────────────────────
+            const tipo = (d.guests && d.guests.length > 0) ? '17 — Capo Famiglia' : '16 — Ospite singolo';
+            const docInfo = d.tipo_doc ? `${escHtml(d.tipo_doc)} n. ${escHtml(d.num_doc || '—')}` : '—';
+
+            let guestsRows = '';
+            if (d.guests && d.guests.length > 0) {
+                guestsRows = d.guests.map((g, i) => {
+                    const docG = g.tipo_doc ? `${escHtml(g.tipo_doc)} n. ${escHtml(g.num_doc||'—')}` : '— (tipo 19, non richiesto)';
+                    return `
+                        <tr style="border-top:1px solid #e5e7eb">
+                          <td colspan="2" style="padding:10px 12px 4px;font-weight:600;color:#1e3a5f;font-size:0.87rem">
+                            Accompagnatore ${i+1} <span style="font-weight:400;color:#64748b">· tipo 19</span>
+                          </td>
+                        </tr>
+                        <tr><td style="padding:2px 12px 2px 24px;color:#64748b;font-size:0.84rem">Nome</td><td style="padding:2px 12px;font-size:0.84rem">${escHtml(g.cognome)} ${escHtml(g.nome)}</td></tr>
+                        <tr><td style="padding:2px 12px 2px 24px;color:#64748b;font-size:0.84rem">Data nascita</td><td style="padding:2px 12px;font-size:0.84rem">${formatDateIT(g.data_nascita)||'—'}</td></tr>
+                        <tr><td style="padding:2px 12px 2px 24px;color:#64748b;font-size:0.84rem">Stato nascita</td><td style="padding:2px 12px;font-size:0.84rem">${escHtml(g.stato_nascita||'—')}</td></tr>
+                        <tr><td style="padding:2px 12px 2px 24px;color:#64748b;font-size:0.84rem">Cittadinanza</td><td style="padding:2px 12px;font-size:0.84rem">${escHtml(g.cittadinanza||'—')}</td></tr>
+                        <tr><td style="padding:2px 12px 2px 24px;color:#64748b;font-size:0.84rem">Documento</td><td style="padding:2px 12px;font-size:0.84rem">${docG}</td></tr>`;
+                }).join('');
+            }
 
             guestDiv.innerHTML = `
-                <div style="font-weight:600;margin-bottom:6px;color:var(--text-dark);font-size:0.95rem">
-                    ${escHtml(d.cognome)} ${escHtml(d.nome)}
-                </div>
-                <div style="color:#555;font-size:0.85rem;line-height:1.7">
-                    <span style="margin-right:14px"><strong>Nascita:</strong> ${formatDateIT(d.data_nascita)} · ${escHtml(d.comune_nascita || '-')} (${escHtml(d.stato_nascita || '-')})</span>
-                    <span style="margin-right:14px"><strong>Cittadinanza:</strong> ${escHtml(d.cittadinanza || '-')}</span>
-                    <span><strong>Documento:</strong> ${escHtml(d.tipo_doc || '-')} n. ${escHtml(d.num_doc || '-')}</span>
-                </div>
-                ${accHtml}
-            `;
+                <table style="width:100%;border-collapse:collapse">
+                  <tbody>
+                    <tr><td colspan="2" style="padding:4px 12px 8px;font-weight:700;color:#1e3a5f;font-size:0.9rem;border-bottom:1px solid #e5e7eb">Referente <span style="font-weight:400;color:#64748b;font-size:0.82rem">· tipo ${tipo}</span></td></tr>
+                    <tr><td style="padding:4px 12px;color:#64748b;font-size:0.85rem;width:38%">Nome</td><td style="padding:4px 12px;font-size:0.85rem;font-weight:600">${escHtml(d.cognome)} ${escHtml(d.nome)}</td></tr>
+                    <tr><td style="padding:4px 12px;color:#64748b;font-size:0.85rem">Data nascita</td><td style="padding:4px 12px;font-size:0.85rem">${formatDateIT(d.data_nascita)||'—'}${d.comune_nascita ? ' · ' + escHtml(d.comune_nascita) : ''}</td></tr>
+                    <tr><td style="padding:4px 12px;color:#64748b;font-size:0.85rem">Stato nascita</td><td style="padding:4px 12px;font-size:0.85rem">${escHtml(d.stato_nascita||'—')}</td></tr>
+                    <tr><td style="padding:4px 12px;color:#64748b;font-size:0.85rem">Cittadinanza</td><td style="padding:4px 12px;font-size:0.85rem">${escHtml(d.cittadinanza||'—')}</td></tr>
+                    <tr><td style="padding:4px 12px;color:#64748b;font-size:0.85rem">Documento</td><td style="padding:4px 12px;font-size:0.85rem">${docInfo}</td></tr>
+                    ${guestsRows}
+                  </tbody>
+                </table>`;
 
-            preText.textContent = json.preview || '';
-
-            // Avvisi per campi potenzialmente mancanti
+            // ── Warnings ─────────────────────────────────────────────
             const warnings = [];
             checkAlloggiatiField_(d.stato_nascita,  'Stato di nascita', warnings);
-            // Comune richiesto SOLO se nato in Italia (o stato vuoto + citt. italiana)
             if (needsComuneNascita_(d.stato_nascita, d.cittadinanza)) {
                 checkAlloggiatiField_(d.comune_nascita, 'Comune di nascita', warnings);
             }
@@ -950,7 +963,7 @@ function previewSchedina(key) {
                 warnDiv.style.display = 'block';
                 warnDiv.innerHTML = `
                     <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:12px 14px;font-size:0.83rem;color:#92400e">
-                        <strong>⚠ Campi da verificare prima dell'invio:</strong>
+                        <strong>⚠ Campi da verificare:</strong>
                         <ul style="margin:6px 0 0 16px;padding:0;line-height:1.8">
                             ${warnings.map(w => `<li>${escHtml(w)}</li>`).join('')}
                         </ul>
@@ -958,13 +971,14 @@ function previewSchedina(key) {
             }
 
             if (d.already_sent) {
+                btn.style.display = '';
                 btn.disabled    = true;
                 btn.textContent = '✅ Già inviata';
                 btn.style.background = '#6b7280';
             }
         })
         .catch(err => {
-            preText.textContent = 'Errore: ' + (err.message || 'Impossibile caricare la preview');
+            guestDiv.innerHTML = `<div style="color:#dc2626;font-size:0.88rem">⚠ ${escHtml(err.message || 'Impossibile caricare il sommario')}</div>`;
         });
 }
 
@@ -1033,6 +1047,17 @@ function validateSchedina() {
                     </div>
                     ${righeHtml}
                 </div>`;
+
+            // Mostra il tasto Invia SOLO se tutte le righe sono OK
+            const sendBtn = document.getElementById('btn-send-schedina');
+            if (allOk) {
+                sendBtn.style.display = '';
+                sendBtn.disabled = false;
+                sendBtn.textContent = '🚔 Invia alla Questura';
+                sendBtn.style.background = '#15803d';
+            } else {
+                sendBtn.style.display = 'none';
+            }
         })
         .catch(err => {
             btn.disabled    = false;

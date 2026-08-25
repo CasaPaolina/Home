@@ -285,35 +285,26 @@
         </div>
 
         <div style="padding:20px 24px">
-            <!-- Guest summary -->
-            <div id="schedina-guest-info" style="background:#f8fafc;border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:0.88rem;line-height:1.7"></div>
-
-            <!-- Raw schedina text -->
-            <div style="margin-bottom:16px">
-                <p style="font-size:0.8rem;font-weight:700;color:var(--text-light);text-transform:uppercase;margin:0 0 8px;letter-spacing:0.04em">
-                    Testo schedina (formato fixed-width 170 chars/riga)
-                </p>
-                <div id="schedina-preview-text"
-                     style="font-family:monospace;font-size:0.78rem;white-space:pre;overflow-x:auto;background:#0f172a;color:#a3e635;padding:14px;border-radius:8px;max-height:200px;overflow-y:auto;line-height:1.5">
-                </div>
-            </div>
+            <!-- Sommario ospite/soggiorno -->
+            <div id="schedina-guest-info" style="background:#f8fafc;border-radius:10px;padding:16px 18px;margin-bottom:14px;font-size:0.88rem"></div>
 
             <!-- Warnings -->
-            <div id="schedina-warnings" style="display:none;margin-bottom:16px"></div>
+            <div id="schedina-warnings" style="display:none;margin-bottom:14px"></div>
 
             <!-- Validate result -->
-            <div id="schedina-validate-result" style="display:none;margin-bottom:16px"></div>
+            <div id="schedina-validate-result" style="display:none;margin-bottom:14px"></div>
 
             <!-- Error -->
             <div id="schedina-send-error" class="ci-step-error" style="display:none;margin-bottom:12px"></div>
 
             <!-- Buttons -->
-            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding-top:8px;border-top:1px solid #e5e7eb">
-                <button onclick="closeSchedinModal()" class="ci-btn" style="background:#f1f5f9;color:var(--text-dark);border:none">Annulla</button>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding-top:12px;border-top:1px solid #e5e7eb">
+                <button onclick="closeSchedinModal()" class="ci-btn" style="background:#f1f5f9;color:var(--text-dark);border:none">Chiudi</button>
                 <button id="btn-validate-schedina" onclick="validateSchedina()" class="ci-btn" style="background:#e0f2fe;color:#075985;border:1.5px solid #0369a1;font-weight:600">
                     🔍 Verifica formato
                 </button>
-                <button id="btn-send-schedina" onclick="sendSchedina()" class="ci-btn ci-btn--next" style="background:#1e3a5f" disabled>
+                <button id="btn-send-schedina" onclick="sendSchedina()" class="ci-btn ci-btn--next"
+                        style="background:#15803d;display:none" disabled>
                     🚔 Invia alla Questura
                 </button>
             </div>

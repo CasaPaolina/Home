@@ -1457,4 +1457,109 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         initMainPOIMap();
     }, 100);
+
+    // Set min date for availability inputs
+    const today = new Date().toISOString().split('T')[0];
+    const availCheckin = document.getElementById('avail-checkin');
+    const availCheckout = document.getElementById('avail-checkout');
+    if (availCheckin) {
+        availCheckin.min = today;
+        availCheckin.addEventListener('change', () => {
+            availCheckout.min = availCheckin.value;
+            if (availCheckout.value && availCheckout.value <= availCheckin.value) {
+                const d = new Date(availCheckin.value);
+                d.setDate(d.getDate() + 1);
+                availCheckout.value = d.toISOString().split('T')[0];
+            }
+        });
+    }
 });
+
+// --- Availability Search ---
+const AVAIL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2kYpdep7maP8j8biDP7TZfIp23RuNo1qCfqCMLTuvY1fyuqleHECcjXJdJZmNbP-2-Q/exec';
+
+const APARTMENTS = [
+    { id: 'celeste', name: 'Appartamento Celeste', tag: '15A', maxGuests: 4, emoji: '🌊', desc: 'Luminoso e fresco, piano terra', checkinPath: 'checkin.html?apt=celeste' },
+    { id: 'verde',   name: 'Appartamento Verde',   tag: '15',  maxGuests: 4, emoji: '🌿', desc: 'Ampio giardino privato',      checkinPath: 'checkin.html?apt=verde'   },
+    { id: 'suite',   name: 'Suite',                tag: '17',  maxGuests: 4, emoji: '✨', desc: 'Elegante con terrazza',       checkinPath: 'checkin.html?apt=suite'   }
+];
+
+function checkAvailability() {
+    const checkin  = document.getElementById('avail-checkin').value;
+    const checkout = document.getElementById('avail-checkout').value;
+    const guests   = parseInt(document.getElementById('avail-guests').value, 10);
+    const results  = document.getElementById('avail-results');
+
+    if (!checkin || !checkout) {
+        results.style.display = 'block';
+        results.innerHTML = '<p style="color:#dc2626;text-align:center">Seleziona le date di arrivo e partenza.</p>';
+        return;
+    }
+    if (checkout <= checkin) {
+        results.style.display = 'block';
+        results.innerHTML = '<p style="color:#dc2626;text-align:center">La data di partenza deve essere successiva all\'arrivo.</p>';
+        return;
+    }
+
+    results.style.display = 'block';
+    results.innerHTML = '<p style="color:#64748b;text-align:center">Verifica disponibilità in corso…</p>';
+
+    const btn = document.getElementById('avail-btn');
+    btn.disabled = true;
+    btn.textContent = 'Caricamento…';
+
+    fetch(AVAIL_SCRIPT_URL + '?action=bookings')
+        .then(r => r.json())
+        .then(data => {
+            const bookings = data.bookings || [];
+            const cin  = new Date(checkin);
+            const cout = new Date(checkout);
+
+            const occupied = new Set();
+            bookings.forEach(b => {
+                const bIn  = new Date(b.checkin);
+                const bOut = new Date(b.checkout);
+                // Overlap: b starts before our checkout AND b ends after our checkin
+                if (bIn < cout && bOut > cin) {
+                    const aptName = (b.appartamento || '').toLowerCase();
+                    APARTMENTS.forEach(a => {
+                        if (aptName.includes(a.id) || aptName.includes(a.tag)) {
+                            occupied.add(a.id);
+                        }
+                    });
+                }
+            });
+
+            const available = APARTMENTS.filter(a => !occupied.has(a.id) && a.maxGuests >= guests);
+
+            if (available.length === 0) {
+                results.innerHTML = '<p style="text-align:center;color:#dc2626;font-weight:600">Nessun appartamento disponibile per le date selezionate.<br><span style="font-weight:400;font-size:0.85rem;color:#64748b">Prova con date diverse o contattaci per soluzioni personalizzate.</span></p>';
+            } else {
+                const nights = Math.round((cout - cin) / 86400000);
+                results.innerHTML = `
+                    <p style="text-align:center;color:#15803d;font-weight:700;margin:0 0 16px">
+                        ✅ ${available.length} appartament${available.length > 1 ? 'i disponibili' : 'o disponibile'} per ${nights} nott${nights > 1 ? 'i' : 'e'}
+                    </p>
+                    <div style="display:grid;gap:12px">
+                        ${available.map(a => `
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border:1.5px solid #d1fae5;border-radius:10px;background:#f0fdf4">
+                            <div>
+                                <div style="font-weight:700;color:#1e3a5f;font-size:1rem">${a.emoji} ${a.name}</div>
+                                <div style="font-size:0.82rem;color:#64748b;margin-top:2px">${a.desc} · fino a ${a.maxGuests} ospiti</div>
+                            </div>
+                            <a href="${a.checkinPath}&checkin=${checkin}&checkout=${checkout}&guests=${guests}"
+                               style="padding:8px 18px;background:#2c7873;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem;white-space:nowrap;margin-left:12px">
+                                Prenota →
+                            </a>
+                        </div>`).join('')}
+                    </div>`;
+            }
+        })
+        .catch(() => {
+            results.innerHTML = '<p style="color:#dc2626;text-align:center">Errore durante la verifica. Riprova o contattaci direttamente.</p>';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.textContent = 'Cerca';
+        });
+}

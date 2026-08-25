@@ -3553,3 +3553,13 @@ section {
         height: 180px;
     }
 }
+
+/* Availability Search Widget - mobile */
+@media (max-width: 640px) {
+    #avail-search-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    #avail-search-grid > div:last-child {
+        grid-column: span 2;
+    }
+}

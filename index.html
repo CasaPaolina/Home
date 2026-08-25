@@ -102,6 +102,45 @@
         </div>
     </div>
 
+    <!-- Availability Search Widget -->
+    <section id="availability" style="background:#f0f9f6;padding:40px 0 32px">
+        <div class="container">
+            <h2 style="text-align:center;margin:0 0 6px;color:#1e3a5f;font-size:1.4rem">Verifica disponibilità</h2>
+            <p style="text-align:center;color:#64748b;margin:0 0 24px;font-size:0.9rem">Inserisci le date e il numero di ospiti per vedere gli appartamenti liberi</p>
+            <div style="background:#fff;border-radius:16px;padding:24px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.07);max-width:720px;margin:0 auto">
+                <div id="avail-search-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:14px;align-items:end">
+                    <div>
+                        <label style="display:block;font-size:0.78rem;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">Arrivo</label>
+                        <input type="date" id="avail-checkin" style="width:100%;padding:10px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.9rem;color:#1e293b;outline:none;box-sizing:border-box">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:0.78rem;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">Partenza</label>
+                        <input type="date" id="avail-checkout" style="width:100%;padding:10px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.9rem;color:#1e293b;outline:none;box-sizing:border-box">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:0.78rem;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">Ospiti</label>
+                        <select id="avail-guests" style="width:100%;padding:10px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:0.9rem;color:#1e293b;outline:none;background:#fff">
+                            <option value="1">1 ospite</option>
+                            <option value="2" selected>2 ospiti</option>
+                            <option value="3">3 ospiti</option>
+                            <option value="4">4 ospiti</option>
+                            <option value="5">5 ospiti</option>
+                            <option value="6">6 ospiti</option>
+                            <option value="7">7 ospiti</option>
+                            <option value="8">8+ ospiti</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button onclick="checkAvailability()" id="avail-btn" style="width:100%;padding:10px 20px;background:#2c7873;color:#fff;border:none;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer;white-space:nowrap">
+                            Cerca
+                        </button>
+                    </div>
+                </div>
+                <div id="avail-results" style="display:none;margin-top:20px;padding-top:20px;border-top:1px solid #e5e7eb"></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Rooms Section -->
     <section id="rooms" class="rooms">
         <div class="container">
