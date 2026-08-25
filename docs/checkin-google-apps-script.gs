@@ -9790,10 +9790,17 @@ function buildSchedinRow_(ospite, dataArrivo, notti) {
   // [95-104] Data Nascita (10)
   var nascita   = fmtDate(ospite.data_nascita);
 
-  // [105-113] Comune Nascita (9) — solo se nato in Italia E il codice è noto
-  // [114-115] Provincia Nascita (2) — solo se nato in Italia E il codice è noto
-  var statoNascCod  = getStatoCodice_(ospite.stato_nascita || 'Italia');
-  var isItaliano    = (statoNascCod === '100000100');
+  // [105-113] Comune Nascita (9) e [114-115] Provincia Nascita (2)
+  // Obbligatori SOLO se nato in Italia (spec. Alloggiati Web, Tabella 1).
+  // Se stato_nascita è diverso da Italia → 11 spazi bianchi (9+2).
+  var statoNascStr  = String(ospite.stato_nascita || '').trim();
+  var statoNascNorm = normalizeAlloggiatiKey_(statoNascStr);
+  // Considera nato in Italia: campo vuoto (default) oppure variante Italia/Italiana/Italiano
+  var isItaliano    = !statoNascStr ||
+                      statoNascNorm === 'italia' ||
+                      statoNascNorm === 'italiana' ||
+                      statoNascNorm === 'italiano';
+  var statoNascCod  = isItaliano ? '100000100' : getStatoCodice_(statoNascStr);
   var comuneNasc, provinciaNasc;
   if (isItaliano && ospite.comune_nascita) {
     var codCom = getComuneCodice_(ospite.comune_nascita);

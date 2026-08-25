@@ -806,8 +806,10 @@ function renderSchedine(items) {
         return;
     }
 
-    // Separa le già inviate da quelle pendenti
-    const pending = items.filter(x => !x.already_sent);
+    // Mostra solo soggiorni con arrivo negli ultimi 2 giorni (non ancora inviati)
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const twoDaysAgo = new Date(today); twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+    const pending = items.filter(x => !x.already_sent && new Date(x.data_arrivo) >= twoDaysAgo);
     const sent    = items.filter(x =>  x.already_sent);
 
     if (pending.length === 0 && sent.length === 0) {

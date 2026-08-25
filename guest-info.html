@@ -10,10 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'" />
-<<<<<<< HEAD
-=======
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" media="print" onload="this.media='all'" />
->>>>>>> feature/alloggiati-web
     <noscript><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /></noscript>
     <link rel="icon" href="images/favicon.ico" sizes="32x32 64x64" type="image/x-icon">
     <link rel="icon" href="images/favicon-32.png" sizes="32x32" type="image/png">
@@ -56,7 +52,6 @@
         function gateSubmit() {
             var val = document.getElementById('gate-input').value;
             var err = document.getElementById('gate-error');
-<<<<<<< HEAD
             var btn = document.querySelector('#guest-gate button');
             if (!val) return;
             err.style.display = 'none';
@@ -85,17 +80,6 @@
                 err.style.display = 'block';
                 if (btn) { btn.disabled = false; btn.textContent = 'Entra'; }
             });
-=======
-            if (val === '__GUEST_AREA__') {
-                sessionStorage.setItem('guestLoggedIn', 'true');
-                document.getElementById('guest-gate').style.display = 'none';
-                document.body.style.overflow = '';
-            } else {
-                err.style.display = 'block';
-                document.getElementById('gate-input').value = '';
-                document.getElementById('gate-input').focus();
-            }
->>>>>>> feature/alloggiati-web
         }
     </script>
 
@@ -207,13 +191,8 @@
     <section class="weather-beaches" id="beaches-section">
         <div class="container">
             <div class="section-header">
-<<<<<<< HEAD
                 <div class="section-tag" data-translate="section_tag_meteo">🌤️ Meteo &amp; 🏖️ Mare</div>
                 <h2 data-translate="weather_beaches_title">Previsioni e Spiagge del Salento</h2>
-=======
-                <div class="section-tag" data-translate="section_tag_meteo">🌤️ Meteo</div>
-                <h2 data-translate="weather_beaches_title">Previsioni Meteo e Spiagge Consigliate</h2>
->>>>>>> feature/alloggiati-web
             </div>
 
             <!-- 3-day weather forecast -->
@@ -223,7 +202,6 @@
                 <div class="forecast-card skeleton"></div>
             </div>
 
-<<<<<<< HEAD
             <!-- Activity filter pills + wind badge -->
             <div class="mc-filters-row">
                 <div class="mc-filters-scroll">
@@ -330,28 +308,6 @@
                             <li><strong>🏄 <span data-translate="filter_sup">SUP</span></strong><br><span data-translate="act_info_sup">Mare piattissimo, vento minimo (< 12 km/h), niente raffiche.</span></li>
                             <li><strong>⭐ <span data-translate="filter_today_best">Oggi</span></strong><br><span data-translate="act_info_today">Spiagge protette dal vento attuale, ordinate per condizioni.</span></li>
                         </ul>
-=======
-            <!-- Beach map & filters -->
-            <div class="beach-recommendations">
-                <div class="beaches-map-section">
-                    <div class="beach-filters-modern">
-                        <p id="current-wind-info" class="current-wind-info">💨 Caricamento vento in corso…</p>
-                        <div class="beach-filter-buttons">
-                            <button class="beach-filter-btn active" data-filter="all" data-translate="filter_all">Tutte</button>
-                            <button class="beach-filter-btn" data-filter="sand" data-translate="filter_sand">Sabbia</button>
-                            <button class="beach-filter-btn" data-filter="rocks" data-translate="filter_rocks">Scogliera</button>
-                            <button class="beach-filter-btn" data-filter="recommended-today" data-translate="filter_recommended_today">Spiagge consigliate in base al vento</button>
-                        </div>
-                        <p id="recommendation-status" class="recommendation-status" aria-live="polite"></p>
-                    </div>
-                    <div class="beach-view-tabs">
-                        <button class="beach-view-tab active" data-view="map">🗺️ <span data-translate="tab_map">Mappa</span></button>
-                        <button class="beach-view-tab" data-view="list">📋 <span data-translate="tab_list">Lista</span></button>
-                    </div>
-                    <div class="beach-map-list-container tab-map">
-                        <div id="beaches-map" class="map-container-modern"></div>
-                        <div id="beaches-list" class="beaches-list-modern"></div>
->>>>>>> feature/alloggiati-web
                     </div>
                 </div>
             </div>
@@ -441,10 +397,6 @@
     <script src="js/locations-data.js" defer></script>
     <script src="js/guest-translations.js" defer></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-<<<<<<< HEAD
-=======
-    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js" defer></script>
->>>>>>> feature/alloggiati-web
     <script src="js/leaflet-beach-map.js" defer></script>
     <script src="js/guest-page.js" defer></script>
 </body>
