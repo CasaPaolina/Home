@@ -9792,15 +9792,41 @@ function buildSchedinRow_(ospite, dataArrivo, notti) {
 
   // [105-113] Comune Nascita (9) e [114-115] Provincia Nascita (2)
   // Obbligatori SOLO se nato in Italia (spec. Alloggiati Web, Tabella 1).
-  // Se stato_nascita è diverso da Italia → 11 spazi bianchi (9+2).
+  // Se stato_nascita ≠ Italia → 11 spazi bianchi (9+2).
   var statoNascStr  = String(ospite.stato_nascita || '').trim();
+  var cittStr       = String(ospite.cittadinanza  || '').trim();
   var statoNascNorm = normalizeAlloggiatiKey_(statoNascStr);
-  // Considera nato in Italia: campo vuoto (default) oppure variante Italia/Italiana/Italiano
-  var isItaliano    = !statoNascStr ||
-                      statoNascNorm === 'italia' ||
-                      statoNascNorm === 'italiana' ||
-                      statoNascNorm === 'italiano';
-  var statoNascCod  = isItaliano ? '100000100' : getStatoCodice_(statoNascStr);
+  var cittNorm      = normalizeAlloggiatiKey_(cittStr);
+
+  // Determina se nato in Italia:
+  // - stato esplicito Italia/Italiana/Italiano/Italy → sì
+  // - stato vuoto + cittadinanza italiana/vuota → assume Italia (ospiti italiani standard)
+  // - stato vuoto + cittadinanza NON italiana → non-Italia (usa citta come proxy per il codice)
+  // - stato qualsiasi non-Italia → no
+  var isItaliano;
+  if (!statoNascStr) {
+    var isItaCitt = !cittNorm || cittNorm === 'italiana' || cittNorm === 'italiano' || cittNorm === 'italia';
+    isItaliano = isItaCitt;
+  } else {
+    isItaliano = statoNascNorm === 'italia' || statoNascNorm === 'italiana' ||
+                 statoNascNorm === 'italiano' || statoNascNorm === 'italy';
+  }
+
+  // Codice ISTAT stato di nascita.
+  // Se getStatoCodice_ dà il fallback Italia per stato non riconosciuto,
+  // tenta la cittadinanza come proxy per evitare inconsistenze nel record.
+  var statoNascCod;
+  if (isItaliano) {
+    statoNascCod = '100000100';
+  } else {
+    var sc = getStatoCodice_(statoNascStr);
+    if (sc === '100000100' && cittStr &&
+        cittNorm !== 'italiana' && cittNorm !== 'italiano' && cittNorm !== 'italia') {
+      var sc2 = getStatoCodice_(cittStr);
+      if (sc2 !== '100000100') sc = sc2;
+    }
+    statoNascCod = sc;
+  }
   var comuneNasc, provinciaNasc;
   if (isItaliano && ospite.comune_nascita) {
     var codCom = getComuneCodice_(ospite.comune_nascita);
