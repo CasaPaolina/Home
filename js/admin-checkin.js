@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────
 
 const ADMIN_PASSWORD = '__ADMIN_CHECKIN__';
-const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2kYpdep7maP8j8biDP7TZfIp23RuNo1qCfqCMLTuvY1fyuqleHECcjXJdJZmNbP-2-Q/exec';
+const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNbH7MdDaPDnA2JRUCKqmHLUmyInL3RYFRmoK80mSVYWHW0L46z5dfog6CwiDbxg86Ww/exec';
 
 // ─── DATI STRUTTURA (per PDF conferma) ───────────────────────
 const CASA_PAOLINA = {
