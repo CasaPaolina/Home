@@ -43,8 +43,25 @@ function adminLogin() {
 function showPanel() {
     document.getElementById('admin-gate').style.display  = 'none';
     document.getElementById('admin-panel').style.display = 'block';
-    loadBookings();
-    loadSchedine();
+    switchTab('checkin');  // carica il tab default
+}
+
+// ─── TABS ────────────────────────────────────────────────────
+
+function switchTab(tab) {
+    const tabs    = ['checkin', 'schedine'];
+    const btnIds  = { checkin: 'tab-btn-checkin', schedine: 'tab-btn-schedine' };
+    const panelIds = { checkin: 'tab-panel-checkin', schedine: 'tab-panel-schedine' };
+
+    tabs.forEach(t => {
+        const btn   = document.getElementById(btnIds[t]);
+        const panel = document.getElementById(panelIds[t]);
+        if (btn)   btn.classList.toggle('tab-btn--active', t === tab);
+        if (panel) panel.style.display = t === tab ? 'block' : 'none';
+    });
+
+    if (tab === 'checkin'  && !document.getElementById('bookings-list').children.length) loadBookings();
+    if (tab === 'schedine' && !document.getElementById('schedine-list').children.length)  loadSchedine();
 }
 
 // ─── LOAD BOOKINGS ───────────────────────────────────────────
@@ -853,8 +870,12 @@ function previewSchedina(key) {
     warnDiv.style.display = 'none';
     warnDiv.innerHTML    = '';
     errEl.style.display  = 'none';
-    btn.disabled         = false;
+    btn.disabled         = true;   // rimane disabilitato fino ad abilitazione manuale
     btn.textContent      = '🚔 Invia alla Questura';
+    const validateResult = document.getElementById('schedina-validate-result');
+    if (validateResult) { validateResult.style.display = 'none'; validateResult.innerHTML = ''; }
+    const btnValidate = document.getElementById('btn-validate-schedina');
+    if (btnValidate) { btnValidate.disabled = false; btnValidate.textContent = '🔍 Verifica formato'; }
     modal.style.display  = 'block';
 
     const url = SHEETS_SCRIPT_URL + '?action=alloggiati-preview&key=' + encodeURIComponent(key);
@@ -933,6 +954,59 @@ function closeSchedinModal() {
     currentSchedina = null;
 }
 
+// ─── VALIDA SCHEDINA (SOAP Test) ───────────────────────────────
+
+function validateSchedina() {
+    if (!currentSchedina) return;
+
+    const btn    = document.getElementById('btn-validate-schedina');
+    const result = document.getElementById('schedina-validate-result');
+    const errEl  = document.getElementById('schedina-send-error');
+
+    btn.disabled    = true;
+    btn.textContent = '⏳ Verifica in corso…';
+    result.style.display = 'none';
+    errEl.style.display  = 'none';
+
+    const url = SHEETS_SCRIPT_URL + '?action=alloggiati-validate&key=' + encodeURIComponent(currentSchedina.key);
+    fetch(url)
+        .then(r => r.json())
+        .then(json => {
+            btn.disabled    = false;
+            btn.textContent = '🔍 Verifica formato';
+
+            if (json.status !== 'ok') throw new Error(json.error || 'Errore validazione');
+
+            const allOk  = json.genEsito && json.valide === json.totale;
+            const color  = allOk ? '#dcfce7' : '#fef2f2';
+            const border = allOk ? '#86efac' : '#fca5a5';
+            const icon   = allOk ? '✅' : '❌';
+
+            let righeHtml = '';
+            (json.righe || []).forEach((r, i) => {
+                const ico    = r.ok ? '✅' : '❌';
+                const detail = r.det ? ` — ${escHtml(r.det)}` : (r.des ? ` — ${escHtml(r.des)}` : '');
+                righeHtml += `<div style="padding:3px 0;font-size:0.82rem">${ico} Riga ${i + 1}${detail}</div>`;
+            });
+
+            result.style.display = 'block';
+            result.innerHTML = `
+                <div style="background:${color};border:1.5px solid ${border};border-radius:8px;padding:12px 14px">
+                    <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px">
+                        ${icon} ${allOk ? "Formato valido — schedina pronta per l'invio" : 'Errori di formato rilevati'}
+                        <span style="font-weight:400;color:#666;font-size:0.8rem;margin-left:8px">${json.valide}/${json.totale} righe OK</span>
+                    </div>
+                    ${righeHtml}
+                </div>`;
+        })
+        .catch(err => {
+            btn.disabled    = false;
+            btn.textContent = '🔍 Verifica formato';
+            errEl.style.display = 'block';
+            errEl.textContent   = '⚠ ' + (err.message || 'Errore durante la validazione.');
+        });
+}
+
 // ─── INVIA ───────────────────────────────────────────────────
 
 function sendSchedina() {
@@ -988,7 +1062,6 @@ function escAttr(s) {
 // ─── INIT ────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Auto-show panel if already logged in this session
     if (sessionStorage.getItem('adminLoggedIn') === 'true') {
         showPanel();
     }

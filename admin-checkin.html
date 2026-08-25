@@ -64,8 +64,35 @@
             border-radius: 20px;
             letter-spacing: 0.03em;
         }
+        /* ── TABS ── */
+        .adm-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 0 24px;
+            border-bottom: 2px solid var(--border);
+            background: var(--surface);
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-family: inherit;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color .15s, border-color .15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-btn:hover { color: var(--text-dark); }
+        .tab-btn--active { color: #1e3a5f; border-bottom-color: #1e3a5f; }
         @media (max-width: 500px) {
             .adm-booking-row { flex-direction: column; align-items: flex-start; }
+            .tab-btn { padding: 10px 14px; font-size: 0.82rem; }
         }
         .ci-btn--conferma {
             background: #fff;
@@ -113,15 +140,27 @@
 <!-- ─── ADMIN PANEL ─────────────────────────────────────── -->
 <div id="admin-panel" style="display:none">
 
-    <div class="ci-hero" style="padding:28px 24px 24px">
+    <div class="ci-hero" style="padding:24px 24px 20px">
         <div class="ci-hero-inner">
             <h1 style="font-size:1.7rem;font-style:normal;font-family:inherit;font-weight:700;letter-spacing:0">
-                Dashboard Check-in
+                Dashboard Admin
             </h1>
-            <p style="opacity:0.85">Seleziona una prenotazione per avviare il check-in manuale</p>
+            <p style="opacity:0.85">Gestione check-in e schedine alloggiati</p>
         </div>
     </div>
 
+    <!-- Tabs -->
+    <nav class="adm-tabs">
+        <button id="tab-btn-checkin"  class="tab-btn tab-btn--active" onclick="switchTab('checkin')">
+            📋 Check-in
+        </button>
+        <button id="tab-btn-schedine" class="tab-btn" onclick="switchTab('schedine')">
+            🚔 Schedine Questura
+        </button>
+    </nav>
+
+    <!-- ── TAB: Check-in ─────────────────────────────────── -->
+    <div id="tab-panel-checkin">
     <main class="ci-main">
 
         <!-- Filters + refresh -->
@@ -152,27 +191,32 @@
         <!-- Booking cards -->
         <div id="bookings-list"></div>
 
-        <!-- ── SCHEDINE QUESTURA ──────────────────────────── -->
-        <div style="margin-top:32px">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-                <div style="display:flex;align-items:center;gap:8px">
-                    <span style="font-size:1.1rem">🚔</span>
-                    <h2 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-dark)">Schedine Questura</h2>
-                    <span style="font-size:0.72rem;font-weight:600;padding:3px 8px;background:#fef3c7;color:#92400e;border-radius:12px">Alloggiati Web</span>
-                </div>
-                <button class="adm-refresh" onclick="loadSchedine()" id="btn-reload-schedine" style="margin-left:auto">↻ Aggiorna</button>
-            </div>
+    </main>
+    </div>
 
-            <div id="schedine-loading" class="ci-card" style="text-align:center;padding:32px;display:none">
-                <p style="color:var(--text-light)">⏳ Caricamento schedine…</p>
+    <!-- ── TAB: Schedine Questura ─────────────────────────── -->
+    <div id="tab-panel-schedine" style="display:none">
+    <main class="ci-main">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+            <div>
+                <p style="margin:0;font-size:0.8rem;color:var(--text-light);line-height:1.6">
+                    Check-in con data di arrivo <strong>≤ oggi</strong> non ancora inviati alla questura.<br>
+                    L'invio deve avvenire entro 24 ore dall'arrivo (art. 109 T.U.L.P.S.).
+                </p>
             </div>
-            <div id="schedine-error" class="ci-error-box" style="display:none">
-                ⚠ Impossibile caricare le schedine. Verifica che le credenziali Alloggiati siano configurate nelle Script Properties.
-            </div>
-            <div id="schedine-list"></div>
+            <button class="adm-refresh" onclick="loadSchedine()">↻ Aggiorna</button>
         </div>
 
+        <div id="schedine-loading" class="ci-card" style="text-align:center;padding:32px;display:none">
+            <p style="color:var(--text-light)">⏳ Caricamento schedine…</p>
+        </div>
+        <div id="schedine-error" class="ci-error-box" style="display:none"></div>
+        <div id="schedine-list"></div>
+
     </main>
+    </div>
+
 </div>
 
 <!-- ─── GENERA CONFERMA MODAL ──────────────────────────────── -->
@@ -256,13 +300,19 @@
             <!-- Warnings -->
             <div id="schedina-warnings" style="display:none;margin-bottom:16px"></div>
 
+            <!-- Validate result -->
+            <div id="schedina-validate-result" style="display:none;margin-bottom:16px"></div>
+
             <!-- Error -->
             <div id="schedina-send-error" class="ci-step-error" style="display:none;margin-bottom:12px"></div>
 
             <!-- Buttons -->
             <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding-top:8px;border-top:1px solid #e5e7eb">
                 <button onclick="closeSchedinModal()" class="ci-btn" style="background:#f1f5f9;color:var(--text-dark);border:none">Annulla</button>
-                <button id="btn-send-schedina" onclick="sendSchedina()" class="ci-btn ci-btn--next" style="background:#1e3a5f">
+                <button id="btn-validate-schedina" onclick="validateSchedina()" class="ci-btn" style="background:#e0f2fe;color:#075985;border:1.5px solid #0369a1;font-weight:600">
+                    🔍 Verifica formato
+                </button>
+                <button id="btn-send-schedina" onclick="sendSchedina()" class="ci-btn ci-btn--next" style="background:#1e3a5f" disabled>
                     🚔 Invia alla Questura
                 </button>
             </div>

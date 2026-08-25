@@ -2,3 +2,6 @@
 .claude/
 *.backup
 node_modules/
+data/
+docs/checkin-google-apps-script.gs
+
