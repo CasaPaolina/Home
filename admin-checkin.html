@@ -64,8 +64,35 @@
             border-radius: 20px;
             letter-spacing: 0.03em;
         }
+        /* ── TABS ── */
+        .adm-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 0 24px;
+            border-bottom: 2px solid var(--border);
+            background: var(--surface);
+        }
+        .tab-btn {
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-light);
+            font-family: inherit;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color .15s, border-color .15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-btn:hover { color: var(--text-dark); }
+        .tab-btn--active { color: #1e3a5f; border-bottom-color: #1e3a5f; }
         @media (max-width: 500px) {
             .adm-booking-row { flex-direction: column; align-items: flex-start; }
+            .tab-btn { padding: 10px 14px; font-size: 0.82rem; }
         }
         .ci-btn--conferma {
             background: #fff;
@@ -113,15 +140,27 @@
 <!-- ─── ADMIN PANEL ─────────────────────────────────────── -->
 <div id="admin-panel" style="display:none">
 
-    <div class="ci-hero" style="padding:28px 24px 24px">
+    <div class="ci-hero" style="padding:24px 24px 20px">
         <div class="ci-hero-inner">
             <h1 style="font-size:1.7rem;font-style:normal;font-family:inherit;font-weight:700;letter-spacing:0">
-                Dashboard Check-in
+                Dashboard Admin
             </h1>
-            <p style="opacity:0.85">Seleziona una prenotazione per avviare il check-in manuale</p>
+            <p style="opacity:0.85">Gestione check-in e schedine alloggiati</p>
         </div>
     </div>
 
+    <!-- Tabs -->
+    <nav class="adm-tabs">
+        <button id="tab-btn-checkin"  class="tab-btn tab-btn--active" onclick="switchTab('checkin')">
+            📋 Check-in
+        </button>
+        <button id="tab-btn-schedine" class="tab-btn" onclick="switchTab('schedine')">
+            🚔 Schedine Questura
+        </button>
+    </nav>
+
+    <!-- ── TAB: Check-in ─────────────────────────────────── -->
+    <div id="tab-panel-checkin">
     <main class="ci-main">
 
         <!-- Filters + refresh -->
@@ -153,6 +192,31 @@
         <div id="bookings-list"></div>
 
     </main>
+    </div>
+
+    <!-- ── TAB: Schedine Questura ─────────────────────────── -->
+    <div id="tab-panel-schedine" style="display:none">
+    <main class="ci-main">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
+            <div>
+                <p style="margin:0;font-size:0.8rem;color:var(--text-light);line-height:1.6">
+                    Check-in con data di arrivo <strong>≤ oggi</strong> non ancora inviati alla questura.<br>
+                    L'invio deve avvenire entro 24 ore dall'arrivo (art. 109 T.U.L.P.S.).
+                </p>
+            </div>
+            <button class="adm-refresh" onclick="loadSchedine()">↻ Aggiorna</button>
+        </div>
+
+        <div id="schedine-loading" class="ci-card" style="text-align:center;padding:32px;display:none">
+            <p style="color:var(--text-light)">⏳ Caricamento schedine…</p>
+        </div>
+        <div id="schedine-error" class="ci-error-box" style="display:none"></div>
+        <div id="schedine-list"></div>
+
+    </main>
+    </div>
+
 </div>
 
 <!-- ─── GENERA CONFERMA MODAL ──────────────────────────────── -->
@@ -205,6 +269,64 @@
         <div id="details-content" style="padding:24px;max-height:70vh;overflow-y:auto">
             <!-- Details will be populated here -->
         </div>
+    </div>
+</div>
+
+<!-- ─── SCHEDINA PREVIEW MODAL ─────────────────────────────── -->
+<div id="schedina-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:1200;overflow-y:auto;padding:20px">
+    <div style="background:#fff;border-radius:12px;max-width:680px;margin:24px auto;box-shadow:0 10px 40px rgba(0,0,0,0.25)">
+        <div style="padding:20px 24px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#1e3a5f,#264653);border-radius:12px 12px 0 0">
+            <div>
+                <h2 style="margin:0;font-size:1.15rem;font-weight:700;color:#fff">🚔 Schedina Alloggiati Web</h2>
+                <p id="schedina-modal-subtitle" style="margin:4px 0 0;font-size:0.8rem;color:rgba(255,255,255,0.7)"></p>
+            </div>
+            <button onclick="closeSchedinModal()" style="background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center">✕</button>
+        </div>
+
+        <div style="padding:20px 24px">
+            <!-- Guest summary -->
+            <div id="schedina-guest-info" style="background:#f8fafc;border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:0.88rem;line-height:1.7"></div>
+
+            <!-- Raw schedina text -->
+            <div style="margin-bottom:16px">
+                <p style="font-size:0.8rem;font-weight:700;color:var(--text-light);text-transform:uppercase;margin:0 0 8px;letter-spacing:0.04em">
+                    Testo schedina (formato fixed-width 170 chars/riga)
+                </p>
+                <div id="schedina-preview-text"
+                     style="font-family:monospace;font-size:0.78rem;white-space:pre;overflow-x:auto;background:#0f172a;color:#a3e635;padding:14px;border-radius:8px;max-height:200px;overflow-y:auto;line-height:1.5">
+                </div>
+            </div>
+
+            <!-- Warnings -->
+            <div id="schedina-warnings" style="display:none;margin-bottom:16px"></div>
+
+            <!-- Validate result -->
+            <div id="schedina-validate-result" style="display:none;margin-bottom:16px"></div>
+
+            <!-- Error -->
+            <div id="schedina-send-error" class="ci-step-error" style="display:none;margin-bottom:12px"></div>
+
+            <!-- Buttons -->
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding-top:8px;border-top:1px solid #e5e7eb">
+                <button onclick="closeSchedinModal()" class="ci-btn" style="background:#f1f5f9;color:var(--text-dark);border:none">Annulla</button>
+                <button id="btn-validate-schedina" onclick="validateSchedina()" class="ci-btn" style="background:#e0f2fe;color:#075985;border:1.5px solid #0369a1;font-weight:600">
+                    🔍 Verifica formato
+                </button>
+                <button id="btn-send-schedina" onclick="sendSchedina()" class="ci-btn ci-btn--next" style="background:#1e3a5f" disabled>
+                    🚔 Invia alla Questura
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── SCHEDINA RICEVUTA MODAL ─────────────────────────────── -->
+<div id="schedina-ok-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:1300;padding:20px;align-items:center;justify-content:center">
+    <div style="background:#fff;border-radius:12px;max-width:400px;width:100%;margin:auto;box-shadow:0 10px 40px rgba(0,0,0,0.25);padding:32px;text-align:center">
+        <div style="font-size:3rem;margin-bottom:12px">✅</div>
+        <h3 style="margin:0 0 8px;color:#15803d">Schedina inviata!</h3>
+        <p id="schedina-ok-ricevuta" style="color:var(--text-light);font-size:0.9rem;margin:0 0 20px"></p>
+        <button onclick="document.getElementById('schedina-ok-modal').style.display='none';loadSchedine()" class="ci-btn ci-btn--next" style="width:100%;justify-content:center">OK</button>
     </div>
 </div>
 

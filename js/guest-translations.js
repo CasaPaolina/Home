@@ -269,6 +269,7 @@ const guestTranslations = {
         restaurant_da_mimmo: "Pizzeria con forno a legna",
         restaurant_locanda_gusto: "Cucina contemporanea ispirata ai piatti tradizionali",
 
+<<<<<<< HEAD
         // Beach activity filters & day selector
         filter_swim: "Nuoto",
         filter_snorkel: "Snorkeling",
@@ -298,6 +299,8 @@ const guestTranslations = {
         act_info_sup: "SUP: mare piattissimo, vento minimo (< 12 km/h), niente raffiche.",
         act_info_today: "Oggi Consigliate: spiagge protette dal vento attuale, ordinate per condizioni.",
 
+=======
+>>>>>>> feature/alloggiati-web
     },
     
     en: {
@@ -566,6 +569,7 @@ const guestTranslations = {
         restaurant_le_tagliate: "Farmhouse restaurant with traditional cuisine and local produce",
         restaurant_da_mimmo: "Wood-fired pizza",
         restaurant_locanda_gusto: "Contemporary take on traditional dishes",
+<<<<<<< HEAD
 
         // Beach activity filters & day selector
         filter_swim: "Swimming",
@@ -595,6 +599,8 @@ const guestTranslations = {
         act_info_hidden: "Hidden Coves: hard to reach, rewards those seeking peace.",
         act_info_sup: "SUP: glassy flat water, minimal wind (< 12 km/h), no gusts.",
         act_info_today: "Best Today: beaches sheltered from current wind, ranked by conditions.",
+=======
+>>>>>>> feature/alloggiati-web
     },
     fr: {
         back_to_site: "Retour au site",
@@ -875,6 +881,7 @@ const guestTranslations = {
         restaurant_le_tagliate: "Ferme-restaurant avec cuisine traditionnelle et produits locaux",
         restaurant_da_mimmo: "Pizza au feu de bois",
         restaurant_locanda_gusto: "Cuisine contemporaine inspirée des plats traditionnels",
+<<<<<<< HEAD
 
         // Beach activity filters & day selector
         filter_swim: "Nage",
@@ -904,6 +911,8 @@ const guestTranslations = {
         act_info_hidden: "Criques cachées : difficiles d'accès, idéales pour la tranquillité.",
         act_info_sup: "SUP : mer parfaitement plate, vent minimal (< 12 km/h), pas de rafales.",
         act_info_today: "Meilleures aujourd'hui : plages à l'abri du vent actuel, classées par conditions.",
+=======
+>>>>>>> feature/alloggiati-web
     },
     
     es: {
@@ -1181,6 +1190,7 @@ const guestTranslations = {
         restaurant_le_tagliate: "Restaurante rural con cocina tradicional y productos locales",
         restaurant_da_mimmo: "Pizza al horno de leña",
         restaurant_locanda_gusto: "Cocina contemporánea inspirada en platos tradicionales",
+<<<<<<< HEAD
 
         // Beach activity filters & day selector
         filter_swim: "Natación",
@@ -1210,6 +1220,8 @@ const guestTranslations = {
         act_info_hidden: "Calas Escondidas: difícil de llegar, perfectas para la tranquilidad.",
         act_info_sup: "SUP: mar completamente plano, viento mínimo (< 12 km/h), sin rachas.",
         act_info_today: "Mejores hoy: playas protegidas del viento actual, ordenadas por condiciones.",
+=======
+>>>>>>> feature/alloggiati-web
     },
     
     de: {
@@ -1478,6 +1490,7 @@ const guestTranslations = {
         restaurant_le_tagliate: "Landrestaurant mit traditioneller Küche und lokalen Produkten",
         restaurant_da_mimmo: "Pizza aus dem Holzofen",
         restaurant_locanda_gusto: "Zeitgenössische Küche inspiriert von traditionellen Gerichten",
+<<<<<<< HEAD
 
         // Beach activity filters & day selector
         filter_swim: "Schwimmen",
@@ -1507,6 +1520,8 @@ const guestTranslations = {
         act_info_hidden: "Versteckte Buchten: schwer zu erreichen, Belohnung für Ruhesuchende.",
         act_info_sup: "SUP: absolut flaches Wasser, minimaler Wind (< 12 km/h), keine Böen.",
         act_info_today: "Heute Empfohlen: Strände windgeschützt, nach Bedingungen geordnet.",
+=======
+>>>>>>> feature/alloggiati-web
     }
 };
 

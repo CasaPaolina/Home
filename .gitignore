@@ -2,3 +2,9 @@
 .claude/
 *.backup
 node_modules/
+<<<<<<< HEAD
+=======
+data/
+docs/checkin-google-apps-script.gs
+
+>>>>>>> feature/alloggiati-web

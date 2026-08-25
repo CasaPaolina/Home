@@ -768,6 +768,7 @@ function showGuestLogin() {
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const password = passwordInput.value;
+<<<<<<< HEAD
         if (!password) return;
 
         fetch('/.netlify/functions/auth', {
@@ -793,6 +794,22 @@ function showGuestLogin() {
         .catch(() => {
             errorEl.textContent = currentLang === 'it' ? 'Errore di rete. Riprova.' : 'Network error. Try again.';
         });
+=======
+
+        // Simple password check (in production, this should be server-side)
+        if (password === '__GUEST_AREA__') {
+            sessionStorage.setItem('guestLoggedIn', 'true');
+            document.body.removeChild(modal);
+            document.body.style.overflow = '';
+            requestGeolocationThen('guest-info.html');
+        } else {
+            passwordInput.style.borderColor = 'red';
+            passwordInput.value = '';
+            const wrongMsg = (translations[currentLang] && translations[currentLang].guest_login_wrong) || (currentLang === 'it' ? 'Password errata, riprova' : 'Wrong password, try again');
+            passwordInput.placeholder = wrongMsg;
+            errorEl.textContent = wrongMsg;
+        }
+>>>>>>> feature/alloggiati-web
     });
 
     modal.querySelector('.guest-modal-close').addEventListener('click', () => {
@@ -1176,6 +1193,7 @@ function initMainPOIMap() {
         fullscreenControlOptions: { position: 'topleft' }
     }).setView([CASA_PAOLINA.lat, CASA_PAOLINA.lng], 11);
 
+<<<<<<< HEAD
     L.tileLayer(
         'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         {
@@ -1188,6 +1206,13 @@ function initMainPOIMap() {
         'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
         { maxZoom: 19 }
     ).addTo(map);
+=======
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors © CARTO',
+        maxZoom: 19,
+        subdomains: 'abcd'
+    }).addTo(map);
+>>>>>>> feature/alloggiati-web
 
     // Center home button
     L.Control.CenterHomePOI = L.Control.extend({
@@ -1202,6 +1227,7 @@ function initMainPOIMap() {
     map.addControl(new L.Control.CenterHomePOI({ position: 'topleft' }));
 
     // Casa Paolina marker
+<<<<<<< HEAD
     L.circleMarker([CASA_PAOLINA.lat, CASA_PAOLINA.lng], {
         radius: 10,
         fillColor: '#f4a261',
@@ -1225,10 +1251,24 @@ function initMainPOIMap() {
         services:    '#16a34a',
         restaurants: '#dc2626'
     };
+=======
+    const homeIcon = L.divIcon({
+        className: 'custom-home-marker',
+        html: `<div class="map-badge map-badge--home"><span class="map-badge-emoji">🏠</span></div>`,
+        iconSize: [42, 46], iconAnchor: [21, 46]
+    });
+    L.marker([CASA_PAOLINA.lat, CASA_PAOLINA.lng], { icon: homeIcon })
+        .bindPopup('<b>Casa Paolina</b><br>Via Dante De Blasi, 15')
+        .addTo(map);
+
+    const categoryEmoji = { attractions: '🏛️', nightlife: '🍹', services: '🛒', restaurants: '🍴' };
+    const categoryBadge = { attractions: 'map-badge--attraction', nightlife: 'map-badge--nightlife', services: 'map-badge--service', restaurants: 'map-badge--restaurant' };
+>>>>>>> feature/alloggiati-web
 
     const markerLayers = {};
     const markerRefs = {};
 
+<<<<<<< HEAD
     function resetAllMarkers() {
         Object.values(markerRefs).forEach(r => {
             r.marker.setStyle({ color: '#fff', weight: 2 });
@@ -1278,6 +1318,26 @@ function initMainPOIMap() {
     });
 
     // Render cards — div (not <a>) so card click selects, inner link opens maps
+=======
+    pointsOfInterest.forEach((poi, index) => {
+        const emoji = categoryEmoji[poi.category] || '📍';
+        const badgeClass = categoryBadge[poi.category] || 'map-badge--service';
+        const icon = L.divIcon({
+            className: 'custom-beach-marker',
+            html: `<div class="map-badge ${badgeClass}"><span class="map-badge-emoji">${emoji}</span></div>`,
+            iconSize: [38, 42], iconAnchor: [19, 42]
+        });
+
+        const marker = L.marker([poi.lat, poi.lng], { icon })
+            .bindPopup(`<div style="min-width:180px"><b>${poi.name}</b><br><span style="font-size:0.88rem;color:#64748b">${poi.description || poi.address || ''}</span></div>`);
+
+        if (!markerLayers[poi.category]) markerLayers[poi.category] = L.layerGroup().addTo(map);
+        marker.addTo(markerLayers[poi.category]);
+        markerRefs[`poi-${index}`] = { marker, poi };
+    });
+
+    // Render cards matching guest page style
+>>>>>>> feature/alloggiati-web
     function renderPOIList(filter = 'all') {
         const listContainer = document.getElementById('poi-interactive-list');
         if (!listContainer) return;
@@ -1296,17 +1356,26 @@ function initMainPOIMap() {
             const emoji = categoryEmoji[poi.category] || '📍';
             const desc = poi.description || poi.address || '';
             const dist = poi.distance || '';
+<<<<<<< HEAD
             const mapsUrl = poi.mapsUrl
                 || `https://www.google.com/maps/dir/?api=1&origin=${CASA_PAOLINA.lat},${CASA_PAOLINA.lng}&destination=${poi.lat},${poi.lng}`;
             const tc = thumbColors[poi.category] || { bg: '#e0f2f1', color: '#2c7873', border: '#a8d5d1' };
             return `
                 <div class="poi-list-card" data-poi-id="poi-${globalIndex}">
+=======
+            const mapsUrl = poi.mapsUrl || '#';
+            const tc = thumbColors[poi.category] || { bg: '#e0f2f1', color: '#2c7873', border: '#a8d5d1' };
+            return `
+                <a href="${mapsUrl}" target="_blank" rel="noopener"
+                   class="poi-list-card" data-poi-id="poi-${globalIndex}">
+>>>>>>> feature/alloggiati-web
                     <div class="poi-list-thumb" style="background:${tc.bg};color:${tc.color};border-color:${tc.border}">${emoji}</div>
                     <div class="poi-list-body">
                         <div class="poi-list-name">${poi.name}</div>
                         ${desc ? `<div class="poi-list-desc">${desc}</div>` : ''}
                         ${dist ? `<div class="poi-list-dist">📍 ${dist}</div>` : ''}
                     </div>
+<<<<<<< HEAD
                     <a href="${mapsUrl}" target="_blank" rel="noopener"
                        class="poi-list-nav" onclick="event.stopPropagation()" title="Portami qui">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -1314,6 +1383,9 @@ function initMainPOIMap() {
                         </svg>
                     </a>
                 </div>
+=======
+                </a>
+>>>>>>> feature/alloggiati-web
             `;
         }).join('');
 
@@ -1321,6 +1393,7 @@ function initMainPOIMap() {
         const countEl = document.getElementById('poi-list-count');
         if (countEl) countEl.textContent = filtered.length + (filtered.length === 1 ? ' luogo' : ' luoghi');
 
+<<<<<<< HEAD
         // Card click → fly map to marker, highlight pin + card
         listContainer.querySelectorAll('.poi-list-card').forEach(card => {
             card.addEventListener('click', () => {
@@ -1332,6 +1405,18 @@ function initMainPOIMap() {
                 listContainer.querySelectorAll('.poi-list-card').forEach(c => c.classList.remove('selected'));
                 card.classList.add('selected');
                 map.flyTo([ref.poi.lat, ref.poi.lng], 14, { duration: 0.8 });
+=======
+        // Click on card → pan map to marker
+        listContainer.querySelectorAll('.poi-list-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const ref = markerRefs[card.dataset.poiId];
+                if (ref) {
+                    listContainer.querySelectorAll('.poi-list-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    map.setView([ref.poi.lat, ref.poi.lng], 14);
+                    ref.marker.openPopup();
+                }
+>>>>>>> feature/alloggiati-web
             });
         });
     }

@@ -2,7 +2,8 @@
 //  Casa Paolina — Admin Check-in Dashboard
 // ─────────────────────────────────────────────────────────────
 
-const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx2kYpdep7maP8j8biDP7TZfIp23RuNo1qCfqCMLTuvY1fyuqleHECcjXJdJZmNbP-2-Q/exec';
+const ADMIN_PASSWORD = '__ADMIN_CHECKIN__';
+const SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNbH7MdDaPDnA2JRUCKqmHLUmyInL3RYFRmoK80mSVYWHW0L46z5dfog6CwiDbxg86Ww/exec';
 
 // ─── DATI STRUTTURA (per PDF conferma) ───────────────────────
 const CASA_PAOLINA = {
@@ -60,7 +61,25 @@ function adminLogin() {
 function showPanel() {
     document.getElementById('admin-gate').style.display  = 'none';
     document.getElementById('admin-panel').style.display = 'block';
-    loadBookings();
+    switchTab('checkin');  // carica il tab default
+}
+
+// ─── TABS ────────────────────────────────────────────────────
+
+function switchTab(tab) {
+    const tabs    = ['checkin', 'schedine'];
+    const btnIds  = { checkin: 'tab-btn-checkin', schedine: 'tab-btn-schedine' };
+    const panelIds = { checkin: 'tab-panel-checkin', schedine: 'tab-panel-schedine' };
+
+    tabs.forEach(t => {
+        const btn   = document.getElementById(btnIds[t]);
+        const panel = document.getElementById(panelIds[t]);
+        if (btn)   btn.classList.toggle('tab-btn--active', t === tab);
+        if (panel) panel.style.display = t === tab ? 'block' : 'none';
+    });
+
+    if (tab === 'checkin'  && !document.getElementById('bookings-list').children.length) loadBookings();
+    if (tab === 'schedine' && !document.getElementById('schedine-list').children.length)  loadSchedine();
 }
 
 // ─── LOAD BOOKINGS ───────────────────────────────────────────
@@ -734,12 +753,333 @@ document.addEventListener('click', (e) => {
     if (e.target === conf) {
         closeConfermaModal();
     }
+    const sched = document.getElementById('schedina-modal');
+    if (e.target === sched) {
+        closeSchedinModal();
+    }
 });
+
+
+// ════════════════════════════════════════════════════════════════
+//  SCHEDINE ALLOGGIATI WEB — Polizia di Stato
+// ════════════════════════════════════════════════════════════════
+
+let currentSchedina = null;  // dati dell'anteprima attiva
+
+// ─── CARICA SCHEDINE ─────────────────────────────────────────
+
+function loadSchedine() {
+    const list    = document.getElementById('schedine-list');
+    const loading = document.getElementById('schedine-loading');
+    const errEl   = document.getElementById('schedine-error');
+
+    list.innerHTML    = '';
+    errEl.style.display   = 'none';
+    loading.style.display = 'block';
+
+    fetch(SHEETS_SCRIPT_URL + '?action=alloggiati-due')
+        .then(r => r.json())
+        .then(json => {
+            loading.style.display = 'none';
+            if (json.status !== 'ok') throw new Error(json.error || 'Errore caricamento');
+            renderSchedine(json.due || []);
+        })
+        .catch(err => {
+            loading.style.display = 'none';
+            errEl.style.display   = 'block';
+            errEl.textContent     = '⚠ ' + (err.message || 'Errore caricamento schedine');
+        });
+}
+
+// ─── RENDER ──────────────────────────────────────────────────
+
+function renderSchedine(items) {
+    const list = document.getElementById('schedine-list');
+    list.innerHTML = '';
+
+    if (items.length === 0) {
+        list.innerHTML = `
+            <div class="adm-empty">
+                <div style="font-size:2rem;margin-bottom:8px">✅</div>
+                <p style="margin:0;font-size:0.88rem">Nessuna schedina in attesa di invio.</p>
+            </div>`;
+        return;
+    }
+
+    // Separa le già inviate da quelle pendenti
+    const pending = items.filter(x => !x.already_sent);
+    const sent    = items.filter(x =>  x.already_sent);
+
+    if (pending.length === 0 && sent.length === 0) {
+        list.innerHTML = `<div class="adm-empty"><p>Nessuna prenotazione.</p></div>`;
+        return;
+    }
+
+    if (pending.length > 0) {
+        const header = document.createElement('p');
+        header.style.cssText = 'font-size:0.8rem;font-weight:700;color:#b45309;text-transform:uppercase;margin:0 0 10px;letter-spacing:0.04em';
+        header.textContent = `⏳ Da inviare (${pending.length})`;
+        list.appendChild(header);
+        pending.forEach(item => list.appendChild(createSchedinCard(item, false)));
+    }
+
+    if (sent.length > 0) {
+        const header = document.createElement('p');
+        header.style.cssText = 'font-size:0.8rem;font-weight:700;color:#15803d;text-transform:uppercase;margin:16px 0 10px;letter-spacing:0.04em';
+        header.textContent = `✅ Già inviate (${sent.length})`;
+        list.appendChild(header);
+        sent.forEach(item => list.appendChild(createSchedinCard(item, true)));
+    }
+}
+
+function createSchedinCard(item, alreadySent) {
+    const card = document.createElement('div');
+    card.className = 'ci-card';
+    card.style.marginBottom = '10px';
+
+    const notti = item.notti || '?';
+    const guests = (item.adulti || 0) + (item.bambini || 0);
+    const guestsLabel = guests ? ` · ${guests} ospiti` : '';
+    const accLabel = item.n_acc > 0
+        ? ` · ${item.n_acc} accompagnator${item.n_acc === 1 ? 'e' : 'i'}`
+        : '';
+
+    const badge = alreadySent
+        ? `<span class="adm-status" style="background:#dcfce7;color:#15803d">✅ Inviata</span>`
+        : `<span class="adm-status" style="background:#fef3c7;color:#92400e">⏳ Da inviare</span>`;
+
+    const btnHtml = alreadySent
+        ? `<button class="ci-btn" style="background:#f1f5f9;color:var(--text-dark);border:none;padding:8px 16px;font-size:0.83rem;white-space:nowrap"
+                   onclick="previewSchedina('${escAttr(item.key)}')">🔍 Rivedi</button>`
+        : `<button class="ci-btn ci-btn--next" style="padding:8px 18px;font-size:0.85rem;white-space:nowrap;background:#1e3a5f"
+                   onclick="previewSchedina('${escAttr(item.key)}')">🚔 Anteprima &amp; Invia</button>`;
+
+    card.innerHTML = `
+        <div class="adm-booking-row">
+            <div class="adm-booking-meta">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+                    <span class="adm-apt-badge" style="background:#e0f2fe;color:#075985">${escHtml(item.appartamento)}</span>
+                    ${badge}
+                </div>
+                <div class="adm-booking-name">${escHtml(item.cognome)} ${escHtml(item.nome)}</div>
+                <div class="adm-booking-dates">
+                    Arrivo ${formatAdminDate(item.data_arrivo)} · ${notti} nott${notti === 1 ? 'e' : 'i'}${guestsLabel}${accLabel}
+                </div>
+            </div>
+            <div>${btnHtml}</div>
+        </div>`;
+    return card;
+}
+
+// ─── ANTEPRIMA ────────────────────────────────────────────────
+
+function previewSchedina(key) {
+    currentSchedina = null;
+    const modal    = document.getElementById('schedina-modal');
+    const preText  = document.getElementById('schedina-preview-text');
+    const guestDiv = document.getElementById('schedina-guest-info');
+    const warnDiv  = document.getElementById('schedina-warnings');
+    const errEl    = document.getElementById('schedina-send-error');
+    const btn      = document.getElementById('btn-send-schedina');
+    const subtitle = document.getElementById('schedina-modal-subtitle');
+
+    preText.textContent  = '⏳ Caricamento…';
+    guestDiv.innerHTML   = '';
+    warnDiv.style.display = 'none';
+    warnDiv.innerHTML    = '';
+    errEl.style.display  = 'none';
+    btn.disabled         = true;   // rimane disabilitato fino ad abilitazione manuale
+    btn.textContent      = '🚔 Invia alla Questura';
+    const validateResult = document.getElementById('schedina-validate-result');
+    if (validateResult) { validateResult.style.display = 'none'; validateResult.innerHTML = ''; }
+    const btnValidate = document.getElementById('btn-validate-schedina');
+    if (btnValidate) { btnValidate.disabled = false; btnValidate.textContent = '🔍 Verifica formato'; }
+    modal.style.display  = 'block';
+
+    const url = SHEETS_SCRIPT_URL + '?action=alloggiati-preview&key=' + encodeURIComponent(key);
+    fetch(url)
+        .then(r => r.json())
+        .then(json => {
+            if (json.status !== 'ok') throw new Error(json.error || 'Errore preview');
+            currentSchedina = json.data;
+            const d = json.data;
+
+            subtitle.textContent = `${d.appartamento} · Arrivo ${formatAdminDate(d.data_arrivo)}`;
+
+            const notti  = d.notti || '?';
+            const guests = (d.adulti || 0) + (d.bambini || 0);
+            const accNr  = d.n_acc || 0;
+            const accHtml = d.guests && d.guests.length > 0
+                ? d.guests.map(g => `<span style="display:block;margin-left:12px;color:#555">↳ ${escHtml(g.cognome)} ${escHtml(g.nome)} · ${escHtml(g.cittadinanza || '-')}</span>`).join('')
+                : (accNr > 0 ? `<span style="display:block;margin-left:12px;color:#999">(${accNr} accompagnator${accNr===1?'e':'i'} — dati non disponibili nel foglio Ospiti)</span>` : '');
+
+            guestDiv.innerHTML = `
+                <div style="font-weight:600;margin-bottom:6px;color:var(--text-dark);font-size:0.95rem">
+                    ${escHtml(d.cognome)} ${escHtml(d.nome)}
+                </div>
+                <div style="color:#555;font-size:0.85rem;line-height:1.7">
+                    <span style="margin-right:14px"><strong>Nascita:</strong> ${formatDateIT(d.data_nascita)} · ${escHtml(d.comune_nascita || '-')} (${escHtml(d.stato_nascita || '-')})</span>
+                    <span style="margin-right:14px"><strong>Cittadinanza:</strong> ${escHtml(d.cittadinanza || '-')}</span>
+                    <span><strong>Documento:</strong> ${escHtml(d.tipo_doc || '-')} n. ${escHtml(d.num_doc || '-')}</span>
+                </div>
+                ${accHtml}
+            `;
+
+            preText.textContent = json.preview || '';
+
+            // Avvisi per campi potenzialmente mancanti
+            const warnings = [];
+            checkAlloggiatiField_(d.stato_nascita,  'Stato di nascita', warnings);
+            checkAlloggiatiField_(d.comune_nascita, 'Comune di nascita', warnings);
+            checkAlloggiatiField_(d.cittadinanza,   'Cittadinanza', warnings);
+            checkAlloggiatiField_(d.tipo_doc,       'Tipo documento', warnings);
+            checkAlloggiatiField_(d.num_doc,        'Numero documento', warnings);
+            (d.guests || []).forEach((g, i) => {
+                const p = `Accompagnatore ${i+1} (${g.cognome || '?'})`;
+                checkAlloggiatiField_(g.stato_nascita,  `${p} — stato nascita`, warnings);
+                checkAlloggiatiField_(g.comune_nascita, `${p} — comune nascita`, warnings);
+            });
+            if (warnings.length > 0) {
+                warnDiv.style.display = 'block';
+                warnDiv.innerHTML = `
+                    <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:12px 14px;font-size:0.83rem;color:#92400e">
+                        <strong>⚠ Campi da verificare prima dell'invio:</strong>
+                        <ul style="margin:6px 0 0 16px;padding:0;line-height:1.8">
+                            ${warnings.map(w => `<li>${escHtml(w)}</li>`).join('')}
+                        </ul>
+                    </div>`;
+            }
+
+            if (d.already_sent) {
+                btn.disabled    = true;
+                btn.textContent = '✅ Già inviata';
+                btn.style.background = '#6b7280';
+            }
+        })
+        .catch(err => {
+            preText.textContent = 'Errore: ' + (err.message || 'Impossibile caricare la preview');
+        });
+}
+
+function checkAlloggiatiField_(val, label, warnings) {
+    if (!val || String(val).trim() === '') {
+        warnings.push(`${label}: campo vuoto`);
+    }
+}
+
+function closeSchedinModal() {
+    document.getElementById('schedina-modal').style.display = 'none';
+    currentSchedina = null;
+}
+
+// ─── VALIDA SCHEDINA (SOAP Test) ───────────────────────────────
+
+function validateSchedina() {
+    if (!currentSchedina) return;
+
+    const btn    = document.getElementById('btn-validate-schedina');
+    const result = document.getElementById('schedina-validate-result');
+    const errEl  = document.getElementById('schedina-send-error');
+
+    btn.disabled    = true;
+    btn.textContent = '⏳ Verifica in corso…';
+    result.style.display = 'none';
+    errEl.style.display  = 'none';
+
+    const url = SHEETS_SCRIPT_URL + '?action=alloggiati-validate&key=' + encodeURIComponent(currentSchedina.key);
+    fetch(url)
+        .then(r => r.json())
+        .then(json => {
+            btn.disabled    = false;
+            btn.textContent = '🔍 Verifica formato';
+
+            if (json.status !== 'ok') throw new Error(json.error || 'Errore validazione');
+
+            const allOk  = json.genEsito && json.valide === json.totale;
+            const color  = allOk ? '#dcfce7' : '#fef2f2';
+            const border = allOk ? '#86efac' : '#fca5a5';
+            const icon   = allOk ? '✅' : '❌';
+
+            let righeHtml = '';
+            (json.righe || []).forEach((r, i) => {
+                const ico    = r.ok ? '✅' : '❌';
+                const detail = r.det ? ` — ${escHtml(r.det)}` : (r.des ? ` — ${escHtml(r.des)}` : '');
+                righeHtml += `<div style="padding:3px 0;font-size:0.82rem">${ico} Riga ${i + 1}${detail}</div>`;
+            });
+
+            result.style.display = 'block';
+            result.innerHTML = `
+                <div style="background:${color};border:1.5px solid ${border};border-radius:8px;padding:12px 14px">
+                    <div style="font-weight:700;font-size:0.9rem;margin-bottom:8px">
+                        ${icon} ${allOk ? "Formato valido — schedina pronta per l'invio" : 'Errori di formato rilevati'}
+                        <span style="font-weight:400;color:#666;font-size:0.8rem;margin-left:8px">${json.valide}/${json.totale} righe OK</span>
+                    </div>
+                    ${righeHtml}
+                </div>`;
+        })
+        .catch(err => {
+            btn.disabled    = false;
+            btn.textContent = '🔍 Verifica formato';
+            errEl.style.display = 'block';
+            errEl.textContent   = '⚠ ' + (err.message || 'Errore durante la validazione.');
+        });
+}
+
+// ─── INVIA ───────────────────────────────────────────────────
+
+function sendSchedina() {
+    if (!currentSchedina) return;
+
+    const btn   = document.getElementById('btn-send-schedina');
+    const errEl = document.getElementById('schedina-send-error');
+
+    btn.disabled    = true;
+    btn.textContent = '⏳ Invio in corso…';
+    errEl.style.display = 'none';
+
+    fetch(SHEETS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'data=' + encodeURIComponent(JSON.stringify({
+            action: 'alloggiati-send',
+            key:    currentSchedina.key
+        }))
+    })
+        .then(r => r.json())
+        .then(json => {
+            if (json.status !== 'ok') throw new Error(json.error || 'Invio fallito');
+
+            closeSchedinModal();
+            const okModal = document.getElementById('schedina-ok-modal');
+            document.getElementById('schedina-ok-ricevuta').textContent =
+                json.ricevuta
+                    ? `N° ricevuta: ${json.ricevuta}`
+                    : (json.message || 'Schedina trasmessa con successo.');
+            okModal.style.display = 'flex';
+        })
+        .catch(err => {
+            btn.disabled    = false;
+            btn.textContent = '🚔 Invia alla Questura';
+            errEl.style.display = 'block';
+            errEl.textContent   = '⚠ ' + (err.message || 'Errore durante l\'invio.');
+        });
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────
+
+function escHtml(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escAttr(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 
 // ─── INIT ────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Auto-show panel if already logged in this session
     if (sessionStorage.getItem('adminLoggedIn') === 'true') {
         showPanel();
     }
