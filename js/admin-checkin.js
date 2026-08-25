@@ -932,14 +932,19 @@ function previewSchedina(key) {
             // Avvisi per campi potenzialmente mancanti
             const warnings = [];
             checkAlloggiatiField_(d.stato_nascita,  'Stato di nascita', warnings);
-            checkAlloggiatiField_(d.comune_nascita, 'Comune di nascita', warnings);
+            // Comune richiesto SOLO se nato in Italia (o stato vuoto + citt. italiana)
+            if (needsComuneNascita_(d.stato_nascita, d.cittadinanza)) {
+                checkAlloggiatiField_(d.comune_nascita, 'Comune di nascita', warnings);
+            }
             checkAlloggiatiField_(d.cittadinanza,   'Cittadinanza', warnings);
             checkAlloggiatiField_(d.tipo_doc,       'Tipo documento', warnings);
             checkAlloggiatiField_(d.num_doc,        'Numero documento', warnings);
             (d.guests || []).forEach((g, i) => {
                 const p = `Accompagnatore ${i+1} (${g.cognome || '?'})`;
                 checkAlloggiatiField_(g.stato_nascita,  `${p} — stato nascita`, warnings);
-                checkAlloggiatiField_(g.comune_nascita, `${p} — comune nascita`, warnings);
+                if (needsComuneNascita_(g.stato_nascita, g.cittadinanza)) {
+                    checkAlloggiatiField_(g.comune_nascita, `${p} — comune nascita`, warnings);
+                }
             });
             if (warnings.length > 0) {
                 warnDiv.style.display = 'block';
@@ -967,6 +972,16 @@ function checkAlloggiatiField_(val, label, warnings) {
     if (!val || String(val).trim() === '') {
         warnings.push(`${label}: campo vuoto`);
     }
+}
+
+// Comune di nascita richiesto solo se: stato = Italia/Italiana/Italiano/Italy
+// oppure stato vuoto + cittadinanza italiana/vuota (default = italiano).
+function needsComuneNascita_(stato, citt) {
+    const s = (stato || '').trim().toLowerCase();
+    if (s === 'italia' || s === 'italiana' || s === 'italiano' || s === 'italy') return true;
+    if (s !== '') return false;  // stato non italiano esplicitamente → non serve comune
+    const c = (citt || '').trim().toLowerCase();
+    return !c || c === 'italiana' || c === 'italiano' || c === 'italia' || c === 'italian';
 }
 
 function closeSchedinModal() {

@@ -1764,7 +1764,28 @@ var ALLOGGIATI_STATI_ = {
   'uganda':'100000461','ungheria':'100000244','ungherese':'100000244',
   'uruguay':'100000618','uzbekistan':'100000357',
   'venezuela':'100000619','vietnam':'100000353',
-  'yemen':'100000354','zambia':'100000464','zimbabwe':'100000465'
+  'yemen':'100000354','zambia':'100000464','zimbabwe':'100000465',
+  // Varianti in lingua inglese e tedesca (ospiti che compilano in lingua straniera)
+  'germany':'100000216','german':'100000216',
+  'deutsch':'100000216','deutsche':'100000216',
+  'italian':'100000100','italy':'100000100',
+  'french':'100000215','france':'100000215',
+  'spain':'100000239','spanish':'100000239',
+  'british':'100000219','english':'100000219',
+  'dutch':'100000232','belgium':'100000206','belgian':'100000206',
+  'austrian':'100000203','portuguese':'100000234',
+  'greek':'100000220','greece':'100000220','ireland':'100000221','irish':'100000221',
+  'polish':'100000233','poland':'100000233','czech':'100000257',
+  'hungarian':'100000244','romanian':'100000235','bulgarian':'100000209',
+  'croatian':'100000250','serbian':'100001000','russian':'100000245',
+  'turkish':'100000351','chinese':'100000314','japanese':'100000326',
+  'indian':'100000330','brazilian':'100000605','moroccan':'100000436',
+  'american':'100000536','australian':'100000701',
+  'norwegian':'100000231','sweden':'100000240','swedish':'100000240',
+  'danish':'100000212','denmark':'100000212','finnish':'100000214',
+  'israel':'100000334','israeli':'100000334','egypt':'100000419','egyptian':'100000419',
+  'japan':'100000326','china':'100000314','brazil':'100000605',
+  'mexico':'100000527','mexican':'100000527','saudi':'100000302'
 };
 
 function getStatoCodice_(name) {
@@ -9827,22 +9848,22 @@ function buildSchedinRow_(ospite, dataArrivo, notti) {
     }
     statoNascCod = sc;
   }
+  // Comune e Provincia SOLO se nato in Italia (statoNascCod = '100000100').
+  // Per qualsiasi altro stato → sempre 9+2 spazi, senza eccezioni.
   var comuneNasc, provinciaNasc;
-  if (isItaliano && ospite.comune_nascita) {
+  if (statoNascCod === '100000100' && ospite.comune_nascita) {
     var codCom = getComuneCodice_(ospite.comune_nascita);
     if (codCom.trim()) {
-      // Comune trovato: usa codice + provincia
       comuneNasc    = padR(codCom, 9);
       provinciaNasc = padR(getProvinciaSigla_(codCom), 2);
     } else {
-      // Comune non trovato nella tabella → lascia vuoto (spazi)
       Logger.log('⚠️ Comune nascita non trovato per "' + ospite.comune_nascita + '" — schedina potrebbe essere rifiutata');
       comuneNasc    = padR('', 9);
       provinciaNasc = padR('', 2);
     }
   } else {
-    comuneNasc    = padR('', 9);  // 9 spazi (estero o comune non fornito)
-    provinciaNasc = padR('', 2);  // 2 spazi
+    comuneNasc    = padR('', 9);  // estero o comune non richiesto
+    provinciaNasc = padR('', 2);
   }
   // [116-124] Stato Nascita (9)
   var statoNasc = padR(statoNascCod, 9);
@@ -10003,7 +10024,7 @@ function buildAlloggiatiText_(checkinData) {
     comune_rilascio:checkinData.comune_rilascio
   }, arrivo, notti));
 
-  // Accompagnatori: tipo 19 (FAMILIARE)
+  // Accompagnatori: tipo 19 (FAMILIARE/MEMBRO DEL NUCLEO)
   //  Per specifica: 34 blank per i campi documento (pos. 134-167).
   //  xml:space="preserve" nella chiamata SOAP impedisce la rimozione degli spazi finali.
   (checkinData.guests || []).forEach(function(g) {
