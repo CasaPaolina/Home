@@ -104,6 +104,9 @@ function doPost(e) {
     if (data.action === 'alloggiati-send') {
       return doPostAlloggiatiSend_(data);
     }
+    if (data.action === 'alloggiati-send-simulate') {
+      return doPostAlloggiatiSendSimulate_(data);
+    }
 
     var ss   = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -10249,6 +10252,55 @@ function doPostAlloggiatiSend_(data) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+
+// ── Azione POST: alloggiati-send-simulate ───────────────────────────
+//  Simula l'invio: costruisce la schedina, logga come "SIMULATO",
+//  manda email di notifica ma NON chiama il SOAP Alloggiati Web.
+function doPostAlloggiatiSendSimulate_(data) {
+  var key = data.key;
+  if (!key) throw new Error('Chiave check-in mancante');
+
+  var due   = getAlloggiatiDue_();
+  var found = null;
+  for (var i = 0; i < due.length; i++) {
+    if (due[i].key === key) { found = due[i]; break; }
+  }
+  if (!found) throw new Error('Check-in non trovato');
+
+  var testo = buildAlloggiatiText_(found);
+  var righe = testo.split('\r\n');
+
+  // Logga come SIMULATO nel foglio AlloggiatiLog
+  logAlloggiatiSend_(found, 'SIMULATO', 'SIM-' + new Date().getTime(), 'Invio simulato — SOAP non chiamato');
+
+  // Email di notifica
+  try {
+    GmailApp.sendEmail(
+      NOTIFICATION_EMAIL,
+      'Casa Paolina — Schedina Questura [SIMULATA] ✓',
+      'SIMULAZIONE invio schedina Alloggiati Web.\n\n' +
+      'Ospite: ' + (found.nome + ' ' + found.cognome).trim() + '\n' +
+      'Appartamento: ' + (found.appartamento || '-') + '\n' +
+      'Data arrivo: ' + (found.data_arrivo || '-') + '\n' +
+      'Notti: ' + (found.notti || '-') + '\n' +
+      '\n--- TESTO SCHEDINA (' + righe.length + ' righe) ---\n' +
+      righe.join('\n') + '\n\n' +
+      '⚠️ ATTENZIONE: questa è una simulazione. Il SOAP NON è stato chiamato.\n' +
+      'Abilita l\'invio reale rimuovendo la simulazione dalla dashboard.'
+    );
+  } catch (mailErr) {
+    Logger.log('Avviso: invio mail simulazione schedina fallito: ' + mailErr.toString());
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      status:   'ok',
+      ricevuta: '',
+      message:  '[SIMULATO] Schedina elaborata correttamente. Email di notifica inviata.',
+      righe:    righe.length
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
 
 // ── Setup: configura le Script Properties ───────────────────────
 //  Modifica i valori qui sotto, poi esegui "setupAlloggiatiProperties".

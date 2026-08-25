@@ -1079,11 +1079,13 @@ function sendSchedina() {
     btn.textContent = '⏳ Invio in corso…';
     errEl.style.display = 'none';
 
+    // ⚠️ MODALITÀ SIMULAZIONE — sostituire 'alloggiati-send-simulate' con
+    // 'alloggiati-send' per abilitare l'invio reale alla Questura.
     fetch(SHEETS_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'data=' + encodeURIComponent(JSON.stringify({
-            action: 'alloggiati-send',
+            action: 'alloggiati-send-simulate',
             key:    currentSchedina.key
         }))
     })
@@ -1094,9 +1096,7 @@ function sendSchedina() {
             closeSchedinModal();
             const okModal = document.getElementById('schedina-ok-modal');
             document.getElementById('schedina-ok-ricevuta').textContent =
-                json.ricevuta
-                    ? `N° ricevuta: ${json.ricevuta}`
-                    : (json.message || 'Schedina trasmessa con successo.');
+                json.message || 'Schedina elaborata correttamente.';
             okModal.style.display = 'flex';
         })
         .catch(err => {
