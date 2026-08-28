@@ -1451,22 +1451,29 @@ function checkAvailability() {
                 results.innerHTML = '<p style="text-align:center;color:#dc2626;font-weight:600">Nessun appartamento disponibile per le date selezionate.<br><span style="font-weight:400;font-size:0.85rem;color:#64748b">Prova con date diverse o contattaci per soluzioni personalizzate.</span></p>';
             } else {
                 const nights = Math.round((cout - cin) / 86400000);
+                const fmtD = s => { const p = s.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; };
                 results.innerHTML = `
                     <p style="text-align:center;color:#15803d;font-weight:700;margin:0 0 16px">
                         ✅ ${available.length} appartament${available.length > 1 ? 'i disponibili' : 'o disponibile'} per ${nights} nott${nights > 1 ? 'i' : 'e'}
                     </p>
                     <div style="display:grid;gap:12px">
-                        ${available.map(a => `
+                        ${available.map(a => {
+                            const msg = encodeURIComponent(
+                                `Ciao! Vorrei prenotare ${a.name} dal ${fmtD(checkin)} al ${fmtD(checkout)} per ${guests} ospiti. Potete confermare la disponibilità e inviarmi un preventivo?`
+                            );
+                            const waUrl = `https://wa.me/393208086738?text=${msg}`;
+                            return `
                         <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border:1.5px solid #d1fae5;border-radius:10px;background:#f0fdf4">
                             <div>
                                 <div style="font-weight:700;color:#1e3a5f;font-size:1rem">${a.emoji} ${a.name}</div>
                                 <div style="font-size:0.82rem;color:#64748b;margin-top:2px">${a.desc} · fino a ${a.maxGuests} ospiti</div>
                             </div>
-                            <a href="${a.checkinPath}&checkin=${checkin}&checkout=${checkout}&guests=${guests}"
-                               style="padding:8px 18px;background:#2c7873;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem;white-space:nowrap;margin-left:12px">
-                                Prenota →
+                            <a href="${waUrl}" target="_blank" rel="noopener"
+                               style="padding:8px 18px;background:#25d366;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem;white-space:nowrap;margin-left:12px">
+                                💬 Prenota →
                             </a>
-                        </div>`).join('')}
+                        </div>`;
+                        }).join('')}
                     </div>`;
             }
         })
