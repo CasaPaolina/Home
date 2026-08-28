@@ -1644,21 +1644,44 @@ function alloggiatiAuthTest_(utente, token) {
   return { esito: esito.toLowerCase() === 'true', erroreDes: errDes, erroreDettaglio: errDet, xml: xml };
 }
 
-// ── Invio schedine → risposta API ───────────────────────────────
+// ── Invio schedine via SOAP Send (stessa struttura di alloggiatiSoapTest_) ──
 function alloggiatiSendRows_(cfg, token, idUtente, rowsText) {
-  var resp = UrlFetchApp.fetch(ALLOGGIATI_API_BASE_ + 'sendschedine', {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify({
-      Utente:       cfg.user,
-      token:        token,
-      WsKey:        cfg.wsKey,
-      IdStruttura:  idUtente || cfg.idStruttura,
-      Rows:         rowsText
-    }),
-    muteHttpExceptions: true
+  // rowsText può essere stringa (righe separate da \r\n) o array
+  var schedine = Array.isArray(rowsText)
+    ? rowsText
+    : String(rowsText).split('\r\n').filter(function(s) { return s.length > 0; });
+
+  var schedineTags = schedine.map(function(s) {
+    return '<all:string xml:space="preserve">' + xmlEscape_(s) + '</all:string>';
+  }).join('');
+
+  var envelope =
+    '<?xml version="1.0" encoding="utf-8"?>' +
+    '<soap:Envelope' +
+      ' xmlns:soap="http://www.w3.org/2003/05/soap-envelope"' +
+      ' xmlns:all="AlloggiatiService">' +
+      '<soap:Header/>' +
+      '<soap:Body>' +
+        '<all:Send>' +
+          '<all:Utente>' + xmlEscape_(cfg.user) + '</all:Utente>' +
+          '<all:token>'  + xmlEscape_(token)    + '</all:token>' +
+          '<all:ElencoSchedine>' + schedineTags + '</all:ElencoSchedine>' +
+        '</all:Send>' +
+      '</soap:Body>' +
+    '</soap:Envelope>';
+
+  var resp = UrlFetchApp.fetch(ALLOGGIATI_SOAP_URL_, {
+    method:      'post',
+    contentType: 'application/soap+xml; charset=utf-8',
+    payload:     envelope,
+    muteHttpExceptions: true,
+    headers: { 'SOAPAction': 'AlloggiatiService/Send' }
   });
-  return JSON.parse(resp.getContentText('UTF-8'));
+
+  return {
+    statusCode: resp.getResponseCode(),
+    xml:        resp.getContentText('UTF-8')
+  };
 }
 
 // ── Tabella codici stati ISTAT (usati da Alloggiati Web) ─────────
@@ -9950,6 +9973,7 @@ function getAlloggiatiDue_() {
       notti:          parseInt(r[4]) || 1,
       adulti:         parseInt(r[5]) || 1,
       bambini:        parseInt(r[6]) || 0,
+      trip_type:      String(r[8]  || '').trim(),
       nome:           nome,
       cognome:        cognome,
       sesso:          String(r[12] || '').trim(),
@@ -10011,9 +10035,30 @@ function buildAlloggiatiText_(checkinData) {
   var notti  = checkinData.notti || 1;
 
   var hasGuests = (checkinData.guests && checkinData.guests.length > 0);
-  // Referente: tipo 17 (CAPO FAMIGLIA) se ci sono accompagnatori, 16 (OSPITE SINGOLO) altrimenti
+
+  // Determina il tipo alloggiato in base al tipo soggiorno:
+  //   16 = ospite singolo (nessun accompagnatore)
+  //   17 = capo famiglia / coppia  +  19 = familiare/membro nucleo
+  //   18 = capo gruppo (amici)     +  20 = membro gruppo
+  var tripNorm = (checkinData.trip_type || '').toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  var isGruppo  = /amici|gruppo|group|friend/.test(tripNorm);
+  var isFamilia = /famig|coppia|couple|family|partner/.test(tripNorm);
+
+  var tipoCapo, tipoAccomp;
+  if (!hasGuests) {
+    tipoCapo   = '16';  // ospite singolo
+    tipoAccomp = '16';  // non usato
+  } else if (isGruppo) {
+    tipoCapo   = '18';  // capo gruppo
+    tipoAccomp = '20';  // membro gruppo
+  } else {
+    // famiglia / coppia (default quando ci sono accompagnatori)
+    tipoCapo   = '17';  // capo famiglia
+    tipoAccomp = '19';  // familiare/membro nucleo
+  }
   lines.push(buildSchedinRow_({
-    tipo:           hasGuests ? '17' : '16',
+    tipo:           tipoCapo,
     cognome:        checkinData.cognome,
     nome:           checkinData.nome,
     sesso:          checkinData.sesso,
@@ -10027,12 +10072,11 @@ function buildAlloggiatiText_(checkinData) {
     comune_rilascio:checkinData.comune_rilascio
   }, arrivo, notti));
 
-  // Accompagnatori: tipo 19 (FAMILIARE/MEMBRO DEL NUCLEO)
-  //  Per specifica: 34 blank per i campi documento (pos. 134-167).
-  //  xml:space="preserve" nella chiamata SOAP impedisce la rimozione degli spazi finali.
+  // Accompagnatori: tipo dipende dal gruppo (19 = familiare, 20 = membro gruppo)
+  //  Campi documento sempre blank (pos. 134-167 = 34 spazi).
   (checkinData.guests || []).forEach(function(g) {
     lines.push(buildSchedinRow_({
-      tipo:           '19',
+      tipo:           tipoAccomp,
       cognome:        g.cognome,
       nome:           g.nome,
       sesso:          g.sesso,
@@ -10216,16 +10260,31 @@ function doPostAlloggiatiSend_(data) {
   var auth  = alloggiatiAuthenticate_(cfg);
   var rows  = buildAlloggiatiText_(found);
   var resp  = alloggiatiSendRows_(cfg, auth.token, auth.idUtente, rows);
+  var xml   = resp.xml;
 
-  if (!resp.Acknowledged) {
-    var errMsg = resp.GeneralError || JSON.stringify(resp);
+  // Esito generale (SendResult)
+  var esitoMatch = xml.match(/<SendResult>([\s\S]*?)<\/SendResult>/i);
+  var esitoBlock = esitoMatch ? esitoMatch[1] : '';
+  var esito      = (esitoBlock.match(/<esito>(true|false)<\/esito>/i) || [])[1];
+  var sendOk     = esito && esito.toLowerCase() === 'true';
+
+  if (!sendOk) {
+    var errDes = (esitoBlock.match(/<ErroreDes>([^<]+)<\/ErroreDes>/i)       || [])[1] || '';
+    var errDet = (esitoBlock.match(/<ErroreDettaglio>([^<]+)<\/ErroreDettaglio>/i) || [])[1] || '';
+    var errMsg = (errDes || 'Invio fallito') + (errDet ? ' — ' + errDet : '');
+    // Fallback al testo XML grezzo se non c'è errore parsato
+    if (!errDes) errMsg = 'Invio fallito. Risposta: ' + xml.substring(0, 400);
     logAlloggiatiSend_(found, 'ERRORE', '', errMsg);
     return ContentService
-      .createTextOutput(JSON.stringify({ status: 'error', error: 'Invio fallito: ' + errMsg }))
+      .createTextOutput(JSON.stringify({ status: 'error', error: errMsg }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  logAlloggiatiSend_(found, 'OK', resp.NumRicevuta || resp.GeneralMessage || '', '');
+  // Numero schedine valide (usato come ricevuta)
+  var valideMatch = xml.match(/<SchedineValide>(\d+)<\/SchedineValide>/i);
+  var numRicevuta = valideMatch ? valideMatch[1] : '';
+
+  logAlloggiatiSend_(found, 'OK', numRicevuta, '');
 
   // Notifica email invio schedina
   try {
@@ -10246,8 +10305,8 @@ function doPostAlloggiatiSend_(data) {
   return ContentService
     .createTextOutput(JSON.stringify({
       status:   'ok',
-      ricevuta: resp.NumRicevuta || '',
-      message:  resp.GeneralMessage || 'Schedina inviata con successo'
+      ricevuta: numRicevuta,
+      message:  'Schedina inviata con successo'
     }))
     .setMimeType(ContentService.MimeType.JSON);
 }
