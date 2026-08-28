@@ -1072,39 +1072,109 @@ function validateSchedina() {
 function sendSchedina() {
     if (!currentSchedina) return;
 
-    const btn   = document.getElementById('btn-send-schedina');
-    const errEl = document.getElementById('schedina-send-error');
+    const btn        = document.getElementById('btn-send-schedina');
+    const errEl      = document.getElementById('schedina-send-error');
+    const body       = document.getElementById('schedina-body');
+    const progressEl = document.getElementById('schedina-progress');
 
     btn.disabled    = true;
     btn.textContent = '⏳ Invio in corso…';
     errEl.style.display = 'none';
 
-    // ⚠️ MODALITÀ SIMULAZIONE — sostituire 'alloggiati-send-simulate' con
-    // 'alloggiati-send' per abilitare l'invio reale alla Questura.
+    // Switch to progress view
+    body.style.display       = 'none';
+    progressEl.style.display = 'block';
+
+    const STEPS = [
+        { id: 'sp-auth',  label: '🔐 Autenticazione al portale Questura' },
+        { id: 'sp-build', label: '📄 Preparazione schedina' },
+        { id: 'sp-send',  label: '📡 Invio al portale Alloggiati Web' },
+        { id: 'sp-log',   label: '📋 Registrazione e notifica email' },
+    ];
+
+    progressEl.innerHTML = `
+        <div style="font-weight:700;color:#1e3a5f;margin-bottom:16px;font-size:0.95rem">
+            📡 Invio schedina alla Questura in corso…
+        </div>
+        ${STEPS.map(s => `
+            <div id="${s.id}" class="sched-step sched-step--wait">
+                <span class="sched-step-icon">⏸</span>
+                <span>${escHtml(s.label)}</span>
+            </div>`).join('')}
+        <div style="margin-top:14px;font-size:0.78rem;color:#94a3b8">
+            L'operazione può richiedere 10–20 secondi — non chiudere questa finestra.
+        </div>`;
+
+    let done = false;
+
+    const activate = (id) => {
+        if (done) return;
+        const el = document.getElementById(id);
+        if (el) { el.className = 'sched-step sched-step--active'; el.querySelector('.sched-step-icon').textContent = '⌛'; }
+    };
+    const complete = (id, ok, msg) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.className = `sched-step sched-step--${ok ? 'ok' : 'err'}`;
+        el.querySelector('.sched-step-icon').textContent = ok ? '✅' : '❌';
+        if (msg) el.querySelector('span:last-child').textContent = msg;
+    };
+
+    activate('sp-auth');
+    const t1 = setTimeout(() => { complete('sp-auth',  true); activate('sp-build'); }, 1500);
+    const t2 = setTimeout(() => { complete('sp-build', true); activate('sp-send'); },  3000);
+    const t3 = setTimeout(() => { activate('sp-log'); }, 7000);
+
     fetch(SHEETS_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'data=' + encodeURIComponent(JSON.stringify({
-            action: 'alloggiati-send-simulate',
+            action: 'alloggiati-send',
             key:    currentSchedina.key
         }))
     })
-        .then(r => r.json())
-        .then(json => {
-            if (json.status !== 'ok') throw new Error(json.error || 'Invio fallito');
+    .then(r => r.json())
+    .then(json => {
+        done = true;
+        [t1, t2, t3].forEach(clearTimeout);
+        if (json.status !== 'ok') throw new Error(json.error || 'Invio fallito');
 
+        complete('sp-auth',  true, '🔐 Autenticazione completata');
+        complete('sp-build', true, '📄 Schedina preparata');
+        complete('sp-send',  true, '📡 Schedina accettata dalla Questura');
+        complete('sp-log',   true, json.ricevuta
+            ? `📋 Registrata — N° ricevuta ${json.ricevuta}`
+            : '📋 Registrata nel foglio · notifica inviata');
+
+        setTimeout(() => {
+            done = false;
+            progressEl.style.display = 'none';
+            body.style.display = 'block';
             closeSchedinModal();
-            const okModal = document.getElementById('schedina-ok-modal');
             document.getElementById('schedina-ok-ricevuta').textContent =
-                json.message || 'Schedina elaborata correttamente.';
-            okModal.style.display = 'flex';
-        })
-        .catch(err => {
+                (json.message || 'Schedina inviata con successo') +
+                (json.ricevuta ? ` — N° ricevuta: ${json.ricevuta}` : '');
+            document.getElementById('schedina-ok-modal').style.display = 'flex';
+        }, 1500);
+    })
+    .catch(err => {
+        done = true;
+        [t1, t2, t3].forEach(clearTimeout);
+        // Mark any active step as failed
+        STEPS.forEach(s => {
+            const el = document.getElementById(s.id);
+            if (el && el.classList.contains('sched-step--active')) complete(s.id, false);
+        });
+        setTimeout(() => {
+            done = false;
+            progressEl.style.display = 'none';
+            body.style.display = 'block';
             btn.disabled    = false;
             btn.textContent = '🚔 Invia alla Questura';
             errEl.style.display = 'block';
-            errEl.textContent   = '⚠ ' + (err.message || 'Errore durante l\'invio.');
-        });
+            errEl.textContent   = '⚠ ' + (err.message || "Errore durante l'invio.");
+        }, 600);
+    });
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────

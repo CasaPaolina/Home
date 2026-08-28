@@ -101,6 +101,25 @@
             border: 1.5px solid #2c7873;
         }
         .ci-btn--conferma:hover { background: #2c7873; color: #fff; }
+        /* ── SCHEDINE PROGRESS STEPS ── */
+        .sched-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.87rem;
+            border: 1.5px solid #e5e7eb;
+            background: #f8fafc;
+            margin-bottom: 8px;
+            transition: background .3s, border-color .3s, color .3s, opacity .3s;
+            color: #94a3b8;
+        }
+        .sched-step .sched-step-icon { font-size: 1rem; flex-shrink: 0; min-width: 22px; text-align: center; }
+        .sched-step--wait   { opacity: 0.5; }
+        .sched-step--active { background: #eff6ff; border-color: #93c5fd; color: #1e40af; font-weight: 500; opacity: 1; }
+        .sched-step--ok     { background: #f0fdf4; border-color: #86efac; color: #15803d; font-weight: 600; opacity: 1; }
+        .sched-step--err    { background: #fef2f2; border-color: #fca5a5; color: #dc2626; font-weight: 600; opacity: 1; }
     </style>
 </head>
 <body>
@@ -284,7 +303,7 @@
             <button onclick="closeSchedinModal()" style="background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center">✕</button>
         </div>
 
-        <div style="padding:20px 24px">
+        <div id="schedina-body" style="padding:20px 24px">
             <!-- Sommario ospite/soggiorno -->
             <div id="schedina-guest-info" style="background:#f8fafc;border-radius:10px;padding:16px 18px;margin-bottom:14px;font-size:0.88rem"></div>
 
@@ -309,6 +328,8 @@
                 </button>
             </div>
         </div>
+        <!-- Progress panel (shown during send) -->
+        <div id="schedina-progress" style="display:none;padding:20px 24px"></div>
     </div>
 </div>
 
