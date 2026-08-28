@@ -490,10 +490,7 @@ function ciBuildSummary() {
     document.getElementById('summary-card').innerHTML = `
         <h3 class="ci-card-title">📋 ${tr.s4_title}</h3>
         <div class="summary-grid">
-<<<<<<< HEAD
-=======
             <div class="summary-row"><span class="summary-label">${tr.sum_apt}</span><span class="summary-value">${v('appartamento') || '—'}</span></div>
->>>>>>> feature/alloggiati-web
             <div class="summary-row"><span class="summary-label">${tr.sum_arrival}</span><span class="summary-value">${ciFormatDate(v('checkin-date'))}</span></div>
             <div class="summary-row"><span class="summary-label">${tr.sum_departure}</span><span class="summary-value">${ciFormatDate(v('checkout-date'))}</span></div>
             <div class="summary-row"><span class="summary-label">${tr.sum_permanenza}</span><span class="summary-value">${nights > 0 ? nights + ' ' + nightLabel : '—'}</span></div>
@@ -704,8 +701,6 @@ document.addEventListener('DOMContentLoaded', () => {
             sessionStorage.removeItem('ciAdminPreFill');
             if (pre.checkin_date  && cin)  cin.value  = pre.checkin_date;
             if (pre.checkout_date && cout) cout.value = pre.checkout_date;
-<<<<<<< HEAD
-=======
             // Appartamento: case-insensitive match against <select> options
             const aptEl = document.getElementById('appartamento');
             if (pre.appartamento && aptEl) {
@@ -714,7 +709,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
                 if (match) aptEl.value = match.value;
             }
->>>>>>> feature/alloggiati-web
             const rNome = document.getElementById('r-nome');
             const rCogn = document.getElementById('r-cognome');
             if (pre.r_nome    && rNome) rNome.value = pre.r_nome;
