@@ -382,7 +382,6 @@ async function fetchWeatherForecast() {
         const slotWindCardinal = getWindDirection(slotWindDirDegrees);
         currentWindCardinal = slotWindCardinal;
         window.currentWindCardinal = slotWindCardinal;
-<<<<<<< HEAD
         window.currentWindSpeedKmh = slotWindSpeed;
 
         // Build 3-day wind data
@@ -406,8 +405,6 @@ async function fetchWeatherForecast() {
         document.dispatchEvent(new CustomEvent('windUpdated', {
             detail: { cardinal: slotWindCardinal, speed: slotWindSpeed, byDay: window.windDataByDay }
         }));
-=======
->>>>>>> feature/alloggiati-web
 
         // Re-apply filter if map is showing "recommended-today"
         if (typeof leafletBeachMap !== 'undefined' && leafletBeachMap && leafletBeachMap.currentFilter === 'recommended-today') {
@@ -449,13 +446,7 @@ async function fetchWeatherForecast() {
         recommendTop3Beaches(slotWindCardinal, slotWindSpeed, 'today');
 
         // Beach recommendations for tomorrow
-<<<<<<< HEAD
         recommendTop3Beaches(avgWindDirTomorrow, avgWindSpeedTomorrow, 'tomorrow');
-=======
-        const avgWindDirectionTomorrow = getWindDirection((tomorrowSlots.morning.direction + tomorrowSlots.noon.direction + tomorrowSlots.afternoon.direction) / 3);
-        const avgWindSpeedTomorrow = (tomorrowSlots.morning.speed + tomorrowSlots.noon.speed + tomorrowSlots.afternoon.speed) / 3;
-        recommendTop3Beaches(avgWindDirectionTomorrow, avgWindSpeedTomorrow, 'tomorrow');
->>>>>>> feature/alloggiati-web
 
     } catch (error) {
         console.error('Error fetching weather:', error);

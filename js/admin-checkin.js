@@ -1133,7 +1133,16 @@ function sendSchedina() {
             key:    currentSchedina.key
         }))
     })
-    .then(r => r.json())
+    .then(r => r.text())
+    .then(text => {
+        try { return JSON.parse(text); }
+        catch(e) {
+            if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                throw new Error('Il server GAS ha restituito HTML invece di JSON. Lo script GAS deve essere ridistribuito ("Distribuisci nuova versione") dopo le ultime modifiche.');
+            }
+            throw new Error('Risposta non valida dal server: ' + text.substring(0, 150));
+        }
+    })
     .then(json => {
         done = true;
         [t1, t2, t3].forEach(clearTimeout);
